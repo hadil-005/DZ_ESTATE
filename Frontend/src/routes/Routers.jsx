@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import Signin from "../pages/Signin";
-
+import { Navbar } from "../components/Navbar/Navbar";
 
 const Routers = () => {
   const { pathname } = useLocation();
@@ -14,6 +14,7 @@ const Routers = () => {
   return (
     <Routes>
       <Route path="/si" element={<Signin />} />
+      <Route path="/navbar" element={<Navbar />} />
     </Routes>
   );
 };
