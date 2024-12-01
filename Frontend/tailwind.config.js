@@ -3,7 +3,7 @@ export default {
   content: ["./index.html", "./src/**/*.{html,js,jsx}"],
   theme: {
     fontFamily: {
-      elMessiri: ["El Messiri", "sans-serif"],
+      elMessiri: ["Poppins"],
     },
     extend: {
       colors: {
