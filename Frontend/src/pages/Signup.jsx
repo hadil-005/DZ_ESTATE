@@ -1,13 +1,13 @@
 import React from "react";
-import Login from "../components/Login/Login.jsx";
-import SideElement from "../components/Login/SideElement.jsx";
+import Signp from "../components/Signup/Signp.jsx";
+import SideElement from "../components/Signup/SideElement.jsx";
 
-const Signin = () => {
+const Signup = () => {
   return (
     <div className="flex w-full h-screen overflow-auto bg-gray-100">
       {/* Section gauche : Formulaire, occupe 50% de la largeur */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 lg:pt-40">
-        <Login />
+        <Signp />
       </div>
 
       {/* Section droite : SideElement, occupe 50% de la largeur */}
@@ -18,4 +18,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default Signup;

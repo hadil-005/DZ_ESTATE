@@ -7,6 +7,11 @@ export default {
     "./node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+
+    fontFamily: {
+      elMessiri: ["Poppins"],
+    },
+
     extend: {
       colors: {
         primaryColor: "#0067FF",
