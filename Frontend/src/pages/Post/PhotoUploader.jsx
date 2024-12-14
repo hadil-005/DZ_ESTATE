@@ -1,0 +1,79 @@
+import React, { useState, useRef } from "react";
+
+const PhotoUploader = () => {
+  const [photos, setPhotos] = useState([]); // Liste des fichiers ajoutés
+  const fileInputRef = useRef(null); // Référence pour l'élément input file
+
+  // Fonction pour ouvrir le sélecteur de fichiers
+  const openFileSelector = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // Simule un clic sur l'input file
+    }
+  };
+
+  // Fonction pour ajouter une photo
+  const addPhoto = (e) => {
+    const files = Array.from(e.target.files);
+    setPhotos([...photos, ...files]); // Ajoute les fichiers sélectionnés à la liste
+    e.target.value = ""; // Réinitialise l'input pour éviter l'affichage du dernier fichier sélectionné
+  };
+
+  // Fonction pour supprimer une photo
+  const removePhoto = (index) => {
+    setPhotos(photos.filter((_, idx) => idx !== index)); // Supprime l'élément de la liste
+  };
+
+  return (
+    <div className="ml-2  w-3/4  space-y-2">
+      <p className="block text-[16px] font-semibold mb-2">Ajouter des photos</p>
+
+      {/* Input file masqué */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept="image/*"
+        onChange={addPhoto}
+        className="hidden "
+      />
+
+      {/* Liste des cases */}
+      <div className="mt-2 border border-[#9F9F9F]  rounded-lg overflow-hidden">
+        {/* Affichage dynamique des cases */}
+        {photos.map((file, index) => (
+          <div
+            key={index}
+            className="flex justify-between items-center p-2 border-b border-gray-200 last:border-none"
+          >
+            {/* Affichage du fichier */}
+            <span className="text-sm text-gray-700 truncate w-3/4">
+              {file.name}
+            </span>
+            {/* Bouton "-" pour supprimer */}
+            <button
+              onClick={() => removePhoto(index)}
+              className="text-[#CD0000] hover:text-red-700 font-bold text-lg"
+            >
+              −
+            </button>
+          </div>
+        ))}
+
+        {/* Dernière case avec le bouton "+" */}
+        <div className="flex justify-between items-center p-2">
+          <span className="text-sm text-gray-500 italic w-3/4">
+            Ajouter une photo
+          </span>
+          <button
+            onClick={openFileSelector}
+            className="text-[#4CAF50] hover:text-green-700 font-bold text-lg"
+          >
+            +
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PhotoUploader;
