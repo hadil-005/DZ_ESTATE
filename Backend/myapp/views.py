@@ -4,7 +4,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .forms import PropertyForm
-
 @login_required  
 from .models import Property, Comment, Like, SavedPost, user , Alert
 # Create your views here.
