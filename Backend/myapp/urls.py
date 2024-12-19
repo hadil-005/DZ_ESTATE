@@ -16,7 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from myapp import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('api/add_property/', views.add_property, name='add_property'),
+    path('api/delete_property/<int:property_id>/', views.delete_property, name='delete_property'),
+    path('api/add_comment/', views.add_comment, name='add_comment'),
+    path('api/add_like/<int:property_id>/', views.add_like, name='add_like'),
+    path('api/save_post/<int:property_id>/', views.save_post, name='save_post'),
+    path('api/mark_as_sold/<int:property_id>/', views.mark_as_sold, name='mark_as_sold'),
 ]
