@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import logo from "../../assets/logo.svg";
 import { GoogleLogin } from "@react-oauth/google";
 
@@ -21,7 +22,7 @@ function Login() {
   };
 
   // Fonction de gestion du formulaire
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.motDePasse.value;
@@ -35,8 +36,18 @@ function Login() {
       return;
     }
 
-    // Simuler une requête pour l'authentification
-    console.log({ email, password });
+    try {
+      // Envoi des données au backend
+      const response = await axios.post("http://127.0.0.1:3000/api/users/login", { email, password });
+      console.log("Connexion réussie :", response.data);
+      alert("Connexion réussie !");
+    } catch (error) {
+      console.error(
+        "Erreur lors de la connexion :",
+        error.response?.data || error.message
+      );
+      alert(error.response?.data?.message || "Erreur lors de la connexion.");
+    }
   };
 
   return (
