@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  /* Classe personnalisée pour définir la direction RTL */
+  .direction-rtl {
+    direction: rtl;
+  }
+
+  /* Classe personnalisée pour définir la direction LTR */
+  .direction-ltr {
+    direction: ltr;
+  }
+
+  /* Applique la classe direction-rtl pour le body avec dir="rtl" */
+  body[dir="rtl"] {
+    @apply text-right direction-rtl; /* Applique text-right et la classe direction-rtl */
+  }
+
+  /* Applique la classe direction-ltr pour le body avec dir="ltr" */
+  body[dir="ltr"] {
+    @apply text-left direction-ltr; /* Applique text-left et la classe direction-ltr */
+  }
+}
