@@ -1,0 +1,147 @@
+
+.alarm {
+    position: relative; /* Position relative to contain the absolute positioning of the overlay */
+    background-size: calc(100%) calc(100%); /* Cover the entire div */
+    width: calc(100%); /* Set width as needed */
+    height: 812px; /* Set a fixed height or use min-height */
+    display: flex; /* Use flexbox to center the overlay */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.overlay {
+    position: absolute; /* Ensure the overlay is positioned absolutely */
+    background-color: rgba(255, 255, 255, 0.5); /* White with 50% transparency */
+    backdrop-filter: blur(5px); /* Apply a blur effect to the background */
+    border-color: aliceblue;  /* Set the border color */
+    border-width: 2px;        /* Set the border thickness */
+    border-style: solid;      /* Set the border style (e.g., solid, dashed) */    padding: calc(5%); /* Add padding for space inside the overlay */
+    width: calc(100% - 10cm); /* Set width to 100% minus 4cm (2cm on each side) */
+    height: calc(100% - 4cm); /* Set height to 100% minus 4cm (2cm on each side) */
+    border-radius: 18px; /* Optional: Add rounded corners */
+    color: black; /* Text color */
+    display: flex; /* Use flexbox to center the text */
+    flex-direction: column;
+}
+.custom-text1 {
+    font-family: 'Poppins', sans-serif; /* Use Poppins font */
+    font-size: 36px; /* Set font size to 40 pixels */
+    font-weight: bold; /* Set font weight to bold */
+    color: black; /* Set text color (optional) */
+    text-align: left; /* Center the text (optional) */
+}
+.custom-text2 {
+    font-family: 'Poppins', sans-serif; /* Use Poppins font */
+    font-size: 16px; /* Set font size to 40 pixels */
+    color: black; /* Set text color (optional) */
+    text-align: left; /* Center the text (optional) */
+}
+.font-poppins {
+    font-family: 'Poppins', sans-serif;
+  }
+  .labels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 items per row */
+    column-gap: 40px; /* Horizontal gap (left & right) */
+    row-gap: 35px;    /* Vertical gap (top), including between rows */
+    padding-top: 30px; /* Ensure no padding at the bottom */
+  }
+  
+  @media (max-width: 768px) {
+    .labels {
+      grid-template-columns: repeat(2, 1fr); /* 2 items per line on smaller screens */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .labels {
+      grid-template-columns: 1fr; /* 1 item per line on very small screens */
+    }
+  }
+
+/* Article Styling */
+.article {
+  background-color: #fff;
+  padding: 20px;
+  margin-right: 20px;
+  border-radius: 10px;
+  width: 100%;
+  text-align: left;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.article-image {
+  width: 450px;
+  margin-bottom: 10px;
+}
+
+.article h3 {
+  font-family: 'Poppins', sans-serif; 
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.location {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* Details Section Styling (Icons and Text) */
+.details {
+  display: inline-flex;
+  align-items: left; /* Align items vertically if needed */
+  gap: 10px; /* Adds space between the items */
+}
+
+.detail {
+  display: flex;
+  align-items: center;
+}
+
+.detail .icon {
+  margin-right: 5px;
+  color: #000000;
+}
+
+.detail span {
+  font-size: 14px;
+  color: #1f1d1d;
+}
+
+/* Articles Container (Scrolling horizontally) */
+.articles {
+  display: flex;
+  gap: 20px;
+}
+
+
+/* See More Button Styling */
+.see-more-btn {
+  display: flex;
+  justify-content: right;
+  margin-top: 20px;
+}
+
+.btn-see-more {
+  padding: 5px 20px;
+  margin-right: 50px;
+  background-color: inherit;
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-see-more:hover {
+  background-color: #77797a;
+}
+
+.btn-see-more:focus {
+  outline: none;
+}
