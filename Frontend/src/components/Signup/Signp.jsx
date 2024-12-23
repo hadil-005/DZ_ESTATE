@@ -5,9 +5,9 @@ import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
 const Signp = () => {
-  const onSuccess = (credentialResponse) => {
-    console.log(credentialResponse.credential);
-  };
+  // const onSuccess = (credentialResponse) => {
+  //   console.log(credentialResponse.credential);
+  // };
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -197,7 +197,7 @@ const Signp = () => {
         <hr className="flex-1 border-t border-gray-300" />
       </div>
 
-      <div className="flex flex-col w-4/5">
+      {/* <div className="flex flex-col w-4/5">
         <GoogleLogin
           onSuccess={(credentialResponse) => {
             console.log(credentialResponse);
@@ -220,7 +220,7 @@ const Signp = () => {
             </div>
           )}
         />
-      </div>
+      </div> */}
 
       <div className="flex items-center justify-center my-4 w-4/5">
         <p className="text-gray-600">
