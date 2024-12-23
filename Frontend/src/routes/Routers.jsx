@@ -8,7 +8,10 @@ import { Navbar } from "../components/Navbar/Navbar";
 const Routers = () => {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.console.log('Routers component rendered');
+    
+    
+    crollTo(0, 0);
     console.log(pathname);
   }, [pathname]);
 
