@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - celia
   pull_request:
     branches:
       - main
+      - celia
 
 jobs:
   frontend-test:
