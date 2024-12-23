@@ -98,41 +98,17 @@ export const Post = () => {
   };
 
   // Validation du formulaire
-  const validateForm = () => {
-    const requiredFields = [
-      "addresse",
-      "wilaya",
-      "commune",
-      "quartier",
-      "addresseM",
-      "téléphone",
-      "surface",
-      "prix",
-      "description",
-    ];
-    // Vérifie si tous les champs obligatoires sont remplis
-    for (let fieldId of requiredFields) {
-      const field = document.getElementById(fieldId);
-      if (!field || !field.value.trim()) {
-        alert(`Veuillez remplir le champ : ${fieldId}`);
-        return false;
-      }
-    }
+;
 
-    // Vérifie si un type (A vendre ou A louer) a été sélectionné
-    if (!selectedCheckbox) {
-      alert("Veuillez sélectionner un type (A vendre ou A louer).");
-      return false;
-    }
+   
 
-    // Vérifie si des photos ont été téléchargées
-    if (photos.length === 0) {
-      alert("Veuillez ajouter au moins une photo.");
-      return false;
-    }
+   
 
-    return true; // Si tout est validé, retourne true
-  };
+  
+
+ 
+  
+
 
  const handleSubmit = (e) => {
    e.preventDefault(); // Empêche le comportement par défaut (rechargement de la page)
@@ -304,7 +280,7 @@ export const Post = () => {
 
               <button
                 onClick={handleSubmit}
-                className="bg-[#1C84FF] text-white font-bold text-[24px] rounded-md w-28 h-12 ml-[60%]"
+                className="bg-[#1C84FF] hover:bg-blue-700 transition text-white font-bold text-[20px] rounded-md w-28 h-12 ml-[60%]"
               >
                 Publier
               </button>
