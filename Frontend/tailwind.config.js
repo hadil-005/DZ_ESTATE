@@ -43,3 +43,11 @@ export default {
   plugins: [],
   colors: {},
 };
+module.exports = {
+  content: ["./src/**/*.{js,jsx,ts,tsx}"], // Assurez-vous que les fichiers sont inclus
+  theme: {
+    extend: {},
+  },
+  plugins: [
+  ],
+};

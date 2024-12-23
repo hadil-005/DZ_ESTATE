@@ -1,45 +1,55 @@
 import React, { useState } from "react";
-import styles from "../../components/Navbar/Navbar.module.css";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import drapeau from "../../assets/drapeau.png";
 import profile from "../../assets/profil.png";
-
-
+import { Navbar as MaterialNavbar, Typography, Button, IconButton } from "@material-tailwind/react"; // Importez le composant Navbar de Material Tailwind
+import "../Multilingue/i18n"
 
 
 export const Navbar = () => {
+  const { i18n ,t} = useTranslation(); // Utilisez i18n de react-i18next
   const [click, setClick] = useState(false);
+ 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // État pour la liste déroulante
   const [hoverMessage, setHoverMessage] = useState(""); // État pour le message
+  // Langue actuelle, par défaut en français
+  const [currentLang, setCurrentLang] = useState(i18n.language || "fr");
   const handleClick = () => setClick(!click);
   const closeMenu = () => setClick(false);
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng); // Change la langue
-    document.documentElement.dir = lng === "ar" ? "rtl" : "ltr"; // Gère RTL
-    setIsDropdownOpen(false);
-  };
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen); // Gère l'ouverture/fermeture de la liste
-  const selectLanguage = (language) => {
-    console.log(`Langue sélectionnée : ${language}`); // Remplacez par votre logique
-    setIsDropdownOpen(false); // Ferme la liste après sélection
+  // const selectLanguage = (language) => {
+  //   console.log(`Langue sélectionnée : ${language}`); // Remplacez par votre logique
+  //   setIsDropdownOpen(false); // Ferme la liste après sélection
+  // };
+  // Changer la langue et la direction
+  const selectLanguage = (lang) => {
+    setIsDropdownOpen(false); // Ferme le menu déroulant
+    setCurrentLang(lang); // Met à jour la langue sélectionnée
+    i18n.changeLanguage(lang); // Changer la langue (si vous utilisez i18next)
+
+    // Mettre à jour les attributs HTML pour gérer la direction (RTL/LTR)
+    document.documentElement.lang = lang === "ar" ? "ar" : "fr";
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   };
 
   const links = [
-    { name: "Acceuil", link: "" },
-    { name: "Découvrir", link: "decouvrir" },
-    { name: "A propos", link: "apropos" },
-    { name: "FAQ", link: "aide" },
-    { name: "AVIS", link: "avis" },
+    { name: t("accueil"), link: "" },
+    { name: t("decouvrir"), link: "" },
+    { name: t("apropos"), link: "" },
+    { name: t("faq"), link: "" },
+    { name: t("avis"), link: "" },
   ];
 
-  const linkss = [{ name: "+ Publier votre bien", link: "publier" }];
-  const links1 = [{ name: "login", link: "contact" }];
+  const linkss = [{ name: t("publier"), link: "post" }];
+  const links1 = [{ name: t("login"), link: "signin" }];
+ 
 
   return (
-    <div
-      className={`${styles.header} fixed w-full top-0 right-0 bg-black flex items-center justify-between flex-row px-4 py-5 transition-all duration-500 shadow-lg z-50`}
+    <MaterialNavbar
+      className={` fixed w-full top-0 right-0 bg-black flex items-center justify-between flex-row px-4 py-5 transition-all duration-500 shadow-lg z-50`}
     >
       {/* Logo */}
       <Link to="/" className="flex items-center space-x-3">
@@ -59,7 +69,7 @@ export const Navbar = () => {
             <Link
               onClick={closeMenu}
               to={`/${link.link}`}
-              className={`${styles.navLink} text-white hover:text-[#1C84FF] font-semibold block md:text-bold md:mx-2`}
+              className={` text-white hover:text-[#1C84FF] font-semibold block md:text-bold md:mx-2`}
             >
               {link.name}
             </Link>
@@ -75,7 +85,7 @@ export const Navbar = () => {
           alt="drapeau"
           className="cursor-pointer "
           onClick={toggleDropdown} // Ouvre/ferme la liste
-          onMouseEnter={() => setHoverMessage("choisissez  votre langue")} // Message au survol
+          onMouseEnter={() => setHoverMessage(t("langue"))} // Message au survol
           onMouseLeave={() => setHoverMessage("")} // Cache le message
         />
         {hoverMessage && (
@@ -89,16 +99,16 @@ export const Navbar = () => {
         {isDropdownOpen && (
           <ul className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg">
             <li
-              className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-              onClick={() => selectLanguage("arabe")}
+              className="px-4 py-2 text-black  cursor-pointer hover:bg-gray-100"
+              onClick={() => selectLanguage("ar")}
             >
-              Arabe
+              {t("Arabe")}
             </li>
             <li
-              className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-              onClick={() => selectLanguage("français")}
+              className="px-4 text-black py-2 cursor-pointer hover:bg-gray-100"
+              onClick={() => selectLanguage("fr")}
             >
-              Français
+              {t("Français")}
             </li>
           </ul>
         )}
@@ -117,7 +127,7 @@ export const Navbar = () => {
             <Link
               onClick={closeMenu}
               to={`/${link.link}`}
-              className={`${styles.navLink} text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2`}
+              className={` text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2`}
             >
               {link.name}
             </Link>
@@ -134,11 +144,11 @@ export const Navbar = () => {
       >
         {links1.map((link, idx) => (
           <li key={idx} className="flex items-center space-x-4">
-            <img className="mb-1 hover:fill-white"  src={profile} alt="Profil" />
+            <img className="mb-1 hover:fill-white" src={profile} alt="Profil" />
             <Link
               onClick={closeMenu}
               to={`/${link.link}`}
-              className={`${styles.navLink} text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2`}
+              className={` text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2`}
             >
               {link.name}
             </Link>
@@ -172,6 +182,6 @@ export const Navbar = () => {
           </svg>
         </button>
       </div>
-    </div>
+    </MaterialNavbar>
   );
 };
