@@ -9,14 +9,14 @@ const Signp = () => {
     console.log(credentialResponse.credential);
   };
 
-
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    first_name: "",
+    family_name: "",
     email: "",
-    mot_de_passe: "",
+    password: "",
     confirmation: "",
-    nom: "",
-    prénom: "",
+    phone_number: "",
   });
 
   console.log(formData);
@@ -37,15 +37,38 @@ const Signp = () => {
       }
     }
 
+    // Validation du numéro de téléphone (par exemple, 10 chiffres)
+    const phoneRegex = /^[0-9]{10}$/; // Ici, on accepte un numéro de téléphone de 10 chiffres
+    if (!phoneRegex.test(formData.phone_number)) {
+      alert("Veuillez entrer un numéro de téléphone valide (10 chiffres)");
+      return;
+    }
     // Vérifier si les mots de passe correspondent
-    if (formData.mot_de_passe !== formData.confirmation) {
+    if (formData.password !== formData.confirmation) {
       alert("Les mots de passe ne correspondent pas");
       return;
     }
+    console.log("Données avant l'envoi :", formData);
 
-    // Continuer avec l'envoi des données si toutes les validations sont passées
-    console.log("Données validées :", formData);
-    navigate("/success");
+    try {
+      // Appel API vers le backend pour créer un utilisateur
+      console.log("Tentative d'envoi des données au backend...");
+      const response = await axios.post("http://127.0.0.1:3000/api/users/signup", {
+        first_name: formData.first_name,
+        family_name: formData.family_name,
+        email: formData.email,
+        password: formData.password,
+        phone_number: formData.phone_number,
+      });
+       console.log("Tentative d'envoi des données au backend...");
+       console.log("Réponse du serveur :", response);
+      // Si l'utilisateur est créé avec succès
+      console.log("Utilisateur créé :", response.data);
+      navigate("/success");
+    } catch (error) {
+      console.error("Erreur lors de l'inscription :", error);
+      alert("Erreur lors de l'inscription. Veuillez réessayer.");
+    }
   };
 
   return (
@@ -66,30 +89,30 @@ const Signp = () => {
         {/* Nom et Prénom */}
         <div className="flex gap-4 w-4/5">
           <div className="flex flex-col w-1/2">
-            <label htmlFor="nom" className="text-lg font-medium mb-2">
-              Nom
-            </label>
-            <input
-              type="text"
-              id="nom"
-              name="nom" // Important pour le bon fonctionnement de handleChange
-              placeholder="Entrer votre Nom"
-              className="w-full h-10 rounded border border-gray-300 bg-gray-100 px-4"
-              value={formData.last_name}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="flex flex-col w-1/2">
-            <label htmlFor="prenom" className="text-lg font-medium mb-2">
+            <label htmlFor="first_name" className="text-lg font-medium mb-2">
               Prénom
             </label>
             <input
               type="text"
-              id="prenom"
-              name="prénom" // Important pour le bon fonctionnement de handleChange
+              id="first_name"
+              name="first_name" // Mise à jour ici
               placeholder="Entrer votre Prénom"
               className="w-full h-10 rounded border border-gray-300 bg-gray-100 px-4"
               value={formData.first_name}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="flex flex-col w-1/2">
+            <label htmlFor="family_name" className="text-lg font-medium mb-2">
+              Nom
+            </label>
+            <input
+              type="text"
+              id="family_name"
+              name="family_name" // Mise à jour ici
+              placeholder="Entrer votre Nom"
+              className="w-full h-10 rounded border border-gray-300 bg-gray-100 px-4"
+              value={formData.family_name}
               onChange={handleChange}
             />
           </div>
@@ -103,7 +126,7 @@ const Signp = () => {
           <input
             type="email"
             id="email"
-            name="email" // Important pour le bon fonctionnement de handleChange
+            name="email"
             placeholder="Entrer votre Email"
             className="w-full h-10 rounded border border-gray-300 bg-gray-100 px-4"
             value={formData.email}
@@ -111,15 +134,31 @@ const Signp = () => {
           />
         </div>
 
+        {/* Numéro de téléphone */}
+        <div className="flex flex-col w-4/5">
+          <label htmlFor="phone_number" className="text-lg font-medium mb-2">
+            Numéro de téléphone
+          </label>
+          <input
+            type="tel"
+            id="phone_number"
+            name="phone_number" // Mise à jour ici
+            placeholder="Entrer votre numéro de téléphone"
+            className="w-full h-10 rounded border border-gray-300 bg-gray-100 px-4"
+            value={formData.phone_number}
+            onChange={handleChange}
+          />
+        </div>
+
         {/* Mot de passe */}
         <div className="flex flex-col w-4/5">
-          <label htmlFor="motDePasse" className="text-lg font-medium mb-2">
+          <label htmlFor="password" className="text-lg font-medium mb-2">
             Mot de passe
           </label>
           <input
             type="password"
-            id="motDePasse"
-            name="mot_de_passe" // Important pour le bon fonctionnement de handleChange
+            id="password"
+            name="password" // Mise à jour ici
             placeholder="Entrer votre Mot de passe"
             className="w-full h-10 rounded border border-gray-300 bg-gray-100 px-4"
             value={formData.password}
@@ -135,7 +174,7 @@ const Signp = () => {
           <input
             type="password"
             id="confirmation"
-            name="confirmation" // Important pour le bon fonctionnement de handleChange
+            name="confirmation"
             placeholder="Confirmer votre mot de passe"
             className="w-full h-10 rounded border border-gray-300 bg-gray-100 px-4"
             value={formData.confirmation}
@@ -185,7 +224,7 @@ const Signp = () => {
 
       <div className="flex items-center justify-center my-4 w-4/5">
         <p className="text-gray-600">
-          Avez vous déjà un compte ?{" "}
+          Avez-vous déjà un compte ?{" "}
           <a href="/signin" className="text-[#1C84FF] hover:underline">
             Se connecter
           </a>

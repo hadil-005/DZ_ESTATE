@@ -1,10 +1,11 @@
 const express = require('express');
 const cors = require("cors");
-const app = express();
 const multer = require('multer');
 const path = require('path');
+const bodyParser = require("body-parser");
 const userRoutes = require('./route');
-const bodyParser = require('body-parser');
+const app = express();
+
 
 app.use(cors());
 
@@ -49,7 +50,17 @@ app.use('/api/property', userRoutes);
 app.use('/api/history', userRoutes);
 app.use('/api/messeges', userRoutes);
 
+
 const PORT = 3000;
+app.get("/", (req, res) => {
+  res.send("Bienvenue sur la page d'accueil");
+});
+app.post("/signup", (req, res) => {
+  // Traitez l'inscription ici
+  res.send("Inscription réussie");
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
