@@ -12,10 +12,7 @@ import Discussion from "../pages/Chat/Discussion";
 const Routers = () => {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.console.log('Routers component rendered');
-    
-    
-    crollTo(0, 0);
+    window.scrollTo(0, 0);
     console.log(pathname);
   }, [pathname]);
 
