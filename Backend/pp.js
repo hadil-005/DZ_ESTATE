@@ -1,9 +1,12 @@
 const express = require('express');
+const cors = require("cors");
 const app = express();
 const multer = require('multer');
 const path = require('path');
 const userRoutes = require('./route');
 const bodyParser = require('body-parser');
+
+app.use(cors());
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
