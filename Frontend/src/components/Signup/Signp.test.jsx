@@ -1,8 +1,9 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import Signp from "./Signp";
-
+import axios from "axios"; // Ajoutez cette ligne en haut de votre fichier
+jest.mock("axios");
 
 test("Displays error message when password does not match confirmation", () => {
   render(
@@ -201,6 +202,180 @@ test("Accepts a valid phone number", () => {
 
   // Vérifier qu'aucune alerte n'est affichée
   expect(global.alert).not.toHaveBeenCalled();
+
+  global.alert.mockRestore();
+});
+
+test("Displays alert for invalid email format", () => {
+  jest.spyOn(global, "alert").mockImplementation(() => {});
+
+  render(
+    <Router>
+      <Signp />
+    </Router>
+  );
+
+  // Remplir les champs sauf l'email avec un format invalide
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Email/i), {
+    target: { value: "john.doe@com" }, // Email invalide
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Prénom/i), {
+    target: { value: "John" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Nom/i), {
+    target: { value: "Doe" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Mot de passe/i), {
+    target: { value: "password123" },
+  });
+  fireEvent.change(
+    screen.getByPlaceholderText(/Confirmer votre mot de passe/i),
+    {
+      target: { value: "password123" },
+    }
+  );
+  fireEvent.change(
+    screen.getByPlaceholderText(/Entrer votre numéro de téléphone/i),
+    {
+      target: { value: "1234567890" },
+    }
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: /Créer un compte/i }));
+
+  // Vérifier que l'alerte pour un email invalide est affichée
+  expect(global.alert).toHaveBeenCalledWith("Veuillez entrer un email valide");
+
+  global.alert.mockRestore();
+});
+
+test("Accepts a valid email format", () => {
+  jest.spyOn(global, "alert").mockImplementation(() => {});
+
+  render(
+    <Router>
+      <Signp />
+    </Router>
+  );
+
+  // Remplir tous les champs avec des valeurs valides
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Prénom/i), {
+    target: { value: "John" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Nom/i), {
+    target: { value: "Doe" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Email/i), {
+    target: { value: "john.doe@example.com" }, // Email valide
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Mot de passe/i), {
+    target: { value: "password123" },
+  });
+  fireEvent.change(
+    screen.getByPlaceholderText(/Confirmer votre mot de passe/i),
+    {
+      target: { value: "password123" },
+    }
+  );
+  fireEvent.change(
+    screen.getByPlaceholderText(/Entrer votre numéro de téléphone/i),
+    {
+      target: { value: "1234567890" },
+    }
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: /Créer un compte/i }));
+
+  // Vérifier qu'aucune alerte n'est affichée pour un email valide
+  expect(global.alert).not.toHaveBeenCalled();
+
+  global.alert.mockRestore();
+});
+
+test("submits the form when the 'Créer un compte' button is clicked", () => {
+  jest.spyOn(global, "alert").mockImplementation(() => {});
+
+  render(
+    <Router>
+      <Signp />
+    </Router>
+  );
+
+  // Remplir les champs avec des valeurs valides
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Prénom/i), {
+    target: { value: "John" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Nom/i), {
+    target: { value: "Doe" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Email/i), {
+    target: { value: "john.doe@example.com" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Mot de passe/i), {
+    target: { value: "password123" },
+  });
+  fireEvent.change(
+    screen.getByPlaceholderText(/Confirmer votre mot de passe/i),
+    {
+      target: { value: "password123" },
+    }
+  );
+  fireEvent.change(
+    screen.getByPlaceholderText(/Entrer votre numéro de téléphone/i),
+    {
+      target: { value: "1234567890" },
+    }
+  );
+
+  // Clic sur le bouton "Créer un compte"
+  fireEvent.click(screen.getByRole("button", { name: /Créer un compte/i }));
+
+  // Vérifier qu'aucune alerte n'est affichée (formulaire valide)
+  expect(global.alert).not.toHaveBeenCalled();
+
+  global.alert.mockRestore();
+});
+
+test("displays an alert when the form is incomplete", () => {
+  jest.spyOn(global, "alert").mockImplementation(() => {});
+
+  render(
+    <Router>
+      <Signp />
+    </Router>
+  );
+
+  // Laisser certains champs vides
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Prénom/i), {
+    target: { value: "John" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Nom/i), {
+    target: { value: "Doe" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Email/i), {
+    target: { value: "" }, // Email vide
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Entrer votre Mot de passe/i), {
+    target: { value: "password123" },
+  });
+  fireEvent.change(
+    screen.getByPlaceholderText(/Confirmer votre mot de passe/i),
+    {
+      target: { value: "password123" },
+    }
+  );
+  fireEvent.change(
+    screen.getByPlaceholderText(/Entrer votre numéro de téléphone/i),
+    {
+      target: { value: "1234567890" },
+    }
+  );
+
+  // Clic sur le bouton "Créer un compte"
+  fireEvent.click(screen.getByRole("button", { name: /Créer un compte/i }));
+
+  // Vérifier que l'alerte pour le champ vide (email) est affichée
+  expect(global.alert).toHaveBeenCalledWith("Veuillez remplir le champ email");
 
   global.alert.mockRestore();
 });
