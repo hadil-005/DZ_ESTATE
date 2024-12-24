@@ -30,7 +30,7 @@ router.post('/like', addLike);
 router.post('/save', saveProperty);
 
 router.post('/userhis' , his);
-router.get('/home/:user_id', getit);
+router.get('/home/', getit);
 
 
 router.post('/createMessage', createMessage); 
