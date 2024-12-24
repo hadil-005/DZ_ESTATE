@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import Signup from "../pages/Signup";
 import Signin from "../pages/Signin";
+import Home from "../components/Home/home";
+import Footer from '../components/Footer/Footer';
 import { Navbar } from "@material-tailwind/react";
 import { Post } from "../pages/Post/Post";
 import { Chat } from "../pages/Chat/Chat";
@@ -18,7 +20,9 @@ const Routers = () => {
 
   return (
     <Routes>
+      <Route path="/" element={<Home />} />
       <Route path="/navbar" element={<Navbar />} />
+      <Route path="/footer" element={<Footer />} />
       <Route path="/chat" element={<Chat />} />
       <Route path="/post" element={<Post />} />
       <Route path="/disc" element={<Discussion />} />

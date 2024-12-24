@@ -1,9 +1,13 @@
 const express = require('express');
-const app = express();
+const cors = require("cors");
 const multer = require('multer');
 const path = require('path');
+const bodyParser = require("body-parser");
 const userRoutes = require('./route');
-const bodyParser = require('body-parser');
+const app = express();
+
+
+app.use(cors());
 const upload =  require('./route');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser')
@@ -42,7 +46,9 @@ app.use('/api/property', userRoutes);
 app.use('/api/history', userRoutes);
 app.use('/api/messeges', userRoutes);
 
-const PORT = 3303;
+
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
