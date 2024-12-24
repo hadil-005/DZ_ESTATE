@@ -6,11 +6,44 @@ const bodyParser = require("body-parser");
 const userRoutes = require('./route');
 const app = express();
 
-
-app.use(cors());
-const upload =  require('./route');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser')
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const session = require('express-session');
+const passport = require('passport');
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(cors());
+
+const GOOGLE_CLIENT_ID = "408478996991-prag7l93m9v845ms2ft7oighd3o17edh.apps.googleusercontent.com";
+const GOOGLE_CLIENT_SECRET = " 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";
+
+app.use(session({
+  secret: 'd1565e2de497088d875c5b66f985b5245f559212a48773f1f6781ff76d501760f9558a3a5f8cee8d118b0abc9d35bd046f41579b2cfc79d420370d9ae570b26f',
+  resave: false,
+  saveUninitialized: true
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new GoogleStrategy({
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://127.0.0.1:3000/auth/google/callback"
+}, (accessToken, refreshToken, profile, done) => {
+    return done(null, profile);
+}));
+
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+app.get("/auth/google", passport.authenticate("google", { 
+  scope: ["profile", "email"] 
+}));
+
+
+const upload =  require('./route');
 
 app.use(cookieParser()); 
 app.use(express.json());
