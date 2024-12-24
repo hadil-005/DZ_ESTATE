@@ -35,27 +35,27 @@ function FormulaireSelect() {
           <div className="flex flex-col space-y-2">
             <div className="flex items-center space-x-3">
               <label
-                htmlFor="nombreChambres"
+                htmlFor="nombreChambres1"
                 className="block text-sm font-semibold"
               >
                 Nombre de chambres
               </label>
               <input
                 type="number"
-                id="nombreChambres"
+                id="nombreChambres1"
                 className="mt-1 block w-1/12 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
               />
             </div>
             <div className="flex items-center space-x-3">
               <label
-                htmlFor="nombreSallesDeBains"
+                htmlFor="nombreSallesDeBains1"
                 className="block text-sm font-semibold"
               >
                 Nombre de salles de bains
               </label>
               <input
                 type="number"
-                id="nombreSallesDeBains"
+                id="nombreSallesDeBains1"
                 className="mt-1 block w-1/12 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
               />
             </div>
@@ -66,27 +66,27 @@ function FormulaireSelect() {
           <div className="flex flex-col space-y-2">
             <div className="flex items-center space-x-3">
               <label
-                htmlFor="nombreChambres"
+                htmlFor="nombreChambres2"
                 className="block text-sm font-semibold"
               >
                 Nombre de chambres
               </label>
               <input
                 type="number"
-                id="nombreChambres"
+                id="nombreChambres2"
                 className="mt-1 block w-1/12 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
               />
             </div>
             <div className="flex items-center space-x-3">
               <label
-                htmlFor="nombreSallesDeBains"
+                htmlFor="nombreSallesDeBains2"
                 className="block text-sm font-semibold"
               >
                 Nombre de salles de bains
               </label>
               <input
                 type="number"
-                id="nombreSallesDeBains"
+                id="nombreSallesDeBains2"
                 className="mt-1 block w-1/12 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
               />
             </div>
@@ -97,41 +97,41 @@ function FormulaireSelect() {
           <div className="flex flex-col space-y-2">
             <div className="flex items-center space-x-3">
               <label
-                htmlFor="nombreChambres"
+                htmlFor="nombreChambres4"
                 className="block text-sm font-semibold"
               >
                 Nombre de chambres
               </label>
               <input
                 type="number"
-                id="nombreChambres"
+                id="nombreChambres4"
                 className="mt-1 block w-1/12 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
               />
             </div>
             <div className="flex items-center space-x-3">
               {" "}
               <label
-                htmlFor="nombreSallesDeBains"
+                htmlFor="nombreSallesDeBains4"
                 className="block text-sm font-semibold"
               >
                 Nombre de salles de bains
               </label>
               <input
                 type="number"
-                id="nombreSallesDeBains"
+                id="nombreSallesDeBains4"
                 className="mt-1 block w-1/12 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
               />
             </div>
             <div className="flex items-center space-x-3">
               <label
-                htmlFor="jardinVilla"
+                htmlFor="jardin4"
                 className="block text-sm font-semibold"
               >
                 Surface du jardin (en m²)
               </label>
               <input
                 type="number"
-                id="jardinVilla"
+                id="jardin4"
                 className="mt-1 block w-1/12 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
               />
             </div>
