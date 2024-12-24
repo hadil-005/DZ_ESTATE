@@ -4,14 +4,18 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import drapeau from "../../assets/drapeau.png";
 import profile from "../../assets/profil.png";
-import { Navbar as MaterialNavbar, Typography, Button, IconButton } from "@material-tailwind/react"; // Importez le composant Navbar de Material Tailwind
-import "../Multilingue/i18n"
-
+import {
+  Navbar as MaterialNavbar,
+  Typography,
+  Button,
+  IconButton,
+} from "@material-tailwind/react"; // Importez le composant Navbar de Material Tailwind
+import "../Multilingue/i18n";
 
 export const Navbar = () => {
-  const { i18n ,t} = useTranslation(); // Utilisez i18n de react-i18next
+  const { i18n, t } = useTranslation(); // Utilisez i18n de react-i18next
   const [click, setClick] = useState(false);
- 
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // État pour la liste déroulante
   const [hoverMessage, setHoverMessage] = useState(""); // État pour le message
   // Langue actuelle, par défaut en français
@@ -45,7 +49,6 @@ export const Navbar = () => {
 
   const linkss = [{ name: t("publier"), link: "post" }];
   const links1 = [{ name: t("login"), link: "signin" }];
- 
 
   return (
     <MaterialNavbar

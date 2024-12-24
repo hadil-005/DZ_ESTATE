@@ -58,15 +58,18 @@ const Signp = () => {
     try {
       // Appel API vers le backend pour créer un utilisateur
       console.log("Tentative d'envoi des données au backend...");
-      const response = await axios.post("http://127.0.0.1:3000/api/users/signup", {
-        first_name: formData.first_name,
-        family_name: formData.family_name,
-        email: formData.email,
-        password: formData.password,
-        phone_number: formData.phone_number,
-      });
-       console.log("Tentative d'envoi des données au backend...");
-       console.log("Réponse du serveur :", response);
+      const response = await axios.post(
+        "http://127.0.0.1:3000/api/users/signup",
+        {
+          first_name: formData.first_name,
+          family_name: formData.family_name,
+          email: formData.email,
+          password: formData.password,
+          phone_number: formData.phone_number,
+        }
+      );
+      console.log("Tentative d'envoi des données au backend...");
+      console.log("Réponse du serveur :", response);
       // Si l'utilisateur est créé avec succès
       console.log("Utilisateur créé :", response.data);
       navigate("/success");
