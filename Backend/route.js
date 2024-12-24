@@ -35,7 +35,7 @@ router.post('/userhis' , his);
 router.post('/createMessage', createMessage); 
 
 router.get('/getMessages', getMessages);  
-router.get('/home/:user_id', getit);
+router.get('/home/', getit);
 
 router.delete('/:id/deleteit', deleteProperty);
 module.exports = router;

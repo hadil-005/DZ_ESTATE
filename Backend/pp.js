@@ -47,7 +47,7 @@ app.use('/api/history', userRoutes);
 app.use('/api/messeges', userRoutes);
 
 
-const PORT = 3000;
+const PORT = 3434;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

@@ -545,18 +545,38 @@ const getMessages = async (req, res) => {
 };
 
 const getit = async (req, res) => {
-  const { user_id } = req.params;
-  id = user_id
+  const token = req.cookies.token;  // Get the token from the cookies
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided, please login' });
+  }
+
   try {
-    const result = await pool.query('SELECT first_name, family_name FROM users WHERE id = $1', [id]);
-    
+    // Verify the JWT token to get the user ID
+    const decoded = jwt.verify(token, secret);  // Decode the token using the same secret
+    const userId = decoded.id;  // Get the user ID from the decoded token
+
+    // Query to search for the user by ID
+    const result = await pool.query('SELECT first_name, family_name FROM users WHERE id = $1', [userId]);
+
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    // Send the found user details as the response
     res.json(result.rows[0]);
   } catch (err) {
     console.error('Error executing query', err.stack);
+
+    // Handle JWT errors specifically
+    if (err.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token has expired, please log in again' });
+    }
+
     res.status(500).json({ message: 'Internal server error' });
   }
 };
