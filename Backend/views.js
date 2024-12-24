@@ -2,7 +2,19 @@ const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 const multer = require('multer');
 const path = require('path');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv')
+const session = require('express-session');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const cookieParser = require('cookie-parser')
+const crypto = require('crypto');
+const secret = crypto.randomBytes(64).toString('hex');
+console.log(secret);
 
+
+
+// 
 const pool = new Pool({
   connectionString: 'postgresql://DZestate_owner:ZMrytvCKhe04@ep-soft-cell-a5j0gqje.us-east-2.aws.neon.tech/DZestate?sslmode=require',
 });
@@ -32,7 +44,27 @@ async function signup(req, res) {
       phone_number,
     ]);
 
-    res.status(201).json({ message: 'User signed up successfully', user: newUser.rows[0] });
+    const token = jwt.sign(
+      { id: newUser.rows[0].id, first_name, family_name, email },
+      secret,
+      { expiresIn: '1h' } 
+    );
+
+    res.cookie('token', token, {
+      httpOnly: true,  
+      secure: process.env.NODE_ENV === 'production',  
+      maxAge: 3600000,  
+      sameSite: 'Strict', 
+    });
+
+    res.status(201).json({
+      message: 'User signed up successfully',
+      user: {
+        first_name,
+        family_name,
+        email,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -43,24 +75,59 @@ async function login(req, res) {
     const { email, password } = req.body;
 
     const findUserQuery = 'SELECT * FROM users WHERE email = $1';
-    const userResult = await pool.query(findUserQuery, [email]);
+    const user = await pool.query(findUserQuery, [email]);
 
-    if (userResult.rows.length === 0) {
-      return res.status(404).json({ message: 'Invalid email or password' });
+    if (user.rows.length === 0) {
+      return res.status(400).json({ message: 'User not found' });
     }
 
-    const user = userResult.rows[0];
+    const isMatch = await bcrypt.compare(password, user.rows[0].password);
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({ message: 'Invalid password or email' });
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    res.status(200).json({ message: 'Login successful', user });
+    const token = jwt.sign(
+      { id: user.rows[0].id, first_name: user.rows[0].first_name, family_name: user.rows[0].family_name, email },
+      secret,
+      { expiresIn: '1h' }
+    );
+
+    res.cookie('token', token, {
+      httpOnly: true,  
+      secure: process.env.NODE_ENV === 'production',  
+      maxAge: 3600000, 
+      sameSite: 'Strict',  
+    });
+
+    res.status(200).json({
+      message: 'Login successful',
+      user: {
+        first_name: user.rows[0].first_name,
+        family_name: user.rows[0].family_name,
+        email,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 }
+
+function authenticate(req, res, next) {
+  const token = req.cookies.token;  
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided, authorization denied' });
+  }
+
+  jwt.verify(token, secret, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: 'Token is not valid' });
+    }
+    req.user = decoded; 
+  });
+}
+
 
 
 const storage = multer.diskStorage({
@@ -173,13 +240,10 @@ const zz = (req, res) => {
   console.log(req.files); 
   const { title, description, price, location, property_type, area, transaction_status, user_id } = req.body;
 
-  // Map the uploaded files to URLs
   const photoUrls = req.files.map(file => `/uploads/${file.filename}`);
   
-  // Log to ensure photoUrls is correctly populated
   console.log(photoUrls);
 
-  // SQL query to insert property with photo URLs as an array
   const query = `
     INSERT INTO property (title, description, price, location, property_type, area, transaction_status, user_id, photo_urls)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
@@ -193,7 +257,6 @@ const zz = (req, res) => {
     } else {
       const createdProperty = result.rows[0];
 
-      // Log the result to ensure photo_urls is correctly returned
       console.log(createdProperty.photo_urls);
 
       res.status(201).json({
@@ -271,18 +334,17 @@ const getRandomComments = async (req, res) => {
     res.status(500).json({ error: 'Error retrieving random comments' });
   }
 };
-const jwt = require('jsonwebtoken');
 
-const authenticate = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1];
-  if (!token) return res.status(403).json({ message: 'Token required' });
+// const authenticate = (req, res, next) => {
+//   const token = req.headers['authorization']?.split(' ')[1];
+//   if (!token) return res.status(403).json({ message: 'Token required' });
 
-  jwt.verify(token, 'your-secret-key', (err, user) => {
-    if (err) return res.status(403).json({ message: 'Invalid token' });
-    req.user = user;
-    next();
-  });
-};
+//   jwt.verify(token, 'your-secret-key', (err, user) => {
+//     if (err) return res.status(403).json({ message: 'Invalid token' });
+//     req.user = user;
+//     next();
+//   });
+// };
 
 const deleteProperty = async (req, res) => {
   const { id } = req.params;
@@ -362,12 +424,15 @@ const saveProperty = async (req, res) => {
   }
 };
 
+
 const his = async (req, res) => {
   const { property_id, buyer_email, new_status } = req.body;
+  
+  console.log('Starting transaction processing...');
 
   try {
     const buyerResult = await pool.query(
-      'SELECT id, first_name, family_name FROM users WHERE email = $1',
+      'SELECT id FROM users WHERE email = $1',
       [buyer_email]
     );
 
@@ -376,8 +441,8 @@ const his = async (req, res) => {
     }
 
     const buyer_id = buyerResult.rows[0].id;
-    const buyer_first_name = buyerResult.rows[0].first_name;
-    const buyer_family_name = buyerResult.rows[0].family_name;
+
+    console.log('Buyer retrieved, buyer_id:', buyer_id);
 
     const updatePropertyResult = await pool.query(
       'UPDATE property SET buyer_id = $1, transaction_status = $2 WHERE id = $3 RETURNING id',
@@ -387,33 +452,33 @@ const his = async (req, res) => {
     if (updatePropertyResult.rowCount === 0) {
       return res.status(404).json({ message: 'Property not found' });
     }
+
+    console.log('Property updated successfully');
+
+    const checkSavedPostResult = await pool.query(
+      'SELECT * FROM saved_posts WHERE property_id = $1 AND user_id = $2',
+      [property_id, buyer_id]
+    );
+
+    if (checkSavedPostResult.rowCount === 0) {
+      await pool.query(
+        'INSERT INTO saved_posts (user_id, property_id, saved_at) VALUES ($1, $2, NOW())',
+        [buyer_id, property_id]
+      );
+      console.log('Saved post inserted');
+    } else {
+      console.log('Saved post already exists, no insertion needed');
+    }
+
+    return res.status(200).json({ message: 'Transaction completed successfully' });
+
   } catch (err) {
-    console.error(err);
+    console.error('Error processing transaction:', err);
     return res.status(500).json({ message: 'An error occurred while processing the transaction' });
   }
 };
-// const property_id_updated = updatePropertyResult.rows[0].id;
 
 
-// const insertHistoryResult = await pool.query(
-//   'INSERT INTO history (user_id, property_ids) VALUES ($1, $2) RETURNING id, interacted_at',
-//   [buyer_id, [property_id_updated]]
-//  );
-
-//  try { 
-//   if (insertHistoryResult.rowCount > 0) {
-//   return res.status(200).json({
-//     message: 'Property status updated successfully',
-//     historyId: insertHistoryResult.rows[0].id,
-//     interactedAt: insertHistoryResult.rows[0].interacted_at
-//   });
-//  } else {
-//   return res.status(500).json({ message: 'Failed to record history' });
-//  }
-//  } catch (err) {
-//   console.error(err);
-//   return res.status(500).json({ message: 'An error occurred' });
-// }
 const updateProperty = async (req, res) => {
   const { property_id, buyer_id, new_status } = req.body;
 
@@ -428,7 +493,7 @@ const updateProperty = async (req, res) => {
     if (updatePropertyResult.rowCount === 0) {
       return res.status(404).json({ message: 'Property not found' });
     }
-
+    
     return res.status(200).json({
       message: 'Property status updated successfully',
       propertyId: updatePropertyResult.rows[0].id
