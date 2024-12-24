@@ -1,5 +1,5 @@
 const express = require('express');
-const { signup, login,getMessages,createMessage, createPostForProperty,saveProperty, his ,addLike ,authenticate,  deleteProperty ,addComment, cc, zz ,getRandomProperties } = require('./views');
+const { signup, login,getit ,getMessages,createMessage, createPostForProperty,saveProperty, his ,addLike ,authenticate,  deleteProperty ,addComment, cc, zz ,getRandomProperties } = require('./views');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
@@ -35,6 +35,7 @@ router.post('/userhis' , his);
 router.post('/createMessage', createMessage); 
 
 router.get('/getMessages', getMessages);  
+router.get('/home/:user_id', getit);
 
 router.delete('/:id/deleteit', deleteProperty);
 module.exports = router;
