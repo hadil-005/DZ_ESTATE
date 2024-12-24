@@ -5,16 +5,23 @@ const path = require('path');
 const bodyParser = require("body-parser");
 const userRoutes = require('./route');
 const app = express();
-
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser')
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const passport = require('passport');
+app.use(cookieParser()); 
+app.use(express.json());
 app.use(bodyParser.json());
-app.use(cookieParser());
 app.use(cors());
 
+
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: 'postgresql://DZestate_owner:ZMrytvCKhe04@ep-soft-cell-a5j0gqje.us-east-2.aws.neon.tech/DZestate?sslmode=require',
+});
+
+const db = pool;
 const GOOGLE_CLIENT_ID = "408478996991-prag7l93m9v845ms2ft7oighd3o17edh.apps.googleusercontent.com";
 const GOOGLE_CLIENT_SECRET = " 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";
 
@@ -43,34 +50,13 @@ app.get("/auth/google", passport.authenticate("google", {
 }));
 
 
-const upload =  require('./route');
-
-app.use(cookieParser()); 
-app.use(express.json());
-app.use(bodyParser.json());
 
 app.post('/logout', (req, res) => {
   res.clearCookie('token');  // Clears the token cookie
   res.status(200).json({ message: 'Logged out successfully' });
 });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); }
-});
 
-
-// app.post('/upload', upload.array('photos', 10), (req, res) => {
-//   if (!req.files || req.files.length === 0) {
-//     return res.status(400).json({ error: 'No photos uploaded' });
-//   }
-
-//   const photoUrls = req.files.map(file => `/uploads/${file.filename}`);
-//   res.status(200).json({ message: 'Files uploaded successfully', photoUrls });
-// });
 
 
 app.use('/api/users', userRoutes);

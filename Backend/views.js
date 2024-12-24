@@ -130,17 +130,6 @@ function authenticate(req, res, next) {
 
 
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } });
-
 const createPostForProperty = async (req, res) => {
   try {
     const { title, description, price, location, property_type, area, transaction_status, user_id } = req.body;
@@ -171,111 +160,6 @@ const createPostForProperty = async (req, res) => {
     res.status(500).json({ message: "Error creating property", error: error.message });
   }
 };
-
-const createPostForPropertyy = async (req, res) => {
-  try {
-    const { title, description, price, location, property_type, area, transaction_status, user_id } = req.body;
-
-    if (!user_id) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
-
-    if (!title || !description || !price || !location || !property_type || !area || !transaction_status) {
-      return res.status(400).json({
-        message: 'All fields are required: title, description, price, location, property_type, area, and transaction_status.'
-      });
-    }
-
-    const result = await pool.query(
-      `INSERT INTO property (title, description, price, location, property_type, area, transaction_status, user_id)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-      [title, description, price, location, property_type, area, transaction_status, user_id]
-    );
-
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error("Error during property creation:", error);
-    res.status(500).json({ message: "Error creating property", error: error.message });
-  }
-};
-
-const cc = (req, res) => {
-  const { title, description, price, location, property_type, area, transaction_status, user_id } = req.body;
-  
-  const photoUrls = req.files.map(file => `/uploads/${file.filename}`);
-
-  const query = `
-    INSERT INTO property (title, description, price, location, property_type, area, transaction_status, user_id, photos)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
-  `;
-  const values = [title, description, price, location, property_type, area, transaction_status, user_id, photoUrls];
-
-  pool.query(query, values, (err, result) => {
-    if (err) {
-      console.error('Error during property creation:', err);
-      res.status(500).json({ error: 'Error during property creation' });
-    } else {
-      const createdProperty = result.rows[0];
-      res.status(201).json({
-        id: createdProperty.id,
-        title: createdProperty.title,
-        description: createdProperty.description,
-        price: createdProperty.price,
-        location: createdProperty.location,
-        property_type: createdProperty.property_type,
-        area: createdProperty.area,
-        transaction_status: createdProperty.transaction_status,
-        user_id: createdProperty.user_id,
-        photos: createdProperty.photos,
-      });
-    }
-  });
-};
-const zz = (req, res) => {
-  console.log("tktk");
-  console.log(req.files); 
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).json({ error: 'No photos uploaded' });
-  }
-  console.log(req.files); 
-  const { title, description, price, location, property_type, area, transaction_status, user_id } = req.body;
-
-  const photoUrls = req.files.map(file => `/uploads/${file.filename}`);
-  
-  console.log(photoUrls);
-
-  const query = `
-    INSERT INTO property (title, description, price, location, property_type, area, transaction_status, user_id, photo_urls)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
-  `;
-  const values = [title, description, price, location, property_type, area, transaction_status, user_id, photoUrls];
-
-  pool.query(query, values, (err, result) => {
-    if (err) {
-      console.error('Error during property creation:', err);
-      res.status(500).json({ error: 'Error during property creation' });
-    } else {
-      const createdProperty = result.rows[0];
-
-      console.log(createdProperty.photo_urls);
-
-      res.status(201).json({
-        id: createdProperty.id,
-        title: createdProperty.title,
-        description: createdProperty.description,
-        price: createdProperty.price,
-        location: createdProperty.location,
-        property_type: createdProperty.property_type,
-        area: createdProperty.area,
-        transaction_status: createdProperty.transaction_status,
-        user_id: createdProperty.user_id,
-        photo_urls: createdProperty.photo_urls, // Return the photo URLs as an array
-      });
-    }
-  });
-};
-
-
 
 const addComment = async (req, res) => {
   const { content } = req.body;
@@ -335,16 +219,6 @@ const getRandomComments = async (req, res) => {
   }
 };
 
-// const authenticate = (req, res, next) => {
-//   const token = req.headers['authorization']?.split(' ')[1];
-//   if (!token) return res.status(403).json({ message: 'Token required' });
-
-//   jwt.verify(token, 'your-secret-key', (err, user) => {
-//     if (err) return res.status(403).json({ message: 'Invalid token' });
-//     req.user = user;
-//     next();
-//   });
-// };
 
 const deleteProperty = async (req, res) => {
   const { id } = req.params;
@@ -580,4 +454,8 @@ const getMessages = async (req, res) => {
   }
 };
 
-module.exports = { getit, signup, his, createMessage, getMessages, saveProperty, login, addLike, authenticate, createPostForProperty, addComment, cc, zz, deleteProperty, getRandomProperties, getRandomComments };
+
+
+
+
+module.exports = { getit, signup, his, createMessage, getMessages, saveProperty, login, addLike, authenticate, createPostForProperty, addComment,  deleteProperty, getRandomProperties, getRandomComments };
