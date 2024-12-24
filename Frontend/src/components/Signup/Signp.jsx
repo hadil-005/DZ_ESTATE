@@ -43,6 +43,11 @@ const Signp = () => {
       alert("Veuillez entrer un numéro de téléphone valide (10 chiffres)");
       return;
     }
+
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      alert("Veuillez entrer un email valide");
+      return;
+    }
     // Vérifier si les mots de passe correspondent
     if (formData.password !== formData.confirmation) {
       alert("Les mots de passe ne correspondent pas");
