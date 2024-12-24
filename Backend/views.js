@@ -504,6 +504,22 @@ const updateProperty = async (req, res) => {
   }
 };
 
+const getit = async (req, res) => {
+  const { user_id } = req.params;
+  id = user_id
+  try {
+    const result = await pool.query('SELECT first_name, family_name FROM users WHERE id = $1', [id]);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error executing query', err.stack);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 const createMessage = async (req, res) => {
   const { sender_id, receiver_id, content } = req.body;
@@ -544,4 +560,4 @@ const getMessages = async (req, res) => {
   }
 };
 
-module.exports = { signup, his, createMessage, getMessages, saveProperty, login, addLike, authenticate, createPostForProperty, addComment, cc, zz, deleteProperty, getRandomProperties, getRandomComments };
+module.exports = { getit, signup, his, createMessage, getMessages, saveProperty, login, addLike, authenticate, createPostForProperty, addComment, cc, zz, deleteProperty, getRandomProperties, getRandomComments };
