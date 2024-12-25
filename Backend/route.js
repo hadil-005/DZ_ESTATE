@@ -1,41 +1,34 @@
 const express = require('express');
-const { signup, login,getit ,getMessages,createMessage, createPostForProperty,saveProperty, his ,addLike ,authenticate,  deleteProperty ,addComment, cc, zz ,getRandomProperties } = require('./views');
+const { signup, login,getMessages,getit , logout, getPropertyDetails ,getLikedProperties,getSavedProperties,getThreeRandomProperties,searchProperties,  createMessage,saveProperty, his ,addLike ,authenticate,  deleteProperty ,addComment, cc, zz ,getRandomProperties } = require('./views');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); }
-});
-
-const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }); // Max file size 5MB
-
-
 router.post('/signup', signup);
 router.post('/login', login);
-router.post('/zz', createPostForProperty);
-// router.post('/:user_id/prop', upload.array('photos', 5), createPostForProperty);
 router.post('/:user_id/comment', addComment);
-
+router.post('/logout', logout);
+//_________________________________________
 router.get('/random', getRandomProperties);
 router.get('/randomp', getRandomProperties);
 router.get('/randomc', getRandomProperties);
-// router.post('/:user_id/cc', upload.array('photos', 5), zz);
-router.post('/like', addLike);
-router.post('/save', saveProperty);
-
-router.post('/userhis' , his);
-
-
-router.post('/createMessage', createMessage); 
-
-router.get('/getMessages', getMessages);  
-router.get('/home/', getit);
+// _______________________________________________________
 
 router.delete('/:id/deleteit', deleteProperty);
+router.post('/like', addLike);
+router.post('/save', saveProperty);
+router.post('/userhis' , his);
+router.post('/createMessage', createMessage); 
+router.get('/home', getit);
+router.get('/searchProperties', searchProperties);
+router.get('/getThreeRandomProperties', getThreeRandomProperties);
+router.get('/:user_id/getLikedProperties', getLikedProperties);
+router.get('/getPropertyDetails/:property_id', getPropertyDetails);
+router.get('/:user_id/getSavedProperties', getSavedProperties);
+
+
+
+// ____________________________________________
+router.get('/getMessages', getMessages);  
 module.exports = router;
