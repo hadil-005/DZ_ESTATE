@@ -65,7 +65,7 @@ async function signup(req, res) {
         email,
       },
     });
-  } catch (error) {ù
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
 }
