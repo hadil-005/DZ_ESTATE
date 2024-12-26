@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import "../../components/Multilingue/i18n";
+import axios from "axios";
 
 const PhotoUploader = ({ onUpload }) => {
    const { i18n, t } = useTranslation(); // Utilisez i18n de react-i18next
