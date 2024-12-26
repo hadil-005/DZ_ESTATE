@@ -3,8 +3,12 @@ import { Navbar } from "../../components/Navbar/Navbar";
 import PhotoUploader from "./PhotoUploader";
 import VideoUploader from "./VideoUploader";
 import FormulaireSelect from "./FormulaireSelect";
+import { useTranslation } from "react-i18next";
+import  "../../components/Multilingue/i18n"
+import axios from "axios";
 
 function Post() {
+  const { i18n, t } = useTranslation(); // Utilisez i18n de react-i18next
   const [search, setSearch] = useState(""); // État pour la recherche
   const [showList, setShowList] = useState(false); // État pour afficher ou masquer la liste
   const [photos, setPhotos] = useState([]); // État pour les photos
@@ -156,17 +160,17 @@ function Post() {
       <Navbar />
       <div className="mt-24 ml-12 flex flex-col ">
         <h1 className="text-[#1C84FF] text-left text-[40px] font-bold mb-8">
-          Publier votre bien
+          {t("Publier")}
         </h1>
         <div className="flex space-x-60 w-full h-screen overflow-auto mt-6">
           <div className="space-y-3 ml-32 w-full lg:w-1/2 flex flex-col p-6 lg:p-1 lg:pt-4">
             <div className="flex flex-col space-y-2 ">
               <label className="font-semibold " htmlFor="wilaya">
-                Wilaya
+                {t("Wilaya")}
               </label>
               <input
                 type="text"
-                placeholder="veuillez saisie la wilaya "
+                placeholder={t("wilaya")}
                 id="wilaya"
                 value={search}
                 onChange={handleInputChange}
@@ -189,10 +193,10 @@ function Post() {
             </div>
             <div className="flex flex-col space-y-2 ">
               <label htmlFor="commune" className="font-semibold">
-                Commune
+                {t("Commune")}
               </label>
               <input
-                placeholder="veuillez saisie la commune"
+                placeholder={t("commune")}
                 id="commune"
                 type="text"
                 className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
@@ -201,10 +205,10 @@ function Post() {
 
             <div className="flex flex-col space-y-2 ">
               <label htmlFor="addresseM" className="font-semibold ">
-                Addresse(Celle de Google Maps)
+                {t("Addresse")}
               </label>
               <input
-                placeholder="veuillez saisie l'addresse"
+                placeholder={t("addresse")}
                 id="addresseM"
                 type="text"
                 className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
@@ -212,10 +216,10 @@ function Post() {
             </div>
             <div className="flex flex-col space-y-2 ">
               <label htmlFor="titre" className="font-semibold ">
-                Titre de publication
+                {t("Titre")}
               </label>
               <input
-                placeholder="veuillez saisie le quartier"
+                placeholder={t("titre")}
                 id="titre"
                 type="text"
                 className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
@@ -223,10 +227,10 @@ function Post() {
             </div>
             <div className="flex flex-col space-y-2">
               <label htmlFor="description" className="font-semibold ">
-                Description
+                {t("Description")}
               </label>
               <textarea
-                placeholder="veuillez ajouter une description"
+                placeholder={t("description")}
                 id="description"
                 type="text"
                 className="border border-[#9F9F9F] transition-all duration-150 ease-in-out rounded-md p-1 mb-4 w-3/4"
@@ -241,10 +245,10 @@ function Post() {
               <FormulaireSelect onSelect={handleSelect} />
               <div className="flex flex-col ml-2 space-y-2">
                 <label htmlFor="surface" className="font-semibold ">
-                  Surface
+                  {t("Surface")}
                 </label>
                 <input
-                  placeholder="veuillez saisie votre la surface (m²)"
+                  placeholder={t("surface")}
                   id="surface"
                   type="number"
                   className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
@@ -252,10 +256,10 @@ function Post() {
               </div>
               <div className="flex flex-col ml-2 space-y-2">
                 <label htmlFor="prix" className="font-semibold ">
-                  Prix
+                  {t("Prix")}
                 </label>
                 <input
-                  placeholder="veuillez saisie votre le prix (DA)"
+                  placeholder={t("prix")}
                   id="prix"
                   type="number"
                   className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
@@ -271,7 +275,7 @@ function Post() {
                     onChange={() => handleCheckboxChange("avendre")}
                   ></input>
                   <label htmlFor="avendre" className="font-semibold ">
-                    A vendre
+                    {t("vendre")}
                   </label>
                 </div>
                 <div className="ml-2 flex items-center space-x-3">
@@ -283,7 +287,7 @@ function Post() {
                     className=" accent-green-600"
                   ></input>
                   <label htmlFor="alouer" className="font-semibold">
-                    A louer
+                    {t("louer")}
                   </label>
                 </div>
               </div>
@@ -295,7 +299,7 @@ function Post() {
                 onClick={handleSubmit}
                 className="bg-[#1C84FF] hover:bg-blue-700 transition  text-white font-bold text-[20px] rounded-md w-28 h-12 ml-[60%]"
               >
-                Publier
+                 {t("publier")}
               </button>
             </div>
           </div>

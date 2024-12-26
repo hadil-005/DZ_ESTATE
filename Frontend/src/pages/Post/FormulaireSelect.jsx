@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import "../../components/Multilingue/i18n";
 
 function FormulaireSelect({ onSelect }) {
+  const { i18n, t } = useTranslation(); // Utilisez i18n de react-i18next
   const [typeBien, setTypeBien] = useState("");
 
   // Fonction pour gérer le changement de sélection
@@ -17,7 +20,7 @@ function FormulaireSelect({ onSelect }) {
         {/* Select pour choisir le type de bien */}
         <div className="flex flex-col w-full">
           <label htmlFor="typeBien" className="font-semibold">
-            Type
+            {t("Type")}
           </label>
           <select
             id="typeBien"
@@ -25,11 +28,11 @@ function FormulaireSelect({ onSelect }) {
             value={typeBien}
             onChange={handleChange}
           >
-            <option value="">Sélectionner</option>
-            <option value="1">Appartement</option>
-            <option value="2">Maison</option>
-            <option value="3">Studio</option>
-            <option value="4">Villa</option>
+            <option value=""> {t("select")}</option>
+            <option value="1"> {t("appa")}</option>
+            <option value="2"> {t("mai")}</option>
+            <option value="3"> {t("stu")}</option>
+            <option value="4"> {t("villa")}</option>
           </select>
         </div>
 
@@ -41,7 +44,7 @@ function FormulaireSelect({ onSelect }) {
                 htmlFor="nombreChambres1"
                 className="block text-sm font-semibold"
               >
-                Nombre de chambres
+                {t("ch")}
               </label>
               <input
                 type="number"
@@ -59,7 +62,7 @@ function FormulaireSelect({ onSelect }) {
                 htmlFor="nombreChambres2"
                 className="block text-sm font-semibold"
               >
-                Nombre de chambres
+             {t("ch")}
               </label>
               <input
                 type="number"
@@ -77,7 +80,7 @@ function FormulaireSelect({ onSelect }) {
                 htmlFor="nombreChambres4"
                 className="block text-sm font-semibold"
               >
-                Nombre de chambres
+             {t("ch")}
               </label>
               <input
                 type="number"
@@ -88,7 +91,7 @@ function FormulaireSelect({ onSelect }) {
 
             <div className="flex items-center space-x-3">
               <label htmlFor="jardin4" className="block text-sm font-semibold">
-                Surface du jardin (en m²)
+                {t("jar")}
               </label>
               <input
                 type="number"

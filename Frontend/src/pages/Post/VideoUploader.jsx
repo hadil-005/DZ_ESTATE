@@ -1,6 +1,9 @@
 import React, { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import "../../components/Multilingue/i18n";
 
 const VideoUploader = () => {
+   const { i18n, t } = useTranslation(); // Utilisez i18n de react-i18next
   const [videos, setVideos] = useState([]); // Liste des fichiers vidéos ajoutés
   const fileInputRef = useRef(null); // Référence pour l'élément input file
 
@@ -30,7 +33,9 @@ const VideoUploader = () => {
 
   return (
     <div className="ml-2 w-3/4 space-y-2">
-      <p className="block text-[16px] font-semibold mb-2">Ajouter des vidéos</p>
+      <p className="block text-[16px] font-semibold mb-2">
+       {t("Vidéo")}
+      </p>
 
       {/* Input file masqué pour accepter uniquement les fichiers vidéo */}
       <input
@@ -68,7 +73,7 @@ const VideoUploader = () => {
         {/* Dernière case avec le bouton "+" */}
         <div className="flex justify-between items-center p-2">
           <span className="text-sm text-gray-500 italic w-3/4">
-            Ajouter une vidéo
+            {t("vidéo")}
           </span>
           <button
             onClick={openFileSelector}

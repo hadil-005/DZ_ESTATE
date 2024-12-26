@@ -1,6 +1,9 @@
 import React, { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import "../../components/Multilingue/i18n";
 
 const PhotoUploader = ({ onUpload }) => {
+   const { i18n, t } = useTranslation(); // Utilisez i18n de react-i18next
   const [photos, setPhotos] = useState([]); // Liste des fichiers ajoutés
   const fileInputRef = useRef(null); // Référence pour l'élément input file
 
@@ -29,7 +32,10 @@ const PhotoUploader = ({ onUpload }) => {
 
   return (
     <div className="ml-2 w-3/4 space-y-2">
-      <p className="block text-[16px] font-semibold mb-2">Ajouter des photos</p>
+      <p className="block text-[16px] font-semibold mb-2">
+        {" "}
+        {t("Photos")}
+      </p>
 
       {/* Input file masqué */}
       <input
@@ -67,7 +73,7 @@ const PhotoUploader = ({ onUpload }) => {
         {/* Dernière case avec le bouton "+" */}
         <div className="flex justify-between items-center p-2">
           <span className="text-sm text-gray-500 italic w-3/4">
-            Ajouter une photo
+            {t("photo")}
           </span>
           <button
             onClick={openFileSelector}
