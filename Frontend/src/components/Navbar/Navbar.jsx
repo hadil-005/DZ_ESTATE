@@ -144,7 +144,7 @@ export const Navbar = () => {
       >
         {links1.map((link, idx) => (
           <li key={idx} className="flex items-center space-x-4">
-            <img className="mb-1 hover:fill-white" src={profile} alt="Profil" />
+            <img  className="mb-1 hover:fill-white" src={profile} alt="Profil" />
             <Link
               onClick={closeMenu}
               to={`/${link.link}`}
