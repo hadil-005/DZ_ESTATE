@@ -8,7 +8,8 @@ const Signp = () => {
   // const onSuccess = (credentialResponse) => {
   //   console.log(credentialResponse.credential);
   // };
-
+ 
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     first_name: "",
@@ -55,28 +56,43 @@ const Signp = () => {
     }
     console.log("Données avant l'envoi :", formData);
 
-    try {
-      // Appel API vers le backend pour créer un utilisateur
-      console.log("Tentative d'envoi des données au backend...");
-      const response = await axios.post(
-        "http://127.0.0.1:3000/api/users/signup",
-        {
-          first_name: formData.first_name,
-          family_name: formData.family_name,
-          email: formData.email,
-          password: formData.password,
-          phone_number: formData.phone_number,
-        }
-      );
-      console.log("Tentative d'envoi des données au backend...");
-      console.log("Réponse du serveur :", response);
-      // Si l'utilisateur est créé avec succès
-      console.log("Utilisateur créé :", response.data);
-      navigate("/success");
-    } catch (error) {
-      console.error("Erreur lors de l'inscription :", error);
-      alert("Erreur lors de l'inscription. Veuillez réessayer.");
-    }
+   try {
+     console.log("Tentative d'envoi des données au backend...");
+     const response = await axios.post(
+       "http://127.0.0.1:3000/api/users/signup",
+       {
+         first_name: formData.first_name,
+         family_name: formData.family_name,
+         email: formData.email,
+         password: formData.password,
+         phone_number: formData.phone_number,
+       }
+     );
+     console.log("Réponse du serveur :", response);
+
+     // Récupérer le token et les informations de l'utilisateur
+     const token = response.data.token;
+     const userData = response.data.user;
+
+     // Sauvegarder dans localStorage
+     localStorage.setItem("token", token);
+     localStorage.setItem("first_name", userData.first_name);
+     localStorage.setItem("family_name", userData.family_name);
+
+     console.log("Utilisateur créé :", userData);
+     alert("Inscription réussie ! Bienvenue !");
+
+     // Naviguer vers la page d'accueil (Home)
+     navigate("/home");
+   } catch (error) {
+     console.error("Erreur lors de l'inscription :", error);
+     if (error.response && error.response.data) {
+       alert(error.response.data.message); // Message spécifique du backend
+     } else {
+       alert("Erreur inattendue. Veuillez réessayer.");
+     }
+   }
+
   };
 
   return (

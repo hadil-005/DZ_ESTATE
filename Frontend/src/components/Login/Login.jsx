@@ -1,9 +1,12 @@
 import React from "react";
 import axios from "axios";
 import logo from "../../assets/logo.svg";
+import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 
+
 function Login() {
+  const navigate = useNavigate();
   // Fonction de réussite de l'authentification Google
   const handleGoogleSuccess = (credentialResponse) => {
     // Validez le jeton Google côté serveur
@@ -36,18 +39,36 @@ function Login() {
       return;
     }
 
-    try {
-      // Envoi des données au backend
-      const response = await axios.post("http://127.0.0.1:3000/api/users/login", { email, password });
-      console.log("Connexion réussie :", response.data);
-      alert("Connexion réussie !");
-    } catch (error) {
-      console.error(
-        "Erreur lors de la connexion :",
-        error.response?.data || error.message
-      );
-      alert(error.response?.data?.message || "Erreur lors de la connexion.");
-    }
+   try {
+     // Envoi des données au backend
+     const response = await axios.post(
+       "http://127.0.0.1:3000/api/users/login",
+       { email, password }
+     );
+     console.log("Connexion réussie :", response.data);
+
+     // Récupérer le token et les informations de l'utilisateur
+     const token = response.data.token;
+     const userData = response.data.user;
+
+     // Sauvegarder dans localStorage
+     localStorage.setItem("token", token);
+     localStorage.setItem("first_name", userData.first_name);
+     localStorage.setItem("family_name", userData.family_name);
+
+     console.log("Utilisateur connecté :", userData);
+     alert("Connexion réussie !");
+
+     // Naviguer vers la page d'accueil (Home)
+     navigate("/home");
+   } catch (error) {
+     console.error(
+       "Erreur lors de la connexion :",
+       error.response?.data || error.message
+     );
+     alert(error.response?.data?.message || "Erreur lors de la connexion.");
+   }
+
   };
 
   return (
