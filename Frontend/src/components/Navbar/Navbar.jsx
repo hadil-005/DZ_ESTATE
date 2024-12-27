@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
@@ -9,34 +9,47 @@ import {
   Typography,
   Button,
   IconButton,
-} from "@material-tailwind/react"; // Importez le composant Navbar de Material Tailwind
+} from "@material-tailwind/react";
 import "../Multilingue/i18n";
 
 export const Navbar = () => {
-  const { i18n, t } = useTranslation(); // Utilisez i18n de react-i18next
+  const { i18n, t } = useTranslation();
   const [click, setClick] = useState(false);
-
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // État pour la liste déroulante
-  const [hoverMessage, setHoverMessage] = useState(""); // État pour le message
-  // Langue actuelle, par défaut en français
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Liste déroulante
+  const [hoverMessage, setHoverMessage] = useState(""); // Message au survol
   const [currentLang, setCurrentLang] = useState(i18n.language || "fr");
+
+  // Ajouter l'état pour l'utilisateur
+  const [user, setUser] = useState(null);
+
+  // Vérifiez si un utilisateur est connecté à chaque chargement
+  useEffect(() => {
+    const firstName = localStorage.getItem("first_name");
+    const familyName = localStorage.getItem("family_name");
+
+    if (firstName && familyName) {
+      setUser({ first_name: firstName, family_name: familyName });
+    }
+  }, []);
+
   const handleClick = () => setClick(!click);
   const closeMenu = () => setClick(false);
 
-  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen); // Gère l'ouverture/fermeture de la liste
-  // const selectLanguage = (language) => {
-  //   console.log(`Langue sélectionnée : ${language}`); // Remplacez par votre logique
-  //   setIsDropdownOpen(false); // Ferme la liste après sélection
-  // };
-  // Changer la langue et la direction
-  const selectLanguage = (lang) => {
-    setIsDropdownOpen(false); // Ferme le menu déroulant
-    setCurrentLang(lang); // Met à jour la langue sélectionnée
-    i18n.changeLanguage(lang); // Changer la langue (si vous utilisez i18next)
+  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
-    // Mettre à jour les attributs HTML pour gérer la direction (RTL/LTR)
+  const selectLanguage = (lang) => {
+    setIsDropdownOpen(false);
+    setCurrentLang(lang);
+    i18n.changeLanguage(lang);
     document.documentElement.lang = lang === "ar" ? "ar" : "fr";
     document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  };
+
+  // Fonction de déconnexion
+  const handleLogout = () => {
+    localStorage.removeItem("first_name");
+    localStorage.removeItem("family_name");
+    setUser(null); // Réinitialisez l'état utilisateur
   };
 
   const links = [
@@ -51,14 +64,11 @@ export const Navbar = () => {
   const links1 = [{ name: t("login"), link: "signin" }];
 
   return (
-    <MaterialNavbar
-      className={` fixed w-full top-0 right-0 bg-black flex items-center justify-between flex-row px-4 py-5 transition-all duration-500 shadow-lg z-50`}
-    >
-      {/* Logo */}
+    <MaterialNavbar className="fixed w-full top-0 right-0 bg-black flex items-center justify-between flex-row px-4 py-5 transition-all duration-500 shadow-lg z-50">
       <Link to="/" className="flex items-center space-x-3">
-        <img src={logo} alt="log" className="w-44 h-11" />
+        <img src={logo} alt="Logo" className="w-44 h-11" />
       </Link>
-      {/* Menu principal */}
+
       <ul
         className={`${
           click
@@ -72,28 +82,26 @@ export const Navbar = () => {
             <Link
               onClick={closeMenu}
               to={`/${link.link}`}
-              className={` text-white hover:text-[#1C84FF] font-semibold block md:text-bold md:mx-2`}
+              className="text-white hover:text-[#1C84FF] font-semibold block md:text-bold md:mx-2"
             >
               {link.name}
             </Link>
           </li>
         ))}
       </ul>
-      {/* Drapeau et liste déroulante */}
-      <div className="header flex justify-between items-center"></div>
 
-      <div className="relative ">
+      <div className="relative">
         <img
           src={drapeau}
-          alt="drapeau"
-          className="cursor-pointer "
-          onClick={toggleDropdown} // Ouvre/ferme la liste
-          onMouseEnter={() => setHoverMessage(t("langue"))} // Message au survol
-          onMouseLeave={() => setHoverMessage("")} // Cache le message
+          alt="Drapeau"
+          className="cursor-pointer"
+          onClick={toggleDropdown}
+          onMouseEnter={() => setHoverMessage(t("langue"))}
+          onMouseLeave={() => setHoverMessage("")}
         />
         {hoverMessage && (
           <div
-            className="absolute w-44 h-6  flex items-center justify-center bg-white text-black text-sm font-semibold rounded-md"
+            className="absolute w-44 h-6 flex items-center justify-center bg-white text-black text-sm font-semibold rounded-md"
             style={{ zIndex: 10 }}
           >
             {hoverMessage}
@@ -102,7 +110,7 @@ export const Navbar = () => {
         {isDropdownOpen && (
           <ul className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg">
             <li
-              className="px-4 py-2 text-black  cursor-pointer hover:bg-gray-100"
+              className="px-4 py-2 text-black cursor-pointer hover:bg-gray-100"
               onClick={() => selectLanguage("ar")}
             >
               {t("Arabe")}
@@ -116,7 +124,7 @@ export const Navbar = () => {
           </ul>
         )}
       </div>
-      {/* Publier et Profil */}
+
       <ul
         className={`${
           click
@@ -130,35 +138,52 @@ export const Navbar = () => {
             <Link
               onClick={closeMenu}
               to={`/${link.link}`}
-              className={` text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2`}
+              className="text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2"
             >
               {link.name}
             </Link>
           </li>
         ))}
       </ul>
-      <ul
-        className={`${
-          click
-            ? "block absolute bg-black left-4 right-4 -mt-2"
-            : "hidden md:flex md:gap-4"
-        } flex flex-col md:flex-row text-[#1C84FF] mr-8 items-center gap-4 transition-all duration-300`}
-        style={{ top: "calc(100% + 10px)", zIndex: "1000" }}
-      >
-        {links1.map((link, idx) => (
-          <li key={idx} className="flex items-center space-x-4">
-            <img  className="mb-1 hover:fill-white" src={profile} alt="Profil" />
-            <Link
-              onClick={closeMenu}
-              to={`/${link.link}`}
-              className={` text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2`}
+
+
+      {/* Affichage du profil ou bouton de connexion */}
+      <ul>
+        {user ? (
+          <li className="flex items-center space-x-4">
+            <img className="mb-1 hover:fill-white" src={profile} alt="Profil" />
+            <span className="text-[#1C84FF] hover:text-white font-semibold">
+              {user.first_name} {user.family_name}
+            </span>
+            {/* Bouton de déconnexion */}
+            <button
+              onClick={handleLogout}
+              className="ml-4 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+
             >
-              {link.name}
-            </Link>
+              {t("déconnexion")}
+            </button>
           </li>
-        ))}
+        ) : (
+          links1.map((link, idx) => (
+            <li key={idx} className="flex items-center space-x-4">
+              <img
+                className="mb-1 hover:fill-white"
+                src={profile}
+                alt="Profil"
+              />
+              <Link
+                onClick={closeMenu}
+                to={`/${link.link}`}
+                className="text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2"
+              >
+                {link.name}
+              </Link>
+            </li>
+          ))
+        )}
       </ul>
-      {/* Bouton mobile */}
+
       <div className="md:hidden">
         <button
           onClick={handleClick}
