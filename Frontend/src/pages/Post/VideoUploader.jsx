@@ -1,6 +1,9 @@
 import React, { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import "../../components/Multilingue/i18n";
 
 const VideoUploader = () => {
+   const { i18n, t } = useTranslation(); // Utilisez i18n de react-i18next
   const [videos, setVideos] = useState([]); // Liste des fichiers vidéos ajoutés
   const fileInputRef = useRef(null); // Référence pour l'élément input file
 
@@ -14,18 +17,25 @@ const VideoUploader = () => {
   // Fonction pour ajouter une vidéo
   const addVideo = (e) => {
     const files = Array.from(e.target.files);
-    setVideos([...videos, ...files]); // Ajoute les fichiers vidéos à la liste
-    e.target.value = ""; // Réinitialise l'input pour éviter l'affichage du dernier fichier sélectionné
+
+    // Filtrer pour ne conserver que les fichiers vidéo
+    const validVideos = files.filter((file) => file.type.startsWith("video/"));
+
+    // Mise à jour sécurisée de l'état avec les vidéos filtrées
+    setVideos((prevVideos) => [...prevVideos, ...validVideos]);
+    e.target.value = ""; // Réinitialise l'input
   };
 
   // Fonction pour supprimer une vidéo
   const removeVideo = (index) => {
-    setVideos(videos.filter((_, idx) => idx !== index)); // Supprime l'élément de la liste
+    setVideos((prevVideos) => prevVideos.filter((_, idx) => idx !== index)); // Supprime l'élément de la liste
   };
 
   return (
     <div className="ml-2 w-3/4 space-y-2">
-      <p className="block text-[16px] font-semibold mb-2">Ajouter des vidéos</p>
+      <p className="block text-[16px] font-semibold mb-2">
+       {t("Vidéo")}
+      </p>
 
       {/* Input file masqué pour accepter uniquement les fichiers vidéo */}
       <input
@@ -35,6 +45,7 @@ const VideoUploader = () => {
         accept="video/*" // Change accept pour vidéos
         onChange={addVideo}
         className="hidden"
+        data-testid="file-input"
       />
 
       {/* Liste des vidéos */}
@@ -62,7 +73,7 @@ const VideoUploader = () => {
         {/* Dernière case avec le bouton "+" */}
         <div className="flex justify-between items-center p-2">
           <span className="text-sm text-gray-500 italic w-3/4">
-            Ajouter une vidéo
+            {t("vidéo")}
           </span>
           <button
             onClick={openFileSelector}

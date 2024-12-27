@@ -146,6 +146,7 @@ export const Navbar = () => {
         ))}
       </ul>
 
+
       {/* Affichage du profil ou bouton de connexion */}
       <ul>
         {user ? (
@@ -158,6 +159,7 @@ export const Navbar = () => {
             <button
               onClick={handleLogout}
               className="ml-4 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+
             >
               {t("déconnexion")}
             </button>

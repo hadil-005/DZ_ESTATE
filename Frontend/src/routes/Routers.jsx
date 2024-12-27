@@ -6,7 +6,7 @@ import Signin from "../pages/Signin";
 import Home from "../components/Home/home";
 import Footer from '../components/Footer/Footer';
 import { Navbar } from "@material-tailwind/react";
-import { Post } from "../pages/Post/Post";
+import  Post  from "../pages/Post/Post";
 import { Chat } from "../pages/Chat/Chat";
 import Favoris from "../pages/Favoris/Favoris";
 import Discussion from "../pages/Chat/Discussion";

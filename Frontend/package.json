@@ -8,11 +8,12 @@
     "start": "react-scripts start",
     "build": "vite build",
     "lint": "eslint .",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "test": "jest",
     "preview": "vite preview",
     "build:css": "postcss src/styles.css -o dist/styles.css"
   },
   "dependencies": {
+    "18": "^0.0.0",
     "@docsearch/react": "^3.8.0",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
@@ -49,6 +50,7 @@
     "@eslint/js": "^9.13.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
