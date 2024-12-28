@@ -61,24 +61,14 @@ export const Sidebar = () => {
           </ListItemPrefix>
           Enregistrements
         </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <UserCircleIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Profil
-        </ListItem>
+        
         <ListItem>
           <ListItemPrefix>
             <ChatBubbleLeftIcon className="h-5 w-5" />
           </ListItemPrefix>
           <Link to="/chat">Messagerie</Link>
         </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <Cog6ToothIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Paramètres
-        </ListItem>
+
         <ListItem>
           <ListItemPrefix>
             <PowerIcon className="h-5 w-5" />

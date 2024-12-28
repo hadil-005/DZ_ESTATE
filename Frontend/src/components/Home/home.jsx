@@ -17,6 +17,7 @@ import { FaMapMarkerAlt ,FaBed, FaBath, FaRulerCombined, FaDollarSign } from 're
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet"></link>
 
 const Home = () => {
+    const [user, setUser] = useState(null);
     const [openIndex, setOpenIndex] = useState(null);
       
         const toggleFAQ = (index) => {
@@ -103,7 +104,7 @@ const Home = () => {
     
     return (
       <div className="home">
-        <Navbar />
+        <Navbar/>
         <div
           style={{
             backgroundImage: `url(${Homep})`,

@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Navbar } from "../../components/Navbar/Navbar";
 import PhotoUploader from "./PhotoUploader";
-import VideoUploader from "./VideoUploader ";
+import VideoUploader from "./VideoUploader";
 import FormulaireSelect from "./FormulaireSelect";
+import { useTranslation } from "react-i18next";
+import  "../../components/Multilingue/i18n"
+import axios from "axios";
 
-export const Post = () => {
+function Post() {
+  const { i18n, t } = useTranslation(); // Utilisez i18n de react-i18next
   const [search, setSearch] = useState(""); // État pour la recherche
   const [showList, setShowList] = useState(false); // État pour afficher ou masquer la liste
   const [photos, setPhotos] = useState([]); // État pour les photos
@@ -92,62 +96,81 @@ export const Post = () => {
     setSelectedCheckbox((prev) => (prev === id ? null : id));
   };
 
+  const [typeBien, setTypeBien] = useState(""); // Stockage du type de bien sélectionné
+  // Fonction qui met à jour le type de bien dans le parent
+  const handleSelect = (value) => {
+    setTypeBien(value);
+  };
+
   // Vérifie si des photos ont été téléchargées
   const handlePhotoUpload = (newPhotos) => {
     setPhotos(newPhotos);
   };
 
+  const [selectedTypeBien, setSelectedTypeBien] = useState(""); // État pour suivre le type de bien
+
   // Validation du formulaire
-;
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Empêche le comportement par défaut (rechargement de la page)
 
-   
+    // Sélectionner les champs requis
+    const wilaya = search.trim();
+    const commune = document.getElementById("commune").value.trim();
+    const adresse = document.getElementById("addresseM").value.trim();
+    const titre = document.getElementById("titre").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const surface = document.getElementById("surface").value.trim();
+    const prix = document.getElementById("prix").value.trim();
 
-   
+    // Vérifier les champs requis
+    const champsVides = [];
 
-  
+    if (!wilaya) champsVides.push("Wilaya");
+    if (!commune) champsVides.push("Commune");
+    if (!adresse) champsVides.push("Adresse");
+    if (!titre) champsVides.push("Titre de publication");
+    if (!description) champsVides.push("Description");
+    if (!surface) champsVides.push("Surface");
+    if (!prix) champsVides.push("Prix");
 
- 
-  
+    // Vérification des photos
+    if (photos.length === 0) champsVides.push("Photos");
+    // Vérifier si au moins une case à cocher est sélectionnée
+    if (selectedCheckbox === null) {
+      champsVides.push("Case à cocher");
+    }
+    // Vérification du type de bien
+    if (!typeBien || typeBien === "") {
+      // Vérification si le type de bien n'est pas sélectionné
+      champsVides.push("Type de bien");
+    }
 
+    if (champsVides.length > 0) {
+      alert(`Veuillez remplir les champs :\n${champsVides.join(", ")}`);
+      return;
+    }
 
- const handleSubmit = (e) => {
-   e.preventDefault(); // Empêche le comportement par défaut (rechargement de la page)
-
-   if (validateForm()) {
-     // On vérifie la validité avant la soumission
-     alert("Formulaire valide et prêt à être soumis !");
-     // Effectuer l'action pour soumettre les données, par exemple une requête API
-   }
- };
-  
+    // Si tout est valide
+    alert("Votre bien a été publié avec succès !");
+    // Effectuer l'action pour soumettre les données, par exemple une requête API
+  };
 
   return (
     <div>
       <Navbar />
       <div className="mt-24 ml-12 flex flex-col ">
         <h1 className="text-[#1C84FF] text-left text-[40px] font-bold mb-8">
-          Publier votre bien
+          {t("Publier")}
         </h1>
         <div className="flex space-x-60 w-full h-screen overflow-auto mt-6">
-          <div className="space-y-3  ml-32 w-full lg:w-1/2 flex flex-col p-6 lg:p-1 lg:pt-4">
-            <div className="flex flex-col space-y-2 ">
-              <label className="font-semibold " id="addresse">
-                Addresse
-              </label>
-              <input
-                type="text"
-                className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
-                placeholder="veuillez saisie l'addresse de votre bien"
-                id="addresse"
-              />
-            </div>
+          <div className="space-y-3 ml-32 w-full lg:w-1/2 flex flex-col p-6 lg:p-1 lg:pt-4">
             <div className="flex flex-col space-y-2 ">
               <label className="font-semibold " htmlFor="wilaya">
-                Wilaya
+                {t("Wilaya")}
               </label>
               <input
                 type="text"
-                placeholder="veuillez saisie la wilaya "
+                placeholder={t("wilaya")}
                 id="wilaya"
                 value={search}
                 onChange={handleInputChange}
@@ -170,60 +193,62 @@ export const Post = () => {
             </div>
             <div className="flex flex-col space-y-2 ">
               <label htmlFor="commune" className="font-semibold">
-                Commune
+                {t("Commune")}
               </label>
               <input
-                placeholder="veuillez saisie la commune"
+                placeholder={t("commune")}
                 id="commune"
                 type="text"
                 className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
               />
             </div>
-            <div className="flex flex-col space-y-2 ">
-              <label htmlFor="quartier" className="font-semibold ">
-                Quartier
-              </label>
-              <input
-                placeholder="veuillez saisie le quartier"
-                id="quartier"
-                type="text"
-                className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
-              />
-            </div>
+
             <div className="flex flex-col space-y-2 ">
               <label htmlFor="addresseM" className="font-semibold ">
-                Addresse(Celle de Google Maps)
+                {t("Addresse")}
               </label>
               <input
-                placeholder="veuillez saisie l'addresse"
+                placeholder={t("addresse")}
                 id="addresseM"
                 type="text"
                 className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
               />
             </div>
-            <div className="flex flex-col space-y-2">
-              <label htmlFor="téléphone" className="font-semibold ">
-                N° de téléphone
+            <div className="flex flex-col space-y-2 ">
+              <label htmlFor="titre" className="font-semibold ">
+                {t("Titre")}
               </label>
               <input
-                placeholder="veuillez saisie votre N° de téléphone"
-                id="téléphone"
-                type="number"
+                placeholder={t("titre")}
+                id="titre"
+                type="text"
                 className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
+              />
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="description" className="font-semibold ">
+                {t("Description")}
+              </label>
+              <textarea
+                placeholder={t("description")}
+                id="description"
+                type="text"
+                className="border border-[#9F9F9F] transition-all duration-150 ease-in-out rounded-md p-1 mb-4 w-3/4"
               />
             </div>
           </div>
           <div className="space-y-3 w-full lg:w-1/2 flex flex-col p-6 lg:p-1 lg:pt-4">
             <div className="flex flex-col space-y-2 ">
-              <PhotoUploader onUpload={handlePhotoUpload}></PhotoUploader>
-              <VideoUploader></VideoUploader>
-              <FormulaireSelect></FormulaireSelect>
+              <PhotoUploader onUpload={handlePhotoUpload} />
+
+              <VideoUploader />
+              <FormulaireSelect onSelect={handleSelect} />
               <div className="flex flex-col ml-2 space-y-2">
                 <label htmlFor="surface" className="font-semibold ">
-                  Surface
+                  {t("Surface")}
                 </label>
                 <input
-                  placeholder="veuillez saisie votre la surface (m²)"
+                  placeholder={t("surface")}
                   id="surface"
                   type="number"
                   className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
@@ -231,10 +256,10 @@ export const Post = () => {
               </div>
               <div className="flex flex-col ml-2 space-y-2">
                 <label htmlFor="prix" className="font-semibold ">
-                  Prix
+                  {t("Prix")}
                 </label>
                 <input
-                  placeholder="veuillez saisie votre le prix (DA)"
+                  placeholder={t("prix")}
                   id="prix"
                   type="number"
                   className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
@@ -250,7 +275,7 @@ export const Post = () => {
                     onChange={() => handleCheckboxChange("avendre")}
                   ></input>
                   <label htmlFor="avendre" className="font-semibold ">
-                    A vendre
+                    {t("vendre")}
                   </label>
                 </div>
                 <div className="ml-2 flex items-center space-x-3">
@@ -262,27 +287,19 @@ export const Post = () => {
                     className=" accent-green-600"
                   ></input>
                   <label htmlFor="alouer" className="font-semibold">
-                    A louer
+                    {t("louer")}
                   </label>
                 </div>
               </div>
-              <div className="flex flex-col ml-2 space-y-2">
-                <label htmlFor="description" className="font-semibold ">
-                  Description
-                </label>
-                <textarea
-                  placeholder="veuillez ajouter une description"
-                  id="description"
-                  type="text"
-                  className="border border-[#9F9F9F] transition-all duration-150 ease-in-out rounded-md p-1 mb-4 w-3/4"
-                />
-              </div>
-
+              <br />
+              <br />
+              <br />
+              <br />
               <button
                 onClick={handleSubmit}
-                className="bg-[#1C84FF] hover:bg-blue-700 transition text-white font-bold text-[20px] rounded-md w-28 h-12 ml-[60%]"
+                className="bg-[#1C84FF] hover:bg-blue-700 transition  text-white font-bold text-[20px] rounded-md w-28 h-12 ml-[60%]"
               >
-                Publier
+                 {t("publier")}
               </button>
             </div>
           </div>
@@ -290,4 +307,5 @@ export const Post = () => {
       </div>
     </div>
   );
-};
+}
+export default Post;
