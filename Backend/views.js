@@ -16,8 +16,8 @@ console.log(secret);
 
 // 
 const pool = new Pool({
-  connectionString: 'postgresql://DZestate_owner:ZMrytvCKhe04@ep-soft-cell-a5j0gqje.us-east-2.aws.neon.tech/DZestate?sslmode=require',
-});
+  connectionString: 'postgresql://DZestate_owner:ZMrytvCKhe04@ep-soft-cell-a5j0gqje.us-east-2.aws.neon.tech/last_version_from_me?sslmode=require'});
+
 
 const db = pool;
 
