@@ -4,10 +4,10 @@ import "../../components/Multilingue/i18n";
 import axios from "axios";
 
 const PhotoUploader = ({ onUpload }) => {
-   const { i18n, t } = useTranslation(); // Utilisez i18n de react-i18next
+  const { i18n, t } = useTranslation(); // Utilisez i18n de react-i18next
   const [photos, setPhotos] = useState([]); // Liste des fichiers ajoutés
   const fileInputRef = useRef(null); // Référence pour l'élément input file
-
+  const [uploading, setUploading] = useState(false); // Pour afficher l'état de l'upload
   // Fonction pour ouvrir le sélecteur de fichiers
   const openFileSelector = () => {
     if (fileInputRef.current) {
@@ -16,11 +16,37 @@ const PhotoUploader = ({ onUpload }) => {
   };
 
   // Fonction pour ajouter une photo
-  const addPhoto = (e) => {
+  const addPhoto = async (e) => {
     const files = Array.from(e.target.files);
     const newPhotos = [...photos, ...files];
     setPhotos(newPhotos); // Ajoute les fichiers sélectionnés à la liste
     onUpload(newPhotos); // Transmet les photos au parent
+    // Envoie les fichiers au backend via Axios
+    try {
+      setUploading(true);
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append("photos", file); // "photos" correspond au champ de votre formulaire
+      });
+
+      // Remplacez par l'URL de votre backend
+      const response = await axios.post(
+        "http://localhost:3000/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Important pour l'upload de fichiers
+          },
+        }
+      );
+
+      console.log("Fichiers téléchargés avec succès :", response.data);
+    } catch (error) {
+      console.error("Erreur lors de l'upload des fichiers :", error);
+    } finally {
+      setUploading(false);
+    }
+
     e.target.value = ""; // Réinitialise l'input pour éviter l'affichage du dernier fichier sélectionné
   };
 
@@ -33,10 +59,7 @@ const PhotoUploader = ({ onUpload }) => {
 
   return (
     <div className="ml-2 w-3/4 space-y-2">
-      <p className="block text-[16px] font-semibold mb-2">
-        {" "}
-        {t("Photos")}
-      </p>
+      <p className="block text-[16px] font-semibold mb-2"> {t("Photos")}</p>
 
       {/* Input file masqué */}
       <input

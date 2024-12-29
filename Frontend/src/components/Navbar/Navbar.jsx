@@ -60,7 +60,7 @@ export const Navbar = () => {
     { name: t("avis"), link: "" },
   ];
 
-  const linkss = [{ name: t("publier"), link: "post" }];
+  const linkss = [{ name: t("publierp"), link: "post" }];
   const links1 = [{ name: t("login"), link: "signin" }];
 
   return (
@@ -135,17 +135,30 @@ export const Navbar = () => {
       >
         {linkss.map((link, idx) => (
           <li key={idx}>
-            <Link
-              onClick={closeMenu}
-              to={`/${link.link}`}
-              className="text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2"
-            >
-              {link.name}
-            </Link>
+            {user ? (
+              // Si l'utilisateur est connecté, afficher le lien "Publier un bien"
+              <Link
+                onClick={closeMenu}
+                to={`/${link.link}`}
+                className="text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2"
+              >
+                {link.name}
+              </Link>
+            ) : (
+              // Si l'utilisateur n'est pas connecté, rediriger ou afficher un message
+              <button
+                onClick={() => {
+                  alert(t("connectez_vous_publier"));
+                  window.location.href = "/signin"; // Redirige vers la page de connexion
+                }}
+                className="text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2"
+              >
+                {link.name}
+              </button>
+            )}
           </li>
         ))}
       </ul>
-
 
       {/* Affichage du profil ou bouton de connexion */}
       <ul>
@@ -159,7 +172,6 @@ export const Navbar = () => {
             <button
               onClick={handleLogout}
               className="ml-4 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
-
             >
               {t("déconnexion")}
             </button>
