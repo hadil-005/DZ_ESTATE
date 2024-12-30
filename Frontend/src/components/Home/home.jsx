@@ -229,7 +229,7 @@ const Home = () => {
                     style={{ paddingLeft: "5px" }}
                   />
                 </div>
-                <div className="label">
+                {/* <div className="label">
                   <label htmlFor="nom" className="custom-text2">
                     Numéro de salle de bain{" "}
                     <span style={{ color: "red" }}>*</span>
@@ -247,7 +247,7 @@ const Home = () => {
                     <option value="3">3</option>
                     <option value="4">4</option>
                   </select>
-                </div>
+                </div> */}
               </div>
               <button
                 className="w-full h-[40px] bg-blue-600 text-white font-poppins rounded-[5px] hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 "
