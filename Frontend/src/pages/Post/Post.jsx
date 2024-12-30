@@ -194,7 +194,7 @@ const handleSubmit = (e) => {
 
           <div className="space-y-3 w-full lg:w-1/2 flex flex-col p-6 lg:p-1 lg:pt-4">
             <PhotoUploader onUpload={handlePhotoUpload} />
-            <VideoUploader />
+        
             <FormulaireSelect onSelect={handleSelect} />
 
             <div className="flex flex-col ml-2 space-y-2">

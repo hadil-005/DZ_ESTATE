@@ -134,7 +134,7 @@ app.use('/api/likes', userRoutes);
 app.use('/api/saved_posts', userRoutes);
 
 
-const PORT = 3434;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
