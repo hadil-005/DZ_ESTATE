@@ -105,7 +105,7 @@ const handleSubmit = (e) => {
   // Envoie les données au backend via axios
     console.log("//////////***********");
    axios
-     .post("http://127.0.0.1:3000/api/property/create", formData)
+     .post("https://xx-zjtw.onrender.com/api/property/create", formData)
      .then((response) => {
        alert("Votre bien a été publié avec succès !");
        // Réinitialise le formulaire après succès

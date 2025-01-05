@@ -42,7 +42,7 @@ app.use(passport.session());
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://127.0.0.1:3000/auth/google/callback"
+    callbackURL: "https://xx-zjtw.onrender.com/auth/google/callback"
 }, (accessToken, refreshToken, profile, done) => {
     return done(null, profile);
 }));
