@@ -13,7 +13,7 @@ import sale from '../../assets/sale.png'
 import { Navbar } from '../Navbar/Navbar';
 import  Footer  from '../Footer/Footer';
 import { TfiQuoteLeft } from "react-icons/tfi";
-import { FaMapMarkerAlt ,FaBed, FaBath, FaRulerCombined, FaDollarSign } from 'react-icons/fa';
+import Article from '../Article/Article'; // Import the new Article component
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet"></link>
 
 const Home = () => {
@@ -46,60 +46,7 @@ const Home = () => {
             answer: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
           },
         ];
-        const Article = ({ title, image, location, bedrooms, bathrooms, surface, price, isNew, saleType }) => {
-          return (
-              <div className="article relative bg-white p-5 rounded-lg shadow-md w-full max-w-sm">
-                  {/* Image with badges */}
-                  <div className="relative">
-                      <img src={image} alt={title} className="article-image w-full h-48 object-cover rounded-lg" />
-                      
-                      {/* FOR SALE / FOR RENT Badge */}
-                      {saleType && (
-                          <span className={`absolute top-2 left-2 ${saleType === 'For Sale' ? 'bg-blue-500' : 'bg-yellow-500'} text-white px-3 py-1 rounded-md text-sm font-semibold`}>
-                              {saleType}
-                          </span>
-                      )}
-      
-                      {/* NEW Badge */}
-                      {isNew && (
-                          <span className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-md text-sm font-semibold">
-                              NEW
-                          </span>
-                      )}
-                  </div>
-                  
-                  {/* Title */}
-                  <h3 className="font-semibold text-lg text-gray-800 mt-4">{title}</h3>
-                  
-                  {/* Location */}
-                  <div className="location flex items-center text-gray-600 text-sm mt-2">
-                      <FaMapMarkerAlt className="size-5 mr-2 text-blue-500" />
-                      <span>{location}</span>
-                  </div>
-                  
-                  {/* Details */}
-                  <div className="details flex justify-between text-sm text-gray-700 mt-3">
-                      <div className="detail flex items-center gap-1">
-                          <FaBed className="icon size-6 text-blue-500" />
-                          <span>{bedrooms}</span>
-                      </div>
-                      <div className="detail flex items-center gap-1">
-                          <FaBath className="icon size-6 text-blue-500" />
-                          <span>{bathrooms}</span>
-                      </div>
-                      <div className="detail flex items-center gap-1">
-                          <FaRulerCombined className="icon size-6 text-blue-500" />
-                          <span>{surface}m²</span>
-                      </div>
-                      <div className="flex text-red-600 items-center gap-1 font-bold text-lg">
-                          <span>{price}</span>
-                          <FaDollarSign />
-                      </div>
-                  </div>
-              </div>
-          );
-      };
-      
+            
     
     return (
         <div className="home">
@@ -172,27 +119,24 @@ const Home = () => {
                     </div>
                     <div className="label">
                         <label htmlFor="nom" className="custom-text2">
-                        Budget minimum (DA) <span style={{ color: 'red' }}>*</span>
+                       Budget    (DA) <span style={{ color: 'red' }}>*</span>
                         </label>
-                        <input
-                            type="text"
-                            id="nom"
-                            placeholder=" Min"
-                            className="w-[80%] h-12 rounded-[5px] border border-gray-300 bg-gray-100 font-poppins "
-                            style={{ paddingLeft: '5px' }} 
-                            />
-                    </div>
-                    <div className="label">
-                        <label htmlFor="nom" className="custom-text2">
-                       Budget maximum   (DA) <span style={{ color: 'red' }}>*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="nom"
-                            placeholder=" Max"
-                            className="w-[80%] h-12 rounded-[5px] border border-gray-300 bg-gray-100 font-poppins"
-                            style={{ paddingLeft: '5px' }} 
-                        />
+                        <div className="flex space-x-2">
+          <input
+            type="number"
+            name="budgetMin"
+            placeholder="Min"
+            step="10"
+            className="w-[40%] px-2 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          <input
+            type="number"
+            name="budgetMax"
+            placeholder="Max"
+            step="10"
+            className="w-[40%] px-2 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+        </div>
                     </div>
                     <div className="label">
                         <label htmlFor="nom" className="custom-text2">
@@ -216,32 +160,24 @@ const Home = () => {
                         <label htmlFor="nom" className="custom-text2">
                         Surface (m2) <span style={{ color: 'red' }}>*</span>
                         </label>
-                        <input
-                            type="text"
-                            id="nom"
-                            placeholder=" surface"
-                            className="w-[80%] h-12 rounded-[5px] border border-gray-300 bg-gray-100 font-poppins"
-                            style={{ paddingLeft: '5px' }} 
-                        />
+                        <div className="flex space-x-2">
+          <input
+            type="number"
+            name="surfaceMin"
+            placeholder="Min"
+            step="10"
+            className="w-[40%] px-2 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          <input
+            type="number"
+            name="surfaceMax"
+            placeholder="Max"
+            step="10"
+            className="w-[40%] px-2 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+        </div>
                     </div>
-                    <div className="label">
-                        <label htmlFor="nom" className="custom-text2">
-                        Numéro de salle de bain <span style={{ color: 'red' }}>*</span>
-                        </label>
-                        <select
-                        id="nom"
-                        className="w-[80%] h-12 rounded-[5px] border border-gray-300 bg-gray-100 font-poppins"
-                        style={{color: 'gray' ,paddingLeft: '5px'}}
-                    >
-                    <option value="" disabled selected hidden>
-                        2
-                        </option>    
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                    </select>
-                    </div>
+                    
                     </div>
                     <button 
                     className="w-full h-[40px] bg-blue-600 text-white font-poppins rounded-[5px] hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 "
@@ -280,7 +216,8 @@ const Home = () => {
 <Article 
     title="Appartement confortable"
     image={Cuisine} 
-    location="Alger" 
+    wilaya="Alger" 
+    commune='Birtouta'
     bedrooms="3" 
     bathrooms="2" 
     surface="120" 
@@ -292,11 +229,13 @@ const Home = () => {
 <Article 
     title="Villa de Luxe"
     image={Cuisine} 
-    location="Oran" 
+    wilaya="Oran" 
+    commune="Oran"
     bedrooms="4" 
     bathrooms="3" 
     surface="200" 
     price="450,000"
+    category="villa"
     isNew={false}  // No NEW tag for this article
     saleType="For Rent"  // Show FOR RENT tag for this article
 />
@@ -304,7 +243,8 @@ const Home = () => {
 <Article 
     title="Condo moderne"
     image={Cuisine} 
-    location="Bejaia" 
+    wilaya="Bejaia" 
+    commune="Ville"
     bedrooms="2" 
     bathrooms="1" 
     surface="80" 
