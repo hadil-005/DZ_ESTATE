@@ -4,7 +4,6 @@ import { initReactI18next } from "react-i18next";
 // Définissez vos traductions ici
 const resources = {
   
-};
 
 i18n.use(initReactI18next).init({
   resources: {
