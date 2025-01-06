@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";  // Import Link from React Router
+import Cuisine from '../../assets/cuisine.png'
+
 import { Navbar } from '../Navbar/Navbar';
 import { useLocation } from 'react-router-dom';
 import { FaTag, FaMapMarkerAlt, FaHome, FaBed, FaListAlt, FaPhoneAlt } from "react-icons/fa";
@@ -180,17 +183,18 @@ const Bien = () => {
             </div>
             <p className='custom-text1 text-blue-500 m-20 text-5xl text-center'>Découvrez nos meilleures offres</p>
  <div className="see-more-btn">
- <Link to="./property">
+ <Link to="../property">
                 <button className="btn-see-more">Voir plus &gt;</button>
                 </Link>
             </div>
  <div className="articles">
                 {/* Example of multiple articles using the Article component */}
                {/* Example of multiple articles using the Article component */}
-<Article 
+               <Article 
     title="Appartement confortable"
     image={Cuisine} 
-    location="Alger" 
+    wilaya="Alger" 
+    commune='Birtouta'
     bedrooms="3" 
     bathrooms="2" 
     surface="120" 
@@ -202,7 +206,8 @@ const Bien = () => {
 <Article 
     title="Villa de Luxe"
     image={Cuisine} 
-    location="Oran" 
+    wilaya="Oran" 
+    commune="Oran"
     bedrooms="4" 
     bathrooms="3" 
     surface="200" 
@@ -215,7 +220,8 @@ const Bien = () => {
 <Article 
     title="Condo moderne"
     image={Cuisine} 
-    location="Bejaia" 
+    wilaya="Bejaia" 
+    commune="Ville"
     bedrooms="2" 
     bathrooms="1" 
     surface="80" 

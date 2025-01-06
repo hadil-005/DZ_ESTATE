@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaBookmark, FaHeart, FaMapMarkerAlt, FaBed, FaRulerCombined, FaDollarSign } from "react-icons/fa";
+import { FaBookmark, FaHeart, FaMapMarkerAlt, FaBed, FaSquare, FaDollarSign } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
 
 const Article = ({ title, image, wilaya, commune, bedrooms, surface, price, saleType, category, images, videos}) => {
@@ -16,7 +16,8 @@ const Article = ({ title, image, wilaya, commune, bedrooms, surface, price, sale
       state: { 
         title, 
         image, 
-        location: `${wilaya}, ${commune}`, 
+        wilaya,
+        commune, 
         price, 
         saleType, 
         bedrooms, 
@@ -60,19 +61,20 @@ const Article = ({ title, image, wilaya, commune, bedrooms, surface, price, sale
       </div>
 
       {/* Details */}
-      <div className="details flex justify-between text-sm text-gray-700 mt-3">
-        <div className="detail flex items-center gap-1">
-          <FaBed className="icon size-6 text-blue-500" />
+      <div className="details flex justify-between text-sm mt-3">
+        <div className="detail flex items-center ">
+          <FaBed className="icon size-5 text-blue-500" />
           <span>{bedrooms}</span>
         </div>
-        <div className="detail flex items-center gap-1">
-          <FaRulerCombined className="icon size-6 text-blue-500" />
+        <div className="detail flex items-center ">
+          <FaSquare className="icon size-4 text-blue-500" />
           <span>{surface}m²</span>
         </div>
       
 
       {/* Actions */}
-      <div className="actions flex justify-between items-center pl-3 pr-3 gap-5 ">
+      <div className="flex justify-between items-center gap-2 ">
+        <div className="flex justify-between items-center gap-1">
         <button
           onClick={handleLike}
           className={`flex items-center space-x-2 text-2xl ${
@@ -82,14 +84,17 @@ const Article = ({ title, image, wilaya, commune, bedrooms, surface, price, sale
           <FaHeart 
             className={`${
               liked ? "fill-red-500" : "fill-white stroke-black"
-            } stroke-[32px]`}
+            } stroke-[40px] size-5`}
           />
         </button>
+        <span>{surface}</span>
+        </div>
+        <div className="flex justify-between items-center gap-1">
         <button
           onClick={handleSave}
           className={`flex items-center space-x-2 text-2xl ${
-            saved ? "text-green-500" : "text-black"
-          }`}
+            saved ? "text-green-500" : "text-black "
+          } size-4`}
         >
           <FaBookmark
             className={`${
@@ -97,6 +102,8 @@ const Article = ({ title, image, wilaya, commune, bedrooms, surface, price, sale
             } stroke-[32px]`}
           />
         </button>
+        <span>{surface}</span>
+        </div>
         <div className="flex text-red-600 ml-4 items-center gap-1 font-bold text-lg">
           <span>{price}</span>
           <FaDollarSign />
