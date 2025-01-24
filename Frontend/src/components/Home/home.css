@@ -3,7 +3,7 @@
     position: relative; /* Position relative to contain the absolute positioning of the overlay */
     background-size: calc(100%) calc(100%); /* Cover the entire div */
     width: calc(100%); /* Set width as needed */
-    height: 812px; /* Set a fixed height or use min-height */
+    height: 658px; /* Set a fixed height or use min-height */
     display: flex; /* Use flexbox to center the overlay */
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
@@ -114,7 +114,7 @@
 /* Articles Container (Scrolling horizontally) */
 .articles {
   display: flex;
-  gap: 20px;
+  justify-content: space-between;
 }
 
 

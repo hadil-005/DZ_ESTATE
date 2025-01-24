@@ -60,6 +60,7 @@ const Signp = () => {
      console.log("Tentative d'envoi des données au backend...");
      const response = await axios.post(
        "http://127.0.0.1:3000/api/users/signup",
+       
        {
          first_name: formData.first_name,
          family_name: formData.family_name,

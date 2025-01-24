@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../../assets/logo.png";
 import { useNavigate } from 'react-router-dom';
-const Footer = () => {
-    
+const Footer = ({ addTestimonial }) => {
+  const [comment, setComment] = useState("");
   const navigate = useNavigate();
-
+  const handleSendComment = () => {
+    if (comment.trim()) {
+      addTestimonial(comment);
+      setComment(""); // Clear input after sending
+    }
+  };
   const handleClick = () => {
     navigate('/signin'); // Navigate to the /signin route
   };
@@ -17,12 +22,14 @@ const Footer = () => {
             <div>
               <p className="text-white font-semibold mb-4">Votre commentaire</p>
               <div className="flex items-center w-fit">
-                <input
-                  type="text"
-                  placeholder="Que pensez-vous de notre service"
-                  className="w-full bg-inherit rounded-lg px-4 py-2 text-sm text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-                <button className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-full text-sm flex items-center ">
+              <input
+                type="text"
+                placeholder="Que pensez-vous de notre service"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                className="w-full bg-inherit rounded-lg px-4 py-2 text-sm text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+                <button onClick={handleSendComment} className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-full text-sm flex items-center ">
                 Envoyer→
                 </button>
               </div>

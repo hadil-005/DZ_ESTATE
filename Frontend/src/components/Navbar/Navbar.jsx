@@ -53,14 +53,14 @@ export const Navbar = () => {
   };
 
   const links = [
-    { name: t("accueil"), link: "" },
-    { name: t("decouvrir"), link: "" },
+    { name: t("accueil"), link: "." },
+    { name: t("decouvrir"), link: "property" },
     { name: t("apropos"), link: "" },
     { name: t("faq"), link: "" },
     { name: t("avis"), link: "" },
   ];
 
-  const linkss = [{ name: t("publier"), link: "post" }];
+  const linkss = [{ name: t("publierp"), link: "post" }];
   const links1 = [{ name: t("login"), link: "signin" }];
 
   return (
@@ -135,13 +135,27 @@ export const Navbar = () => {
       >
         {linkss.map((link, idx) => (
           <li key={idx}>
-            <Link
-              onClick={closeMenu}
-              to={`/${link.link}`}
-              className="text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2"
-            >
-              {link.name}
-            </Link>
+            {user ? (
+              // Si l'utilisateur est connecté, afficher le lien "Publier un bien"
+              <Link
+                onClick={closeMenu}
+                to={`/${link.link}`}
+                className="text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2"
+              >
+                {link.name}
+              </Link>
+            ) : (
+              // Si l'utilisateur n'est pas connecté, rediriger ou afficher un message
+              <button
+                onClick={() => {
+                  alert(t("connectez_vous_publier"));
+                  window.location.href = "/signin"; // Redirige vers la page de connexion
+                }}
+                className="text-[#1C84FF] hover:text-white font-semibold block md:text-bold md:mx-2"
+              >
+                {link.name}
+              </button>
+            )}
           </li>
         ))}
       </ul>
