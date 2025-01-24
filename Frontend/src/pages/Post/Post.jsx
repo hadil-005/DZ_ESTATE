@@ -88,13 +88,14 @@ const handleSubmit = (e) => {
   const formData = new FormData();
   formData.append("wilaya", wilaya);
   formData.append("commune", commune);
-  formData.append("adresse", adresse);
+  formData.append("adress_gmaps", adresse);
   formData.append("title", titre);
   formData.append("description", description);
   formData.append("area", surface);
   formData.append("price", prix);
   formData.append("transaction_status", selectedCheckbox); // Type de transaction
-  formData.append("typeBien", typeBien);
+  formData.append("property_type", typeBien);
+
 
   // // Ajoute les photos au FormData
   // photos.forEach((photo) => {
@@ -103,10 +104,11 @@ const handleSubmit = (e) => {
   // });
 
   // Envoie les données au backend via axios
-    console.log("//////////***********");
+
    axios
      .post("http://127.0.0.1:3000/api/property/create", formData)
      .then((response) => {
+      
        alert("Votre bien a été publié avec succès !");
        // Réinitialise le formulaire après succès
        setSearch("");
@@ -194,7 +196,7 @@ const handleSubmit = (e) => {
 
           <div className="space-y-3 w-full lg:w-1/2 flex flex-col p-6 lg:p-1 lg:pt-4">
             <PhotoUploader onUpload={handlePhotoUpload} />
-        
+            <VideoUploader/>
             <FormulaireSelect onSelect={handleSelect} />
 
             <div className="flex flex-col ml-2 space-y-2">

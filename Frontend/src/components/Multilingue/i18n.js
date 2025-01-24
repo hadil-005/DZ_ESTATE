@@ -1,12 +1,12 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+console.log(initReactI18next); // Devrait afficher une fonction
+
 
 // Définissez vos traductions ici
 const resources = {
-  
 
-i18n.use(initReactI18next).init({
-  resources: {
+
     ar: {
       translation: {
         accueil: "الرئيسية",
@@ -93,7 +93,9 @@ i18n.use(initReactI18next).init({
         connectez_vous_publier: "Veuillez vous connecter pour publier un bien.",
       },
     },
-  },
+  };
+i18n.use(initReactI18next).init({
+  resources,
   lng: "fr", // Langue par défaut
   fallbackLng: "fr", // Langue de secours
   interpolation: {

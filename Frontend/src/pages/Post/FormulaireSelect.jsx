@@ -29,15 +29,15 @@ function FormulaireSelect({ onSelect }) {
             onChange={handleChange}
           >
             <option value=""> {t("select")}</option>
-            <option value="1"> {t("appa")}</option>
-            <option value="2"> {t("mai")}</option>
-            <option value="3"> {t("stu")}</option>
-            <option value="4"> {t("villa")}</option>
+            <option value="appartement"> {t("appa")}</option>
+            <option value="maison"> {t("mai")}</option>
+            <option value="studio"> {t("stu")}</option>
+            <option value="villa"> {t("villa")}</option>
           </select>
         </div>
 
         {/* Champs conditionnels affichés selon le type sélectionné */}
-        {typeBien === "1" && (
+        {typeBien === "appartement" && (
           <div className="flex flex-col space-y-2">
             <div className="flex items-center space-x-3">
               <label
@@ -55,14 +55,14 @@ function FormulaireSelect({ onSelect }) {
           </div>
         )}
 
-        {typeBien === "2" && (
+        {typeBien === "maison" && (
           <div className="flex flex-col space-y-2">
             <div className="flex items-center space-x-3">
               <label
                 htmlFor="nombreChambres2"
                 className="block text-sm font-semibold"
               >
-             {t("ch")}
+                {t("ch")}
               </label>
               <input
                 type="number"
@@ -73,14 +73,14 @@ function FormulaireSelect({ onSelect }) {
           </div>
         )}
 
-        {typeBien === "4" && (
+        {typeBien === "villa" && (
           <div className="flex flex-col space-y-2">
             <div className="flex items-center space-x-3">
               <label
                 htmlFor="nombreChambres4"
                 className="block text-sm font-semibold"
               >
-             {t("ch")}
+                {t("ch")}
               </label>
               <input
                 type="number"
