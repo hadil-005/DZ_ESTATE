@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";  // Import Link from React Router
 import Cuisine from '../../assets/cuisine.png'
-
 import { Navbar } from '../Navbar/Navbar';
+import  Footer  from '../Footer/Footer';
 import { useLocation } from 'react-router-dom';
 import { FaTag, FaMapMarkerAlt, FaHome, FaBed, FaListAlt, FaPhoneAlt } from "react-icons/fa";
 import Bienp from "../../assets/bienp.png";
@@ -230,6 +230,7 @@ const Bien = () => {
     saleType="For Sale"  // Show FOR SALE tag for this article
 />
 </div>
+<Footer />
         </div>
     );
 };

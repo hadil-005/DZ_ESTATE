@@ -8,10 +8,11 @@ import Footer from '../components/Footer/Footer';
 import PropertyPage from "../components/Discover/discover";
 import Bien from "../components/Bien/bien";
 import { Navbar } from "@material-tailwind/react";
-import { Post } from "../pages/Post/Post";
+import  Post  from "../pages/Post/Post";
 import { Chat } from "../pages/Chat/Chat";
 import Favoris from "../pages/Favoris/Favoris";
 import Discussion from "../pages/Chat/Discussion";
+import { UserProvider } from "../../UserContext";
 
 const Routers = () => {
   const { pathname } = useLocation();
@@ -21,19 +22,23 @@ const Routers = () => {
   }, [pathname]);
 
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/navbar" element={<Navbar />} />
-      <Route path="/footer" element={<Footer />} />
-      <Route path="/chat" element={<Chat />} />
-      <Route path="/post" element={<Post />} />
-      <Route path="/disc" element={<Discussion />} />
-      <Route path="/favoris" element={<Favoris />} />
-      <Route path="/property" element={<PropertyPage />} />
-      <Route path="/bien" element={<Bien />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/signin" element={<Signin />} />
-    </Routes>
+    <UserProvider>
+      <Routes>
+        <Route path="/home" element={<Home />} />
+        <Route path="/navbar" element={<Navbar />} />
+        <Route path="/footer" element={<Footer />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/post" element={<Post />} />
+        <Route path="/disc" element={<Discussion />} />
+        <Route path="/favoris" element={<Favoris />} />
+        <Route path="/property" element={<PropertyPage />} />
+        <Route path="/bien" element={<Bien />} />
+
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/navbar" element={<Navbar />} />
+        <Route path="/signin" element={<Signin />} />
+      </Routes>
+    </UserProvider>
   );
 };
 

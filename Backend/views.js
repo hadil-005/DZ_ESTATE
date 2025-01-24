@@ -2,7 +2,19 @@ const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 const multer = require('multer');
 const path = require('path');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv')
+const session = require('express-session');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const cookieParser = require('cookie-parser')
+const crypto = require('crypto');
+const secret = crypto.randomBytes(64).toString('hex');
+console.log(secret);
 
+
+
+// 
 const pool = new Pool({
   connectionString: 'postgresql://DZestate_owner:ZMrytvCKhe04@ep-soft-cell-a5j0gqje.us-east-2.aws.neon.tech/DZestate?sslmode=require',
 });
@@ -32,7 +44,27 @@ async function signup(req, res) {
       phone_number,
     ]);
 
-    res.status(201).json({ message: 'User signed up successfully', user: newUser.rows[0] });
+    const token = jwt.sign(
+      { id: newUser.rows[0].id, first_name, family_name, email },
+      secret,
+      { expiresIn: '1h' } 
+    );
+
+    res.cookie('token', token, {
+      httpOnly: true,  
+      secure: process.env.NODE_ENV === 'production',  
+      maxAge: 3600000,  
+      sameSite: 'Strict', 
+    });
+
+    res.status(201).json({
+      message: 'User signed up successfully',
+      user: {
+        first_name,
+        family_name,
+        email,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -43,176 +75,58 @@ async function login(req, res) {
     const { email, password } = req.body;
 
     const findUserQuery = 'SELECT * FROM users WHERE email = $1';
-    const userResult = await pool.query(findUserQuery, [email]);
+    const user = await pool.query(findUserQuery, [email]);
 
-    if (userResult.rows.length === 0) {
-      return res.status(404).json({ message: 'Invalid email or password' });
+    if (user.rows.length === 0) {
+      return res.status(400).json({ message: 'User not found' });
     }
 
-    const user = userResult.rows[0];
+    const isMatch = await bcrypt.compare(password, user.rows[0].password);
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({ message: 'Invalid password or email' });
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    res.status(200).json({ message: 'Login successful', user });
+    const token = jwt.sign(
+      { id: user.rows[0].id, first_name: user.rows[0].first_name, family_name: user.rows[0].family_name, email },
+      secret,
+      { expiresIn: '1h' }
+    );
+
+    res.cookie('token', token, {
+      httpOnly: true,  
+      secure: process.env.NODE_ENV === 'production',  
+      maxAge: 3600000, 
+      sameSite: 'Strict',  
+    });
+
+    res.status(200).json({
+      message: 'Login successful',
+      user: {
+        first_name: user.rows[0].first_name,
+        family_name: user.rows[0].family_name,
+        email,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 }
 
+function authenticate(req, res, next) {
+  const token = req.cookies.token;  
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided, authorization denied' });
   }
-});
 
-const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } });
-
-const createPostForProperty = async (req, res) => {
-  try {
-    const { title, description, price, location, property_type, area, transaction_status, user_id } = req.body;
-
-    if (!user_id) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
-
-    if (!title || !description || !price || !location || !property_type || !area || !transaction_status) {
-      return res.status(400).json({
-        message: 'All fields are required: title, description, price, location, property_type, area, and transaction_status.'
-      });
-    }
-
-    if (isNaN(price) || isNaN(area)) {
-      return res.status(400).json({ message: "Price and Area must be valid numbers" });
-    }
-
-    const newProperty = await db.query(
-      `INSERT INTO property (title, description, price, location, property_type, area, transaction_status, user_id)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-      [title, description, price, location, property_type, area, transaction_status, user_id]
-    );
-
-    res.status(201).json(newProperty.rows[0]);
-  } catch (error) {
-    console.error("Error during property creation:", error);
-    res.status(500).json({ message: "Error creating property", error: error.message });
-  }
-};
-
-const createPostForPropertyy = async (req, res) => {
-  try {
-    const { title, description, price, location, property_type, area, transaction_status, user_id } = req.body;
-
-    if (!user_id) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
-
-    if (!title || !description || !price || !location || !property_type || !area || !transaction_status) {
-      return res.status(400).json({
-        message: 'All fields are required: title, description, price, location, property_type, area, and transaction_status.'
-      });
-    }
-
-    const result = await pool.query(
-      `INSERT INTO property (title, description, price, location, property_type, area, transaction_status, user_id)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-      [title, description, price, location, property_type, area, transaction_status, user_id]
-    );
-
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error("Error during property creation:", error);
-    res.status(500).json({ message: "Error creating property", error: error.message });
-  }
-};
-
-const cc = (req, res) => {
-  const { title, description, price, location, property_type, area, transaction_status, user_id } = req.body;
-  
-  const photoUrls = req.files.map(file => `/uploads/${file.filename}`);
-
-  const query = `
-    INSERT INTO property (title, description, price, location, property_type, area, transaction_status, user_id, photos)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
-  `;
-  const values = [title, description, price, location, property_type, area, transaction_status, user_id, photoUrls];
-
-  pool.query(query, values, (err, result) => {
+  jwt.verify(token, secret, (err, decoded) => {
     if (err) {
-      console.error('Error during property creation:', err);
-      res.status(500).json({ error: 'Error during property creation' });
-    } else {
-      const createdProperty = result.rows[0];
-      res.status(201).json({
-        id: createdProperty.id,
-        title: createdProperty.title,
-        description: createdProperty.description,
-        price: createdProperty.price,
-        location: createdProperty.location,
-        property_type: createdProperty.property_type,
-        area: createdProperty.area,
-        transaction_status: createdProperty.transaction_status,
-        user_id: createdProperty.user_id,
-        photos: createdProperty.photos,
-      });
+      return res.status(403).json({ message: 'Token is not valid' });
     }
+    req.user = decoded; 
   });
-};
-const zz = (req, res) => {
-  console.log("tktk");
-  console.log(req.files); 
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).json({ error: 'No photos uploaded' });
-  }
-  console.log(req.files); 
-  const { title, description, price, location, property_type, area, transaction_status, user_id } = req.body;
-
-  // Map the uploaded files to URLs
-  const photoUrls = req.files.map(file => `/uploads/${file.filename}`);
-  
-  // Log to ensure photoUrls is correctly populated
-  console.log(photoUrls);
-
-  // SQL query to insert property with photo URLs as an array
-  const query = `
-    INSERT INTO property (title, description, price, location, property_type, area, transaction_status, user_id, photo_urls)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
-  `;
-  const values = [title, description, price, location, property_type, area, transaction_status, user_id, photoUrls];
-
-  pool.query(query, values, (err, result) => {
-    if (err) {
-      console.error('Error during property creation:', err);
-      res.status(500).json({ error: 'Error during property creation' });
-    } else {
-      const createdProperty = result.rows[0];
-
-      // Log the result to ensure photo_urls is correctly returned
-      console.log(createdProperty.photo_urls);
-
-      res.status(201).json({
-        id: createdProperty.id,
-        title: createdProperty.title,
-        description: createdProperty.description,
-        price: createdProperty.price,
-        location: createdProperty.location,
-        property_type: createdProperty.property_type,
-        area: createdProperty.area,
-        transaction_status: createdProperty.transaction_status,
-        user_id: createdProperty.user_id,
-        photo_urls: createdProperty.photo_urls, // Return the photo URLs as an array
-      });
-    }
-  });
-};
-
-
+}
 
 const addComment = async (req, res) => {
   const { content } = req.body;
@@ -271,18 +185,7 @@ const getRandomComments = async (req, res) => {
     res.status(500).json({ error: 'Error retrieving random comments' });
   }
 };
-const jwt = require('jsonwebtoken');
 
-const authenticate = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1];
-  if (!token) return res.status(403).json({ message: 'Token required' });
-
-  jwt.verify(token, 'your-secret-key', (err, user) => {
-    if (err) return res.status(403).json({ message: 'Invalid token' });
-    req.user = user;
-    next();
-  });
-};
 
 const deleteProperty = async (req, res) => {
   const { id } = req.params;
@@ -362,6 +265,7 @@ const saveProperty = async (req, res) => {
   }
 };
 
+
 const his = async (req, res) => {
   const { property_id, buyer_email, new_status } = req.body;
 
@@ -392,28 +296,8 @@ const his = async (req, res) => {
     return res.status(500).json({ message: 'An error occurred while processing the transaction' });
   }
 };
-// const property_id_updated = updatePropertyResult.rows[0].id;
 
 
-// const insertHistoryResult = await pool.query(
-//   'INSERT INTO history (user_id, property_ids) VALUES ($1, $2) RETURNING id, interacted_at',
-//   [buyer_id, [property_id_updated]]
-//  );
-
-//  try { 
-//   if (insertHistoryResult.rowCount > 0) {
-//   return res.status(200).json({
-//     message: 'Property status updated successfully',
-//     historyId: insertHistoryResult.rows[0].id,
-//     interactedAt: insertHistoryResult.rows[0].interacted_at
-//   });
-//  } else {
-//   return res.status(500).json({ message: 'Failed to record history' });
-//  }
-//  } catch (err) {
-//   console.error(err);
-//   return res.status(500).json({ message: 'An error occurred' });
-// }
 const updateProperty = async (req, res) => {
   const { property_id, buyer_id, new_status } = req.body;
 
@@ -428,7 +312,7 @@ const updateProperty = async (req, res) => {
     if (updatePropertyResult.rowCount === 0) {
       return res.status(404).json({ message: 'Property not found' });
     }
-
+    
     return res.status(200).json({
       message: 'Property status updated successfully',
       propertyId: updatePropertyResult.rows[0].id
@@ -439,16 +323,23 @@ const updateProperty = async (req, res) => {
   }
 };
 
+const getit = async (req, res) => {
+  const token = req.cookies.token;  // Get the token from the cookies
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided, please login' });
+}};
 
 const createMessage = async (req, res) => {
   const { sender_id, receiver_id, content } = req.body;
+  const message_date = new Date(); // current date and time
 
   const query = `
-    INSERT INTO messages (sender_id, receiver_id, content)
-    VALUES ($1, $2, $3)
+    INSERT INTO messages (sender_id, receiver_id, content, message_date)
+    VALUES ($1, $2, $3, $4)
     RETURNING *;
   `;
-  const values = [sender_id, receiver_id, content];
+  const values = [sender_id, receiver_id, content, message_date];
 
   try {
     const result = await pool.query(query, values);
@@ -456,6 +347,49 @@ const createMessage = async (req, res) => {
   } catch (err) {
     console.error('Error creating message:', err);
     res.status(500).json({ error: 'Failed to create message' });
+  }
+};
+
+const searchProperties = async (req, res) => {
+  try {
+    const { wilaya, commune, property_type } = req.body;
+
+    // Validate that at least one search field is provided
+    if (!wilaya && !commune && !property_type) {
+      return res.status(400).json({ error: 'At least one search criterion must be provided' });
+    }
+
+    // Build the dynamic SQL query
+    let query = 'SELECT * FROM property WHERE 1=1';
+    const values = [];
+
+    if (wilaya) {
+      query += ` AND wilaya ILIKE $${values.length + 1}`;
+      values.push(`%${wilaya}%`);
+    }
+
+    if (commune) {
+      query += ` AND commune ILIKE $${values.length + 1}`;
+      values.push(`%${commune}%`);
+    }
+
+    if (property_type) {
+      query += ` AND property_type ILIKE $${values.length + 1}`;
+      values.push(`%${property_type}%`);
+    }
+
+    // Execute the query
+    const result = await pool.query(query, values);
+
+    // Return results or handle no match
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'No properties found matching your criteria' });
+    }
+
+    res.status(200).json({ properties: result.rows });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while searching for properties' });
   }
 };
 
@@ -478,5 +412,196 @@ const getMessages = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch messages' });
   }
 };
+const getSavedProperties = async (req, res) => {
+  try {
+    const { user_id } = req.params;
 
-module.exports = { signup, his, createMessage, getMessages, saveProperty, login, addLike, authenticate, createPostForProperty, addComment, cc, zz, deleteProperty, getRandomProperties, getRandomComments };
+    // Validate if the user_id is provided
+    if (!user_id) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    // Step 1: Get the property IDs that the user has saved from the saved_posts table
+    const savedPropertiesQuery = `
+      SELECT property_id
+      FROM saved_posts
+      WHERE user_id = $1;
+    `;
+    const savedPropertiesResult = await pool.query(savedPropertiesQuery, [user_id]);
+
+    // Step 2: If no saved properties found
+    if (savedPropertiesResult.rows.length === 0) {
+      return res.status(404).json({ message: 'No saved properties found for this user' });
+    }
+
+    // Step 3: Collect all the property IDs
+    const propertyIds = savedPropertiesResult.rows.map(row => row.property_id);
+
+    // Step 4: Fetch the property details based on the saved property IDs
+    const propertiesQuery = `
+      SELECT 
+        p.id,
+        p.title,
+        p.price,
+        p.transaction_status,
+        p.location AS address,
+        p.likes_count,
+        CASE
+          WHEN p.photo_urls IS NOT NULL AND p.photo_urls != '{}' THEN p.photo_urls[1]
+          ELSE NULL
+        END AS photo_address
+      FROM property p
+      WHERE p.id = ANY($1);
+    `;
+    
+    const propertiesResult = await pool.query(propertiesQuery, [propertyIds]);
+
+    // Step 5: Return the saved properties
+    res.status(200).json({ saved_properties: propertiesResult.rows });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while retrieving saved properties' });
+  }
+};
+
+const getPropertyDetails = async (req, res) => {
+  try {
+    const { property_id } = req.params;
+
+    // Validate if the property_id is provided
+    if (!property_id) {
+      return res.status(400).json({ error: 'Property ID is required' });
+    }
+
+    // Step 1: Get the property details by property_id
+    const query = `
+      SELECT 
+        id,
+        title,
+        description,
+        price,
+        wilaya,
+        commune, 
+        property_type,
+        area,
+        transaction_status,
+        user_id,
+        likes_count,
+        buyer_id,
+        photos_urls
+      FROM property
+      WHERE id = $1;
+    `;
+    
+    const result = await pool.query(query, [property_id]);
+
+    // Step 2: If no property found
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Property not found' });
+    }
+
+    // Step 3: Return the property details
+    res.status(200).json({ property: result.rows[0] });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while retrieving property details' });
+  }
+};
+
+const getThreeRandomProperties = async (req, res) => {
+    try {
+      const query = `
+        SELECT 
+        id,
+          price, 
+          transaction_status, 
+          title, 
+          wilaya,
+          commune,
+          likes_count,
+          CASE
+            WHEN photos_urls IS NOT NULL AND photos_urls != '{}' THEN photos_urls[1]
+            ELSE NULL
+          END AS photo_address
+        FROM property
+        ORDER BY RANDOM()
+        LIMIT 3;
+      `;
+  
+      const result = await pool.query(query);
+  
+      if (result.rows.length === 0) {
+        return res.status(404).json({ message: 'No properties found' });
+      }
+  
+      res.status(200).json({ properties: result.rows });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while retrieving random properties' });
+    }
+};
+
+  const getLikedProperties = async (req, res) => {
+    try {
+      const { user_id } = req.params;
+  
+      // Validate if the user_id is provided
+      if (!user_id) {
+        return res.status(400).json({ error: 'User ID is required' });
+      }
+  
+      // Step 1: Get the property IDs that the user has liked from the liked_posts table
+      const likedPropertiesQuery = `
+        SELECT property_id
+        FROM likes
+        WHERE user_id = $1;
+      `;
+      const likedPropertiesResult = await pool.query(likedPropertiesQuery, [user_id]);
+  
+      // Step 2: If no liked properties found
+      if (likedPropertiesResult.rows.length === 0) {
+        return res.status(404).json({ message: 'No liked properties found for this user' });
+      }
+  
+      // Step 3: Collect all the property IDs
+      const propertyIds = likedPropertiesResult.rows.map(row => row.property_id);
+  
+      // Step 4: Fetch the property details based on the liked property IDs
+      const propertiesQuery = `
+        SELECT 
+          p.id,
+          p.title,
+          p.price,
+          p.transaction_status,
+          p.wilaya,
+          p.commune, 
+          p.likes_count,
+          CASE
+            WHEN p.photos_urls IS NOT NULL AND p.photos_urls != '{}' THEN p.photos_urls[1]
+            ELSE NULL
+          END AS photo_address
+        FROM property p
+        WHERE p.id = ANY($1);
+      `;
+      
+      const propertiesResult = await pool.query(propertiesQuery, [propertyIds]);
+  
+      // Step 5: Return the liked properties
+      res.status(200).json({ liked_properties: propertiesResult.rows });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while retrieving liked properties' });
+    }
+  };
+
+const logout = (req, res) => {
+    // Clear the cookie
+    res.clearCookie('token');  // replace 'token' with your actual cookie name if different
+  
+    res.status(200).json({ message: 'Logged out successfully' });
+};
+
+
+
+
+module.exports = { logout, getPropertyDetails ,getLikedProperties,getSavedProperties,getThreeRandomProperties,searchProperties, getit, signup, his, createMessage, getMessages, saveProperty, login, addLike, authenticate, addComment,  deleteProperty, getRandomProperties, getRandomComments };
