@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import drapeau from "../../assets/drapeau.png";
 import profile from "../../assets/profil.png";
+
 import {
   Navbar as MaterialNavbar,
   Typography,
@@ -53,11 +54,13 @@ export const Navbar = () => {
   };
 
   const links = [
-    { name: t("accueil"), link: "./" },
-    { name: t("decouvrir"), link: "./property" },
-    { name: t("apropos"), link: "" },
-    { name: t("faq"), link: "" },
-    { name: t("avis"), link: "" },
+
+    { name: t("accueil"), link: "." },
+    { name: t("decouvrir"), link: "property" },
+    { name: t("apropos"), link: "#apropos" },
+    { name: t("faq"), link: "#faq" },
+    { name: t("avis"), link: "#comments-section" },
+
   ];
 
   const linkss = [{ name: t("publierp"), link: "post" }];
@@ -81,8 +84,31 @@ export const Navbar = () => {
         {links.map((link, idx) => (
           <li key={idx} className="flex items-center ml-8">
             <Link
-              onClick={closeMenu}
-              to={`/${link.link}`}
+              onClick={(e) => {
+                e.preventDefault(); // Prevent default behavior
+                if (link.link.startsWith("#")) {
+                  const targetId = link.link.substring(1); // Extract the target ID
+
+                  if (window.location.pathname !== "/") {
+                    // Redirect to the homepage with the fragment
+                    window.location.href = `/#${targetId}`;
+                  } else {
+                    // Smooth scroll to the target section
+                    const target = document.getElementById(targetId);
+                    if (target) {
+                      target.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }
+                  }
+                } else {
+                  // For regular navigation
+                  closeMenu();
+                  window.location.href = link.link;
+                }
+              }}
+              to={link.link}
               className="text-white hover:text-[#1C84FF] font-semibold block md:text-bold md:mx-2"
             >
               {link.name}
