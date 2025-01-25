@@ -1,0 +1,30 @@
+name: Frontend CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  frontend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16' # Version compatible avec ton projet front-end
+
+      - name: Install Dependencies
+        working-directory: ./Frontend
+        run: npm install
+
+      - name: Run Frontend Tests
+        working-directory: ./Frontend
+        run: npm test
+
+      - name: Build Frontend
+        working-directory: ./Frontend
+        run: npm run build
