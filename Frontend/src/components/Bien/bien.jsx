@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";  // Import Link from React Router
 import Cuisine from '../../assets/cuisine.png'
 import { Navbar } from '../Navbar/Navbar';
@@ -13,6 +13,42 @@ const Bien = () => {
     const [mainImage, setMainImage] = useState(article.image || Bienp);
     const [showDescription, setShowDescription] = useState(false);
     const [showContact, setShowContact] = useState(false);
+  const [properties, setProperties] = useState([]); // State for properties
+    
+useEffect(() => {
+
+    const fetchProperties = async () => {
+
+      try {
+
+        const response = await fetch('http://localhost:3000/api/property/getThreeRandomProperties'); // Adjust the URL as needed
+
+        const data = await response.json();
+
+        
+
+        if (response.ok) {
+
+          setProperties(data.properties); // Set the fetched properties
+
+        } else {
+
+          console.error(data.message);
+
+        }
+
+      } catch (error) {
+
+        console.error('Error fetching properties:', error);
+
+      }
+
+    };
+
+
+    fetchProperties();
+
+  }, []);
 
     // Function to handle the image click and toggle behavior
     const handleMediaClick = (clickedMedia) => {
@@ -54,7 +90,7 @@ const Bien = () => {
     <img
       src={mainImage}
       alt={article.title || "Default Image"}
-      className="w-full h-auto rounded-lg shadow-lg"
+      className="w-full h-auto max-h-[500px] rounded-lg shadow-lg"
     />
   )}
 </div>
@@ -95,7 +131,7 @@ const Bien = () => {
                         <div className="space-y-6">
                             {/* Price */}
                             <div className="flex items-center justify-between h-16 bg-gray-100 rounded-lg shadow-md">
-                                <span className="font-semibold text-lg px-4">Price: {article.price || "25,000,000"} DZD</span>
+                                <span className="font-semibold text-lg px-4">Price: {article.price || "no price"} DZD</span>
                                 <div className="flex items-center justify-center bg-orange-500 text-white h-full w-16">
                                     <FaTag size={24} />
                                 </div>
@@ -103,7 +139,7 @@ const Bien = () => {
 
                             {/* Location */}
                             <div className="flex items-center justify-between h-16 bg-gray-100 rounded-lg shadow-md">
-                                <span className="font-semibold text-lg px-4">Details de localisation</span>
+                                <span className="font-semibold text-lg px-4"> {article.wilaya}, {article.commune}</span>
                                 <div className="flex items-center justify-center bg-orange-500 text-white h-full w-16">
                                     <FaMapMarkerAlt size={24} />
                                 </div>
@@ -111,7 +147,7 @@ const Bien = () => {
 
                             {/* Property Type */}
                             <div className="flex items-center justify-between h-16 bg-gray-100 rounded-lg shadow-md">
-                                <span className="font-semibold text-lg px-4">Property Type: Villa</span>
+                                <span className="font-semibold text-lg px-4">Property Type: {article.category}</span>
                                 <div className="flex items-center justify-center bg-orange-500 text-white h-full w-16">
                                     <FaHome size={24} />
                                 </div>
@@ -119,7 +155,7 @@ const Bien = () => {
 
                             {/* Bedrooms */}
                             <div className="flex items-center justify-between h-16 bg-gray-100 rounded-lg shadow-md">
-                                <span className="font-semibold text-lg px-4">Nombre de chambres: 3</span>
+                                <span className="font-semibold text-lg px-4">Nombre de chambres: {article.bedrooms}</span>
                                 <div className="flex items-center justify-center bg-orange-500 text-white h-full w-16">
                                     <FaBed size={24} />
                                 </div>
@@ -127,7 +163,7 @@ const Bien = () => {
 
                             {/* Additional Features */}
                             <div className="flex items-center justify-between h-16 bg-gray-100 rounded-lg shadow-md cursor-pointer" onClick={() => setShowDescription(!showDescription)}>
-                                <span className="font-semibold text-lg px-4">Caractéristiques supplémentaires</span>
+                                <span className="font-semibold text-lg px-4">Caractéristiques supplémentaires </span>
                                 <div className="flex items-center justify-center bg-orange-500 text-white h-full w-16">
                                     <FaListAlt size={24} />
                                 </div>
@@ -138,10 +174,7 @@ const Bien = () => {
                         {showDescription && (
                             <div className="mt-8">
                                 <p className="text-gray-700 leading-relaxed">
-                                    This stunning modern villa is located in the heart of Hydra. With spacious
-                                    living areas, an open-concept kitchen, and beautifully landscaped gardens, it
-                                    offers the perfect blend of luxury and comfort. Close to schools, shops, and
-                                    transportation.
+                                {article.description}
                                 </p>
                             </div>
                         )}
@@ -152,7 +185,7 @@ const Bien = () => {
                                 className="flex items-center justify-between h-16 bg-gray-100 rounded-lg shadow-md cursor-pointer"
                                 onClick={() => setShowContact(!showContact)}
                             >
-                                <span className="font-semibold text-lg px-4">Contact Informations</span>
+                                <span className="font-semibold text-lg px-4">Contact Informations </span>
                                 <div className="flex items-center justify-center bg-orange-500 text-white h-full w-16">
                                     <FaPhoneAlt size={24} />
                                 </div>
@@ -162,8 +195,8 @@ const Bien = () => {
                         {showContact && (
                             <div className="mt-8">
                                 <ul className="text-gray-700">
-                                    <li><strong>Phone:</strong> +213 555 123 456</li>
-                                    <li><strong>Email:</strong> flanbenflan@realestate.dz</li>
+                                    <li><strong>Phone:</strong> {article.phone_number}</li>
+                                    <li><strong>Email:</strong> {article.email}</li>
                                 </ul>
                             </div>
                         )}
@@ -191,48 +224,40 @@ const Bien = () => {
                 <button className="btn-see-more">Voir plus &gt;</button>
                 </Link>
             </div>
- <div className="articles">
-                {/* Example of multiple articles using the Article component */}
-               {/* Example of multiple articles using the Article component */}
-               <Article 
-    title="Appartement confortable"
-    image={Cuisine} 
-    wilaya="Alger" 
-    commune='Birtouta'
-    bedrooms="3" 
-    bathrooms="2" 
-    surface="120" 
-    price="250,000"
-    isNew={true}  // Show NEW tag for this article
-    saleType="For Sale"  // Show FOR SALE tag for this article
-/>
+            <div className="articles">
 
-<Article 
-    title="Villa de Luxe"
-    image={Cuisine} 
-    wilaya="Oran" 
-    commune="Oran"
-    bedrooms="4" 
-    bathrooms="3" 
-    surface="200" 
-    price="450,000"
-    category="villa"
-    isNew={false}  // No NEW tag for this article
-    saleType="For Rent"  // Show FOR RENT tag for this article
-/>
+{/* Map through the properties and render Article components */}
 
-<Article 
-    title="Condo moderne"
-    image={Cuisine} 
-    wilaya="Bejaia" 
-    commune="Ville"
-    bedrooms="2" 
-    bathrooms="1" 
-    surface="80" 
-    price="150,000"
-    isNew={true}  // Show NEW tag for this article
-    saleType="For Sale"  // Show FOR SALE tag for this article
-/>
+{properties.map((property) => (
+
+  <Article 
+
+    key={property.id} // Use the property ID as the key
+
+    title={property.title}
+
+    image={property.photo1 || Cuisine} // Use the fetched image or a default
+
+    wilaya={property.wilaya} 
+
+    commune={property.commune}
+
+    //bedrooms="3" // You may need to adjust this based on your data
+
+    ///bathrooms="2" // You may need to adjust this based on your data
+
+    surface={property.area}// You may need to adjust this based on your data
+
+    price={property.price}
+
+    isNew={true}  // Adjust based on your logic
+
+    saleType={property.transaction_status}  // Adjust based on your data
+
+  />
+
+))}
+
 </div>
 <Footer />
         </div>

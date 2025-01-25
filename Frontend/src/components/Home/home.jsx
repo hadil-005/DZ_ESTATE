@@ -12,6 +12,7 @@ import buy from "../../assets/buy.png";
 import sale from "../../assets/sale.png";
 import { Navbar } from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
+
 import { TfiQuoteLeft } from "react-icons/tfi";
 import Alert from "../../components/Home/alert.jsx";
 import Article from "../Article/Article"; // Import the new Article component
@@ -20,7 +21,13 @@ import Article from "../Article/Article"; // Import the new Article component
   rel="stylesheet"
 ></link>;
 
+
+
+//api/property/getThreeRandomProperties
+
+
 const Home = () => {
+
  const [testimonials, setTestimonials] = useState([]); // Stocker les commentaires
  const [currentIndex, setCurrentIndex] = useState(0); // Index du commentaire affiché
 const [properties, setProperties] = useState([]);
@@ -44,6 +51,7 @@ const [properties, setProperties] = useState([]);
           "http://localhost:3000/api/comments/home/comment"
         );
         setTestimonials(commentsResponse.data); // Mise à jour des témoignages
+
 
         // Appel pour les propriétés
         const propertiesResponse = await fetch(
@@ -265,6 +273,7 @@ const [properties, setProperties] = useState([]);
               Inscrivez-vous maintenant et vendez ou louez <br />
               vos propriétés
             </p>
+
           </div>
         </div>
       </div>
