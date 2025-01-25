@@ -233,7 +233,7 @@ export const Navbar = () => {
         <div className="flex justify-around items-center">
            <button className="text-gray-400 hover:text-blue-500 font-semibold">
             <Link to="/historique">
-              {t("Historique.jsx")}
+              {t("Historique")}
             </Link>
           </button>
           <button className="text-gray-400 hover:text-blue-500 font-semibold">
@@ -248,7 +248,7 @@ export const Navbar = () => {
           </button>
           <button className="text-gray-400 hover:text-blue-500 font-semibold">
           <Link to="/enreg">
-            {t("Enregistrement.jsx")}
+            {t("Enregistrement")}
             </Link>
           </button>
           <button className="text-gray-400 hover:text-blue-500 font-semibold">
