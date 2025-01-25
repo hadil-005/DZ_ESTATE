@@ -169,14 +169,18 @@ const Bien = () => {
                         )}
 
                         {/* Call to Action */}
-                        <div className="mt-8 flex gap-4">
-  <button className="bg-blue-500 text-white px-4  h-12 rounded-lg text-sm hover:bg-blue-600 flex-grow">
-    DEMANDE UNE VISITE
-  </button>
-  <button className="bg-blue-500 text-white px-4  h-12 rounded-lg text-sm hover:bg-blue-600 flex-grow">
-    ENVOYER UN MESSAGE
-  </button>
+                        <div className="mt-8">
+  <h2 className="text-2xl font-bold mb-6 text-gray-800 text-left">Demander une visite</h2>
+  <div className="flex justify-center">
+    <Link to="../disc">
+      <button className="bg-blue-500 text-white px-4 h-12 rounded-lg text-sm hover:bg-blue-600">
+        ENVOYER UN MESSAGE
+      </button>
+    </Link>
+  </div>
 </div>
+
+
 
                     </div>
                 </div>
