@@ -1,107 +1,124 @@
 import React, { useState } from "react";
-import logo from "../../assets/logo.png";
-import { useNavigate } from 'react-router-dom';
-const Footer = ({ addTestimonial }) => {
+import { useNavigate } from "react-router-dom";
+import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa"; // Import des icônes des réseaux sociaux
+
+const Footer = () => {
   const [comment, setComment] = useState("");
   const navigate = useNavigate();
-  const handleSendComment = () => {
-    if (comment.trim()) {
-      addTestimonial(comment);
-      setComment(""); // Clear input after sending
+
+  const handleSendComment = async () => {
+    if (!comment.trim()) {
+      alert("Veuillez saisir un commentaire.");
+      return;
+    }
+
+    const alertData = { content: comment };
+
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:3000/api/comments/createc",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(alertData),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Commentaire ajouté :", data.comment);
+        alert("Votre commentaire a été ajouté !");
+        setComment("");
+      } else {
+        const errorData = await response.json();
+        console.error("Erreur :", errorData.error);
+        alert(errorData.error || "Une erreur est survenue.");
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'envoi du commentaire :", error);
+      alert("Une erreur réseau est survenue. Veuillez réessayer.");
     }
   };
+
   const handleClick = () => {
-    navigate('/signin'); // Navigate to the /signin route
+    navigate("/signin");
   };
-    return (
-      <footer className="bg-gray-950 text-gray-400 py-10">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-6 gap-6">
-          {/* Logo and Comment */}
-          <div className="md:col-span-2">
-            <img src={logo} className='mb-20'></img>
-            <div>
-              <p className="text-white font-semibold mb-4">Votre commentaire</p>
-              <div className="flex items-center w-fit">
+
+  return (
+    <footer className="bg-gray-950 text-gray-400 py-6">
+      <div className="container mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-12">
+          {/* Section Votre commentaire */}
+          <div className="flex-1">
+            <h3 className="text-white font-semibold mb-4">Votre commentaire</h3>
+            <div className="flex items-center">
               <input
                 type="text"
+                id="comment"
                 placeholder="Que pensez-vous de notre service"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="w-full bg-inherit rounded-lg px-4 py-2 text-sm text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-72 bg-inherit rounded-lg px-4 py-2 text-sm text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
-                <button onClick={handleSendComment} className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-full text-sm flex items-center ">
-                Envoyer→
-                </button>
-              </div>
+              <button
+                onClick={handleSendComment}
+                className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-full text-sm flex items-center ml-2"
+              >
+                Envoyer →
+              </button>
             </div>
           </div>
-  
-          {/* Discover */}
-          <div className="mt-24">
-            <h2 className="text-white font-semibold mb-4">Découvrir</h2>
-            <ul className="space-y-2">
-              {["Alger", "Batna", "Bejaia", "Bouira", "Setif", "Oran"].map(
-                (city, index) => (
-                  <li key={index} className="hover:text-white cursor-pointer">
-                    {city}
-                  </li>
-                )
-              )}
-            </ul>
+
+          {/* Section Réseaux sociaux */}
+          <div className="flex-1" style={{ marginRight: "-150px" }}>
+            <h3 className="text-white font-semibold mb-4">
+              Nos réseaux sociaux
+            </h3>
+            <div className="flex justify-center items-center gap-6 mr-96">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaFacebookF className="text-white text-2xl hover:text-blue-600" />
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaTwitter className="text-white text-2xl hover:text-blue-400" />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaInstagram className="text-white text-2xl hover:text-pink-600" />
+              </a>
+            </div>
           </div>
-  
-          {/* Quick Links */}
-          <div className="mt-24">
-            <h2 className="text-white font-semibold mb-4">Liens rapides</h2>
-            <ul className="space-y-2">
-              {[
-                "À propos de nous",
-                "Découvrir",
-                "FAQ",
-                "Commentaires",
-                "Politique de confidentialité",
-                "Conditions générales",
-              ].map((link, index) => (
-                <li key={index} className="hover:text-white cursor-pointer">
-                  {link}
-                </li>
-              ))}
-            </ul>
-          </div>
-  
-          {/* Contact Us */}
-          <div className="mt-24">
-            <h2 className="text-white font-semibold mb-4">Contactez-nous</h2>
+
+          {/* Section Contactez-nous */}
+          <div className="flex-1" style={{ marginRight: "-300px" }}>
+            <h3 className="text-white font-semibold mb-4">Contactez-nous</h3>
             <ul className="space-y-2">
               <li>dzestate@gmail.com</li>
               <li>(123) 456-7890</li>
             </ul>
           </div>
-  
-          {/* Join Us */}
-          <div className="space-y-4 mt-24">
-            <div>
-              <h2 className="text-white font-semibold mb-2">Rejoignez-nous</h2>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm" onClick={handleClick}>
-              S'INSCRIRE
-              </button>
-            </div>
-            <div>
-              <h2 className="text-white font-semibold mb-2">Publiez votre propriété</h2>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm" onClick={handleClick}>
-              Publier
-              </button>
-            </div>
-          </div>
         </div>
-        <div class="h-0.5 bg-gray-700 w-9/12 mx-auto mt-20"></div>
-        {/* Footer Bottom */}
-        <div className="text-center text-sm text-gray-500 mt-10">
+
+        <div className="h-0.5 bg-gray-700 w-9/12 mx-auto my-8"></div>
+
+        <div className="text-center text-sm text-gray-500">
           Copyright © 2024. DZ-ESTATE
         </div>
-      </footer>
-    );
-  };
-  
-  export default Footer;
-  
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
