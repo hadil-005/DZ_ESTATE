@@ -24,8 +24,9 @@ cloudinary.config({
 
 const { Pool } = require('pg');
 const pool = new Pool({
-  connectionString: 'postgresql://DZestate_owner:ZMrytvCKhe04@ep-soft-cell-a5j0gqje.us-east-2.aws.neon.tech/last_version_from_me?sslmode=require'});
-
+  connectionString:
+    "postgresql://DZestate_owner:ZMrytvCKhe04@ep-soft-cell-a5j0gqje.us-east-2.aws.neon.tech/last_version_from_me?sslmode=require",
+});
 const db = pool;
 const GOOGLE_CLIENT_ID = "408478996991-prag7l93m9v845ms2ft7oighd3o17edh.apps.googleusercontent.com";
 const GOOGLE_CLIENT_SECRET = " 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";
