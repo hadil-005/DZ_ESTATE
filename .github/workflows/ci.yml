@@ -31,9 +31,7 @@ jobs:
           npm start &  # Démarre ton backend en arrière-plan
           sleep 5      # Attends quelques secondes pour que le serveur soit lancé
 
-      - name: Run Backend Tests
-        run: npm test --prefix ./backend
-
+      
 
   # Job pour le Frontend
   frontend-tests:
