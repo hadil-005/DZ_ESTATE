@@ -49,7 +49,7 @@ function FormulaireSelect({ onSelect }) {
               <input
                 type="number"
                 id="nombreChambres1"
-                className="mt-1 block w-1/4 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                className="mt-1 block w-1/2 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
               />
             </div>
           </div>
@@ -67,7 +67,7 @@ function FormulaireSelect({ onSelect }) {
               <input
                 type="number"
                 id="nombreChambres2"
-                className="mt-1 block w-1/4 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                className="mt-1 block w-1/2 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
               />
             </div>
           </div>
@@ -85,7 +85,7 @@ function FormulaireSelect({ onSelect }) {
               <input
                 type="number"
                 id="nombreChambres4"
-                className="mt-1 block w-1/4 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                className="mt-1 block w-1/2 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
               />
             </div>
 
@@ -96,7 +96,7 @@ function FormulaireSelect({ onSelect }) {
               <input
                 type="number"
                 id="jardin4"
-                className="mt-1 block w-1/4 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                className="mt-1 block w-1/2 h-8 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
               />
             </div>
           </div>
