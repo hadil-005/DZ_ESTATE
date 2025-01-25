@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16' # Version compatible avec ton projet back-end
+          node-version: '18' # Version compatible avec ton projet back-end
 
       - name: Install Dependencies
         working-directory: ./Backend
