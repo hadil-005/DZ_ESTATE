@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";  // Import Link from React Router
 import './home.css';
 import Cuisine from '../../assets/cuisine.png'
@@ -15,6 +15,11 @@ import { TfiQuoteLeft } from "react-icons/tfi";
 import Article from '../Article/Article'; // Import the new Article component
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet"></link>
 
+
+
+//api/property/getThreeRandomProperties
+
+
 const Home = () => {
   const [testimonials, setTestimonials] = useState([
     "Excellent service! Highly recommend.",
@@ -22,6 +27,45 @@ const Home = () => {
     "Great selection of properties.",
   ]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [properties, setProperties] = useState([]); // State for properties
+
+
+  // Fetch properties from the backend
+
+  useEffect(() => {
+
+    const fetchProperties = async () => {
+
+      try {
+
+        const response = await fetch('http://localhost:3000/api/property/getThreeRandomProperties'); // Adjust the URL as needed
+
+        const data = await response.json();
+
+        
+
+        if (response.ok) {
+
+          setProperties(data.properties); // Set the fetched properties
+
+        } else {
+
+          console.error(data.message);
+
+        }
+
+      } catch (error) {
+
+        console.error('Error fetching properties:', error);
+
+      }
+
+    };
+
+
+    fetchProperties();
+
+  }, []);
 
   const addTestimonial = (newComment) => {
     setTestimonials((prev) => [...prev, newComment]);
@@ -152,17 +196,10 @@ const Home = () => {
                         <div className="flex space-x-2">
           <input
             type="number"
-            name="budgetMin"
-            placeholder="Min"
-            step="10"
-            className="w-[40%] px-2 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <input
-            type="number"
             name="budgetMax"
-            placeholder="Max"
+            placeholder="price"
             step="10"
-            className="w-[40%] px-2 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-[80%] px-2 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
                     </div>
@@ -191,29 +228,22 @@ const Home = () => {
                         <div className="flex space-x-2">
           <input
             type="number"
-            name="surfaceMin"
-            placeholder="Min"
-            step="10"
-            className="w-[40%] px-2 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <input
-            type="number"
             name="surfaceMax"
             placeholder="Max"
             step="10"
-            className="w-[40%] px-2 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-[80%] px-2 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
                     </div>
                     
                     </div>
-                    <button 
-                    className="w-full h-[40px] bg-blue-600 text-white font-poppins rounded-[5px] hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 "
-                    style={{ fontWeight: 'bold',fontSize: '16px', marginTop: '40px'}}
-                    >
-                    PERSONNALISER L'ALERTE
-                    </button>
-
+                    <div className="flex justify-center mt-10">
+<button 
+  className="w-full h-10 bg-blue-600 text-white font-poppins rounded-md hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300"
+>
+  PERSONNALISER L'ALERTE
+</button>
+</div>
                 </div>
                 
 
@@ -239,48 +269,40 @@ const Home = () => {
                 </Link>
             </div>
  <div className="articles">
-                {/* Example of multiple articles using the Article component */}
-               {/* Example of multiple articles using the Article component */}
-<Article 
-    title="Appartement confortable"
-    image={Cuisine} 
-    wilaya="Alger" 
-    commune='Birtouta'
-    bedrooms="3" 
-    bathrooms="2" 
-    surface="120" 
-    price="250,000"
-    isNew={true}  // Show NEW tag for this article
-    saleType="For Sale"  // Show FOR SALE tag for this article
-/>
 
-<Article 
-    title="Villa de Luxe"
-    image={Cuisine} 
-    wilaya="Oran" 
-    commune="Oran"
-    bedrooms="4" 
-    bathrooms="3" 
-    surface="200" 
-    price="450,000"
-    category="villa"
-    isNew={false}  // No NEW tag for this article
-    saleType="For Rent"  // Show FOR RENT tag for this article
-/>
+        {/* Map through the properties and render Article components */}
 
-<Article 
-    title="Condo moderne"
-    image={Cuisine} 
-    wilaya="Bejaia" 
-    commune="Ville"
-    bedrooms="2" 
-    bathrooms="1" 
-    surface="80" 
-    price="150,000"
-    isNew={true}  // Show NEW tag for this article
-    saleType="For Sale"  // Show FOR SALE tag for this article
-/>
-</div>
+        {properties.map((property) => (
+
+          <Article 
+
+            key={property.id} // Use the property ID as the key
+
+            title={property.title}
+
+            image={property.photo1 || Cuisine} // Use the fetched image or a default
+
+            wilaya={property.wilaya} 
+
+            commune={property.commune}
+
+            //bedrooms="3" // You may need to adjust this based on your data
+
+            ///bathrooms="2" // You may need to adjust this based on your data
+
+            surface={property.area}// You may need to adjust this based on your data
+
+            price={property.price}
+
+            isNew={true}  // Adjust based on your logic
+
+            saleType={property.transaction_status}  // Adjust based on your data
+
+          />
+
+        ))}
+
+      </div>
             
             <div className='bg-black h-80 '>
             <p className='custom-text1 text-white text-center mt-10 pt-10'>Pourquoi nous choisir</p>

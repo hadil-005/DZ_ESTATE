@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaBookmark, FaHeart, FaMapMarkerAlt, FaBed, FaSquare, FaDollarSign } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
 
-const Article = ({ title, image, wilaya, commune, bedrooms, surface, price, saleType, category, images, videos}) => {
+const Article = ({ title, image, wilaya, commune, bedrooms,phone_number , surface, price ,email, description,adress_gmaps, saleType, category, images, videos}) => {
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
   const navigate = useNavigate();  // Initialize useNavigate
@@ -14,10 +14,12 @@ const Article = ({ title, image, wilaya, commune, bedrooms, surface, price, sale
   const handleNavigate = () => {
     navigate("/Bien", {
       state: { 
-        title, 
+        title, email,phone_number ,
         image, 
+        adress_gmaps,
         wilaya,
         commune, 
+        description,
         price, 
         saleType, 
         bedrooms, 
