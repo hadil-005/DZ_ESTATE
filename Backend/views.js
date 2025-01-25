@@ -9,6 +9,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const cookieParser = require('cookie-parser')
 const crypto = require('crypto');
+const { console } = require('inspector');
 const secret = crypto.randomBytes(64).toString('hex');
 console.log(secret);
 
@@ -155,7 +156,7 @@ const addComment = async (req, res) => {
 
 const getRandomProperties = async (req, res) => {
   try {
-    const { limit = 5, property_type } = req.query;
+    const { limit = 30, property_type } = req.query;
 
     let query = 'SELECT * FROM property';
 
@@ -353,12 +354,12 @@ const createMessage = async (req, res) => {
   }
 };
 
-const searchProperties = async (req, res) => {
+const sezarchProperties = async (req, res) => {
   try {
-    const { wilaya, commune, property_type } = req.body;
+    const {  commune} = req.body;
 
     // Validate that at least one search field is provided
-    if (!wilaya && !commune && !property_type) {
+    if (!commune ) {
       return res.status(400).json({ error: 'At least one search criterion must be provided' });
     }
 
@@ -387,6 +388,35 @@ const searchProperties = async (req, res) => {
     // Return results or handle no match
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'No properties found matching your criteria' });
+    }
+
+    res.status(200).json({ properties: result.rows });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while searching for properties' });
+  }
+};
+
+const searchProperties = async (req, res) => {
+  try {
+    console.log("zz")
+    const { commune } = req.body;
+    console.log(req.body);
+    // Validate that the commune is provided
+    if (!commune) {
+      return res.status(400).json({ error: 'Commune is required to search for properties' });
+    }
+
+    // Build the query for searching by commune
+    const query = 'SELECT * FROM property WHERE commune ILIKE $1';
+    const values = [`%${commune}%`];
+
+    // Execute the query
+    const result = await pool.query(query, values);
+
+    // Return results or handle no match
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'No properties found in the specified commune' });
     }
 
     res.status(200).json({ properties: result.rows });
@@ -511,7 +541,7 @@ const getPropertyDetails = async (req, res) => {
   }
 };
 
-const getThreeRandomProperties = async (req, res) => {
+const geetThreeRandomProperties = async (req, res) => {
     try {
       const query = `
         SELECT 
@@ -543,6 +573,36 @@ const getThreeRandomProperties = async (req, res) => {
       res.status(500).json({ error: 'An error occurred while retrieving random properties' });
     }
 };
+
+const getThreeRandomProperties = async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        id,
+        price, 
+        transaction_status, 
+        title, 
+        wilaya,
+        commune,
+        likes_count
+      FROM property
+      ORDER BY RANDOM()
+      LIMIT 3;
+    `;
+
+    const result = await pool.query(query);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'No properties found' });
+    }
+
+    res.status(200).json({ properties: result.rows });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while retrieving random properties' });
+  }
+};
+
 
   const getLikedProperties = async (req, res) => {
     try {
