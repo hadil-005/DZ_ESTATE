@@ -491,7 +491,6 @@ const saveProperty = async (req, res) => {
   }
 };
 
-
 const his = async (req, res) => {
   const { property_id, buyer_email, new_status } = req.body;
 
@@ -651,7 +650,9 @@ const searchProperties = async (req, res) => {
     res.status(200).json({ properties: result.rows });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'An error occurred while searching for properties' });
+    res
+      .status(500)
+      .json({ error: "An error occurred while searching for properties" });
   }
 };
 
@@ -848,17 +849,17 @@ const getThreeRandomProperties = async (req, res) => {
 
 
 
-  const getLikedProperties = async (req, res) => {
-    try {
-      const { user_id } = req.params;
-  
-      // Validate if the user_id is provided
-      if (!user_id) {
-        return res.status(400).json({ error: 'User ID is required' });
-      }
-  
-      // Step 1: Get the property IDs that the user has liked from the liked_posts table
-      const likedPropertiesQuery = `
+const getLikedProperties = async (req, res) => {
+  try {
+    const { user_id } = req.params;
+
+    // Validate if the user_id is provided
+    if (!user_id) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    // Step 1: Get the property IDs that the user has liked from the liked_posts table
+    const likedPropertiesQuery = `
         SELECT property_id
         FROM likes
         WHERE user_id = $1;

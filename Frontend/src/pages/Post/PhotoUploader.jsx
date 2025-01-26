@@ -21,31 +21,31 @@ const PhotoUploader = ({ onUpload }) => {
     const newPhotos = [...photos, ...files];
     setPhotos(newPhotos); // Ajoute les fichiers sélectionnés à la liste
     onUpload(newPhotos); // Transmet les photos au parent
-    // Envoie les fichiers au backend via Axios
-    try {
-      setUploading(true);
-      const formData = new FormData();
-      files.forEach((file) => {
-        formData.append("photos", file); // "photos" correspond au champ de votre formulaire
-      });
+    // // Envoie les fichiers au backend via Axios
+    // try {
+    //   setUploading(true);
+    //   const formData = new FormData();
+    //   files.forEach((file) => {
+    //     formData.append("photos", file); // "photos" correspond au champ de votre formulaire
+    //   });
 
-      // Remplacez par l'URL de votre backend
-      const response = await axios.post(
-        "http://localhost:3000/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // Important pour l'upload de fichiers
-          },
-        }
-      );
+    //   // Remplacez par l'URL de votre backend
+    //   const response = await axios.post(
+    //     "http://localhost:3000/upload",
+    //     formData,
+    //     {
+    //       headers: {
+    //         "Content-Type": "multipart/form-data", // Important pour l'upload de fichiers
+    //       },
+    //     }
+    //   );
 
-      console.log("Fichiers téléchargés avec succès :", response.data);
-    } catch (error) {
-      console.error("Erreur lors de l'upload des fichiers :", error);
-    } finally {
-      setUploading(false);
-    }
+    //   console.log("Fichiers téléchargés avec succès :", response.data);
+    // } catch (error) {
+    //   console.error("Erreur lors de l'upload des fichiers :", error);
+    // } finally {
+    //   setUploading(false);
+    // }
 
     e.target.value = ""; // Réinitialise l'input pour éviter l'affichage du dernier fichier sélectionné
   };

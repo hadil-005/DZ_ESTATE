@@ -15,17 +15,66 @@ function Post() {
   const [selectedCheckbox, setSelectedCheckbox] = useState(null);
   const [typeBien, setTypeBien] = useState("");
   const [selectedTypeBien, setSelectedTypeBien] = useState("");
-
+  const [rooms, setRooms] = useState("");
   const wilayas = [
-    "Adrar", "Chlef", "Laghouat", "Oum El Bouaghi", "Batna", "Béjaia", "Biskra", 
-    "Béchar", "Blida", "Bouira", "Tamanrasset", "Tébessa", "Tlemcen", "Tiaret", 
-    "Tizi Ouzou", "Alger", "Djelfa", "Jijel", "Sétif", "Saïda", "Skikda", "Sidi Bel Abbès", 
-    "Annaba", "Guelma", "Constantine", "Médéa", "Mostaganem", "M'Sila", "Mascara", 
-    "Ouargla", "Oran", "El Bayadh", "Illizi", "Bordj Bou Arreridj", "Boumerdès", 
-    "El Tarf", "Tindouf", "Tissemsilt", "El Oued", "Khenchela", "Souk Ahras", 
-    "Tipaza", "Mila", "Ain Defla", "Naama", "Aïn Témouchent", "Ghardaïa", "Relizane", 
-    "Timimoun", "Bordj Badji Mokhtar", "Ouled Djellal", "Béni Abbès", "In Salah", 
-    "In Guezzam", "Touggourt", "Djanet", "El Meghaier", "El Meniaa"
+    "Adrar",
+    "Chlef",
+    "Laghouat",
+    "Oum El Bouaghi",
+    "Batna",
+    "Béjaia",
+    "Biskra",
+    "Béchar",
+    "Blida",
+    "Bouira",
+    "Tamanrasset",
+    "Tébessa",
+    "Tlemcen",
+    "Tiaret",
+    "Tizi Ouzou",
+    "Alger",
+    "Djelfa",
+    "Jijel",
+    "Sétif",
+    "Saïda",
+    "Skikda",
+    "Sidi Bel Abbès",
+    "Annaba",
+    "Guelma",
+    "Constantine",
+    "Médéa",
+    "Mostaganem",
+    "M'Sila",
+    "Mascara",
+    "Ouargla",
+    "Oran",
+    "El Bayadh",
+    "Illizi",
+    "Bordj Bou Arreridj",
+    "Boumerdès",
+    "El Tarf",
+    "Tindouf",
+    "Tissemsilt",
+    "El Oued",
+    "Khenchela",
+    "Souk Ahras",
+    "Tipaza",
+    "Mila",
+    "Ain Defla",
+    "Naama",
+    "Aïn Témouchent",
+    "Ghardaïa",
+    "Relizane",
+    "Timimoun",
+    "Bordj Badji Mokhtar",
+    "Ouled Djellal",
+    "Béni Abbès",
+    "In Salah",
+    "In Guezzam",
+    "Touggourt",
+    "Djanet",
+    "El Meghaier",
+    "El Meniaa",
   ];
 
   const filteredWilayas = wilayas.filter((wilaya) =>
@@ -43,448 +92,522 @@ function Post() {
     setShowList(false);
   };
 
+  const communes = [
+    "Adrar",
+    "Tamest",
+    "Charouine",
+    "Reggane",
+    "In Zghmir",
+    "Tit",
+    "Tsabit",
+    "Ksar Kaddour",
+    "Aoulef",
+    "Tamentit",
+    "Fenoughil",
+    "Zaouiet Kounta",
+    "Timimoun",
+    "Metarfa",
+    "Ouled Said",
+    "Deldoul",
+    "Bouda",
+    "Sali",
+    "Akabli",
+    "Tinerkouk",
+    "Talmine",
+    "Ouled Ahmed Timmi",
+    "Sebaa",
+    "In Belbel",
+    "Bouda",
+    "Chlef",
+    "Tenes",
+    "Beni Haoua",
+    "Sobha",
+    "Ouled Farès",
+    "El Karimia",
+    "Harchoun",
+    "Oued Fodda",
+    "Boukadir",
+    "El Marsa",
+    "Abou El Hassan",
+    "Oued Goussine",
+    "Dahra",
+    "Taougrit",
+    "Sidi Akkacha",
+    "El Hadjadj",
+    "Ouled Abbes",
+    "Tadjena",
+    "Sendjas",
+    "Ouled Ben Abdelkader",
+    "Breira",
+    "Beni Rached",
+    "Beni Bouateb",
+    "Talassa",
+    "Laghouat",
+    "Ksar El Hirane",
+    "Benacer Benchohra",
+    "Sidi Makhlouf",
+    "Hassi Delaa",
+    "Hassi R'mel",
+    "Aflou",
+    "Tadjrouna",
+    "Sebgag",
+    "Brida",
+    "Ouled Morah",
+    "Gueltat Sidi Saad",
+    "El Ghicha",
+    "Ain Madhi",
+    "Tadjemout",
+    "Kheneg",
+    "El Assafia",
+    "Oued Morra",
+    "El Beidha",
+    "Sidi Bouzid",
+    "Oum El Bouaghi",
+    "Aïn Beïda",
+    "Aïn M'lila",
+    "Sigus",
+    "Ouled Hamla",
+    "Fkirina",
+    "Aïn Babouche",
+    "El Amiria",
+    "El Belala",
+    "Aïn Kercha",
+    "Hanchir Toumghani",
+    "Berriche",
+    "Aïn Diss",
+    "Ouled Zouai",
+    "Dhalaa",
+    "El Harmilia",
+    "Aïn Fakroun",
+    "Souk Naamane",
+    "Zorg",
+    "Rahia",
+    "Ouled Gacem",
+    "Bir Chouhada",
+    "Batna",
+    "Timgad",
+    "Barika",
+    "Merouana",
+    "N'gaous",
+    "Seriana",
+    "El Madher",
+    "Aïn Touta",
+    "Tazoult",
+    "Arris",
+    "Lambiridi",
+    "Bouzina",
+    "Chemora",
+    "Djerma",
+    "Inoughissen",
+    "Ichmoul",
+    "Aïn Yagout",
+    "Fesdis",
+    "Gosbat",
+    "El Hassi",
+    "Tilatou",
+    "Talkhamt",
+    "Seggana",
+    "Guigba",
+    "Ouyoun El Assafir",
+    "Béjaïa",
+    "Akbou",
+    "Amizour",
+    "Tichy",
+    "Souk El Tenine",
+    "Tazmalt",
+    "Barbacha",
+    "Timezrit",
+    "Sidi Aïch",
+    "El Kseur",
+    "Tala Hamza",
+    "Kendira",
+    "Adekar",
+    "Chemini",
+    "Aït Smail",
+    "Aokas",
+    "Bouhamza",
+    "Ouzellaguen",
+    "Melbou",
+    "Feraoun",
+    "Tifra",
+    "Tamridjet",
+    "Taskriout",
+    "Semaoune",
+    "Biskra",
+    "Tolga",
+    "El Kantara",
+    "Sidi Okba",
+    "Ourlal",
+    "Djemorah",
+    "Lioua",
+    "M'chouneche",
+    "Aïn Naga",
+    "El Ghrous",
+    "Zeribet El Oued",
+    "Oumache",
+    "Chetma",
+    "Khenguet Sidi Nadji",
+    "El Haouch",
+    "Bouchakroun",
+    "Bordj Ben Azzouz",
+    "Meziraa",
+    "Aïn Zaatout",
+    "Foughala",
+    "El Feidh",
+    "Béchar",
+    "Kenadsa",
+    "Abadla",
+    "Erg Ferradj",
+    "Taghit",
+    "Béni Abbès",
+    "Ouled Khoudir",
+    "Timoudi",
+    "El Ouata",
+    "Kerzaz",
+    "Igli",
+    "Tabelbala",
+    "Beni Ikhlef",
+    "Tamtert",
+    "Boukais",
+    "Mechraa Houari Boumediene",
+    "Blida",
+    "Boufarik",
+    "El Affroun",
+    "Ouled Yaïch",
+    "Mouzaïa",
+    "Bouarfa",
+    "Chebli",
+    "Béni Tamou",
+    "Soumaa",
+    "Chréa",
+    "Chiffa",
+    "Hammam Melouane",
+    "Ben Khelil",
+    "Ouled Slama",
+    "Meftah",
+    "Larbaa",
+    "Bouira",
+    "Aïn Bessem",
+    "Lakhdaria",
+    "El Hachimia",
+    "Bordj Okhriss",
+    "Haizer",
+    "Sour El Ghozlane",
+    "M'Chedallah",
+    "Bechloul",
+    "Bouderbala",
+    "Taghzout",
+    "Aïn Turk",
+    "Aomar",
+    "El Adjiba",
+    "Ridane",
+    "Saharidj",
+    "Dechmia",
+    "El Hakimia",
+    "Taguedit",
+    "Ath Mansour",
+    "Ath Laâziz",
+    "Ath Rached",
+    "Tamanrasset",
+    "Abalessa",
+    "Idles",
+    "In Ghar",
+    "In Guezzam",
+    "In Salah",
+    "Foggaret Ezzoua",
+    "Tazrouk",
+    "Tinzaouatine",
+    "Tébessa",
+    "Bir El Ater",
+    "El Aouinet",
+    "Cheria",
+    "El Ogla",
+    "El Ma Labiodh",
+    "Ouenza",
+    "Bekkaria",
+    "Bir Mokkadem",
+    "Hammamet",
+    "El Kouif",
+    "Negrine",
+    "Morsott",
+    "Safsaf El Ouesra",
+    "Stah Guentis",
+    "El Mezeraa",
+    "El Ogla El Malha",
+    "Guorriguer",
+    "Boukhadra",
+    "Oum Ali",
+    "Aïn Zerga",
+    "Aïn El Kebira",
+    "Tizi Ouzou",
+    "Azazga",
+    "Larbaa Nath Irathen",
+    "Draa El Mizan",
+    "Makouda",
+    "Aïn El Hammam",
+    "Freha",
+    "Boghni",
+    "Tigzirt",
+    "Beni Douala",
+    "Aghribs",
+    "Ait Yahia Moussa",
+    "Yakouren",
+    "Azeffoun",
+    "Ouaguenoun",
+    "Ifigha",
+    "Tizi Gheniff",
+    "Aït Aissa Mimoun",
+    "Mekla",
+    "Aït Bouadou",
+    "Iboudraren",
+    "Imsouhal",
+    "Boudjima",
+    "Yatafen",
+    "Beni Zmenzer",
+    "Iferhounène",
+    "Ait Chaffa",
+    "Timizart",
+    "Illoula Oumalou",
+    "Alger-Centre",
+    "Sidi M'Hamed",
+    "El Madania",
+    "Belouizdad",
+    "Bab El Oued",
+    "Bologhine",
+    "Casbah",
+    "Oued Koriche",
+    "Bir Mourad Raïs",
+    "El Biar",
+    "Bouzareah",
+    "Birkhadem",
+    "El Harrach",
+    "Baraki",
+    "Oued Smar",
+    "Bachdjerrah",
+    "Hussein Dey",
+    "Kouba",
+    "Bourouba",
+    "Dar El Beïda",
+    "Bab Ezzouar",
+    "Ben Aknoun",
+    "Dely Ibrahim",
+    "Hammamet",
+    "Raïs Hamidou",
+    "Djasr Kasentina",
+    "El Mouradia",
+    "Hydra",
+    "Mohammadia",
+    "Boumerdès",
+    "Boudouaou",
+    "Thenia",
+    "Khemis El Khechna",
+    "Naciria",
+    "Bordj Menaïel",
+    "Dellys",
+    "Isser",
+    "Baghlia",
+    "Chabet El Ameur",
+    "Zemmouri",
+    "Corso",
+    "Tidjelabine",
+    "Beni Amrane",
+    "Larbatache",
+    "Ouled Moussa",
+    "Afir",
+    "Souk El Had",
+    "Si Mustapha",
+    "El Kharrouba",
+    "Timezrit",
+    "Ouled Aissa",
+    "Taourga",
+    "Ben Choud",
+    "Legata",
+    "Khenchela",
+    "Babar",
+    "Bouhmama",
+    "Chelia",
+    "Kaïs",
+    "M'Toussa",
+    "El Oueldja",
+    "Ensigha",
+    "Tamza",
+    "Khirane",
+    "Baghai",
+    "Djellal",
+    "Aïn Touila",
+    "El Hamma",
+    "Ouled Rechache",
+    "Taouzianat",
+    "Yabous",
+  ];
+  const [searchc, setSearchc] = useState("");
+  const [showListc, setShowListc] = useState(false);
 
-   const communes = [
-        "Adrar",
-        "Tamest",
-        "Charouine",
-        "Reggane",
-        "In Zghmir",
-        "Tit",
-        "Tsabit",
-        "Ksar Kaddour",
-        "Aoulef",
-        "Tamentit",
-        "Fenoughil",
-        "Zaouiet Kounta",
-        "Timimoun",
-        "Metarfa",
-        "Ouled Said",
-        "Deldoul",
-        "Bouda",
-        "Sali",
-        "Akabli",
-        "Tinerkouk",
-        "Talmine",
-        "Ouled Ahmed Timmi",
-        "Sebaa",
-        "In Belbel",
-        "Bouda",
-        "Chlef",
-        "Tenes",
-        "Beni Haoua",
-        "Sobha",
-        "Ouled Farès",
-        "El Karimia",
-        "Harchoun",
-        "Oued Fodda",
-        "Boukadir",
-        "El Marsa",
-        "Abou El Hassan",
-        "Oued Goussine",
-        "Dahra",
-        "Taougrit",
-        "Sidi Akkacha",
-        "El Hadjadj",
-        "Ouled Abbes",
-        "Tadjena",
-        "Sendjas",
-        "Ouled Ben Abdelkader",
-        "Breira",
-        "Beni Rached",
-        "Beni Bouateb",
-        "Talassa",
-        "Laghouat",
-        "Ksar El Hirane",
-        "Benacer Benchohra",
-        "Sidi Makhlouf",
-        "Hassi Delaa",
-        "Hassi R'mel",
-        "Aflou",
-        "Tadjrouna",
-        "Sebgag",
-        "Brida",
-        "Ouled Morah",
-        "Gueltat Sidi Saad",
-        "El Ghicha",
-        "Ain Madhi",
-        "Tadjemout",
-        "Kheneg",
-        "El Assafia",
-        "Oued Morra",
-        "El Beidha",
-        "Sidi Bouzid",
-        "Oum El Bouaghi",
-        "Aïn Beïda",
-        "Aïn M'lila",
-        "Sigus",
-        "Ouled Hamla",
-        "Fkirina",
-        "Aïn Babouche",
-        "El Amiria",
-        "El Belala",
-        "Aïn Kercha",
-        "Hanchir Toumghani",
-        "Berriche",
-        "Aïn Diss",
-        "Ouled Zouai",
-        "Dhalaa",
-        "El Harmilia",
-        "Aïn Fakroun",
-        "Souk Naamane",
-        "Zorg",
-        "Rahia",
-        "Ouled Gacem",
-        "Bir Chouhada",
-        "Batna",
-        "Timgad",
-        "Barika",
-        "Merouana",
-        "N'gaous",
-        "Seriana",
-        "El Madher",
-        "Aïn Touta",
-        "Tazoult",
-        "Arris",
-        "Lambiridi",
-        "Bouzina",
-        "Chemora",
-        "Djerma",
-        "Inoughissen",
-        "Ichmoul",
-        "Aïn Yagout",
-        "Fesdis",
-        "Gosbat",
-        "El Hassi",
-        "Tilatou",
-        "Talkhamt",
-        "Seggana",
-        "Guigba",
-        "Ouyoun El Assafir",
-        "Béjaïa",
-        "Akbou",
-        "Amizour",
-        "Tichy",
-        "Souk El Tenine",
-        "Tazmalt",
-        "Barbacha",
-        "Timezrit",
-        "Sidi Aïch",
-        "El Kseur",
-        "Tala Hamza",
-        "Kendira",
-        "Adekar",
-        "Chemini",
-        "Aït Smail",
-        "Aokas",
-        "Bouhamza",
-        "Ouzellaguen",
-        "Melbou",
-        "Feraoun",
-        "Tifra",
-        "Tamridjet",
-        "Taskriout",
-        "Semaoune",
-        "Biskra",
-        "Tolga",
-        "El Kantara",
-        "Sidi Okba",
-        "Ourlal",
-        "Djemorah",
-        "Lioua",
-        "M'chouneche",
-        "Aïn Naga",
-        "El Ghrous",
-        "Zeribet El Oued",
-        "Oumache",
-        "Chetma",
-        "Khenguet Sidi Nadji",
-        "El Haouch",
-        "Bouchakroun",
-        "Bordj Ben Azzouz",
-        "Meziraa",
-        "Aïn Zaatout",
-        "Foughala",
-        "El Feidh",
-        "Béchar",
-        "Kenadsa",
-        "Abadla",
-        "Erg Ferradj",
-        "Taghit",
-        "Béni Abbès",
-        "Ouled Khoudir",
-        "Timoudi",
-        "El Ouata",
-        "Kerzaz",
-        "Igli",
-        "Tabelbala",
-        "Beni Ikhlef",
-        "Tamtert",
-        "Boukais",
-        "Mechraa Houari Boumediene",
-        "Blida",
-        "Boufarik",
-        "El Affroun",
-        "Ouled Yaïch",
-        "Mouzaïa",
-        "Bouarfa",
-        "Chebli",
-        "Béni Tamou",
-        "Soumaa",
-        "Chréa",
-        "Chiffa",
-        "Hammam Melouane",
-        "Ben Khelil",
-        "Ouled Slama",
-        "Meftah",
-        "Larbaa",
-        "Bouira",
-        "Aïn Bessem",
-        "Lakhdaria",
-        "El Hachimia",
-        "Bordj Okhriss",
-        "Haizer",
-        "Sour El Ghozlane",
-        "M'Chedallah",
-        "Bechloul",
-        "Bouderbala",
-        "Taghzout",
-        "Aïn Turk",
-        "Aomar",
-        "El Adjiba",
-        "Ridane",
-        "Saharidj",
-        "Dechmia",
-        "El Hakimia",
-        "Taguedit",
-        "Ath Mansour",
-        "Ath Laâziz",
-        "Ath Rached",
-        "Tamanrasset",
-        "Abalessa",
-        "Idles",
-        "In Ghar",
-        "In Guezzam",
-        "In Salah",
-        "Foggaret Ezzoua",
-        "Tazrouk",
-        "Tinzaouatine",
-        "Tébessa",
-        "Bir El Ater",
-        "El Aouinet",
-        "Cheria",
-        "El Ogla",
-        "El Ma Labiodh",
-        "Ouenza",
-        "Bekkaria",
-        "Bir Mokkadem",
-        "Hammamet",
-        "El Kouif",
-        "Negrine",
-        "Morsott",
-        "Safsaf El Ouesra",
-        "Stah Guentis",
-        "El Mezeraa",
-        "El Ogla El Malha",
-        "Guorriguer",
-        "Boukhadra",
-        "Oum Ali",
-        "Aïn Zerga",
-        "Aïn El Kebira",
-        "Tizi Ouzou",
-        "Azazga",
-        "Larbaa Nath Irathen",
-        "Draa El Mizan",
-        "Makouda",
-        "Aïn El Hammam",
-        "Freha",
-        "Boghni",
-        "Tigzirt",
-        "Beni Douala",
-        "Aghribs",
-        "Ait Yahia Moussa",
-        "Yakouren",
-        "Azeffoun",
-        "Ouaguenoun",
-        "Ifigha",
-        "Tizi Gheniff",
-        "Aït Aissa Mimoun",
-        "Mekla",
-        "Aït Bouadou",
-        "Iboudraren",
-        "Imsouhal",
-        "Boudjima",
-        "Yatafen",
-        "Beni Zmenzer",
-        "Iferhounène",
-        "Ait Chaffa",
-        "Timizart",
-        "Illoula Oumalou",
-        "Alger-Centre",
-        "Sidi M'Hamed",
-        "El Madania",
-        "Belouizdad",
-        "Bab El Oued",
-        "Bologhine",
-        "Casbah",
-        "Oued Koriche",
-        "Bir Mourad Raïs",
-        "El Biar",
-        "Bouzareah",
-        "Birkhadem",
-        "El Harrach",
-        "Baraki",
-        "Oued Smar",
-        "Bachdjerrah",
-        "Hussein Dey",
-        "Kouba",
-        "Bourouba",
-        "Dar El Beïda",
-        "Bab Ezzouar",
-        "Ben Aknoun",
-        "Dely Ibrahim",
-        "Hammamet",
-        "Raïs Hamidou",
-        "Djasr Kasentina",
-        "El Mouradia",
-        "Hydra",
-        "Mohammadia",
-        "Boumerdès",
-        "Boudouaou",
-        "Thenia",
-        "Khemis El Khechna",
-        "Naciria",
-        "Bordj Menaïel",
-        "Dellys",
-        "Isser",
-        "Baghlia",
-        "Chabet El Ameur",
-        "Zemmouri",
-        "Corso",
-        "Tidjelabine",
-        "Beni Amrane",
-        "Larbatache",
-        "Ouled Moussa",
-        "Afir",
-        "Souk El Had",
-        "Si Mustapha",
-        "El Kharrouba",
-        "Timezrit",
-        "Ouled Aissa",
-        "Taourga",
-        "Ben Choud",
-        "Legata",
-        "Khenchela",
-        "Babar",
-        "Bouhmama",
-        "Chelia",
-        "Kaïs",
-        "M'Toussa",
-        "El Oueldja",
-        "Ensigha",
-        "Tamza",
-        "Khirane",
-        "Baghai",
-        "Djellal",
-        "Aïn Touila",
-        "El Hamma",
-        "Ouled Rechache",
-        "Taouzianat",
-        "Yabous",
-      ];
-      const [searchc, setSearchc] = useState("");
-      const [showListc, setShowListc] = useState(false);
-  
-      const filtercommunes = communes.filter((commune) =>
-       commune.toLowerCase().startsWith(searchc.toLowerCase())
-      );
-      const handlecommuneClick = (commune) => {
-        setSearchc(commune);
-        setShowListc(false);
-      };
-      const handleInputChangec = (e) => {
-        const value = e.target.value;
-        setSearchc(value);
-        setShowListc(value !== "");
-      };
+  const filtercommunes = communes.filter((commune) =>
+    commune.toLowerCase().startsWith(searchc.toLowerCase())
+  );
+  const handlecommuneClick = (commune) => {
+    setSearchc(commune);
+    setShowListc(false);
+  };
+  const handleInputChangec = (e) => {
+    const value = e.target.value;
+    setSearchc(value);
+    setShowListc(value !== "");
+  };
   const handleCheckboxChange = (id) => {
     setSelectedCheckbox((prev) => (prev === id ? null : id));
   };
-
-  const handleSelect = (value) => {
-    setTypeBien(value);
+  const handleSelect = (data) => {
+    console.log("Type de bien :", data.typeBien);
+    console.log("Nombre de chambres :", data.rooms);
+    setTypeBien(data.typeBien); // Updates the typeBien state
+    setRooms(data.rooms); // Updates the rooms state
   };
 
-  const handlePhotoUpload = (newPhotos) => {
-    setPhotos(newPhotos);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Handle photo upload from PhotoUploader
+  const handlePhotoUpload = (uploadedPhotos) => {
+    console.log("zz");
+    setPhotos(uploadedPhotos); // Update the list of uploaded photo URLs
   };
-const handleSubmit = (e) => {
-  e.preventDefault();
 
-  // Collecte des données du formulaire
-  const wilaya = search.trim();
-  const commune = document.getElementById("commune").value.trim();
-  const adresse = document.getElementById("addresseM").value.trim();
-  const titre = document.getElementById("titre").value.trim();
-  const description = document.getElementById("description").value.trim();
-  const surface = document.getElementById("surface").value.trim();
-  const prix = document.getElementById("prix").value.trim();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    // Vérifie si des photos ont été uploadées
+    // if (photos.length === 0) {
+    //   alert("Veuillez ajouter au moins une photo.");
+    //   setLoading(false);
+    //   return;
+    // }
+    // // Get the token from localStorage
+    const token = localStorage.getItem("token");
+    console.log("Token from localStorage:55555555555555", token);
+    if (!token) {
+      console.error("No token found!");
+      return;
+    }
 
-  // Vérification des champs vides
-  const champsVides = [];
-  if (!wilaya) champsVides.push("Wilaya");
-  if (!commune) champsVides.push("Commune");
-  if (!adresse) champsVides.push("Adresse");
-  if (!titre) champsVides.push("Titre de publication");
-  if (!description) champsVides.push("Description");
-  if (!surface) champsVides.push("Surface");
-  if (!prix) champsVides.push("Prix");
-  if (photos.length === 0) champsVides.push("Photos");
-  if (selectedCheckbox === null) champsVides.push("Case à cocher");
-  if (!typeBien || typeBien === "") champsVides.push("Type de bien");
+    // Collecte des données du formulaire
+    const wilaya = search.trim();
+    const commune = document.getElementById("commune").value.trim();
+    const adresse = document.getElementById("addresseM").value.trim();
+    const titre = document.getElementById("titre").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const surface = document.getElementById("surface").value.trim();
+    const prix = document.getElementById("prix").value.trim();
 
-  if (champsVides.length > 0) {
-    alert(`Veuillez remplir les champs :\n${champsVides.join(", ")}`);
-    return;
-  }
+    // Vérification des champs vides
+    const champsVides = [];
+    if (!wilaya) champsVides.push("Wilaya");
+    if (!commune) champsVides.push("Commune");
+    if (!adresse) champsVides.push("Adresse");
+    if (!titre) champsVides.push("Titre de publication");
+    if (!description) champsVides.push("Description");
+    if (!surface) champsVides.push("Surface");
+    if (!prix) champsVides.push("Prix");
+    if (photos.length === 0) champsVides.push("Photos");
+    if (selectedCheckbox === null) champsVides.push("Case à cocher");
+    if (!typeBien || typeBien === "") champsVides.push("Type de bien");
 
-  // Préparation des données à envoyer
-  const formData = new FormData();
-  formData.append("wilaya", wilaya);
-  formData.append("commune", commune);
-  formData.append("adresse", adresse);
-  formData.append("title", titre);
-  formData.append("description", description);
-  formData.append("area", surface);
-  formData.append("price", prix);
-  formData.append("transaction_status", selectedCheckbox); // Type de transaction
-  formData.append("typeBien", typeBien);
+    // if (champsVides.length > 0) {
+    //   alert(`Veuillez remplir les champs :\n${champsVides.join(", ")}`);
+    //   return;
+    // }
 
-  // // Ajoute les photos au FormData
-  // photos.forEach((photo) => {
-    
-  //   formData.append("photos[]", photo);
+    // const base64Photos = await Promise.all(
+    //   photos.map((photo) => {
+    //     return new Promise((resolve, reject) => {
+    //       const reader = new FileReader();
+    //       reader.onloadend = () => resolve(reader.result.split(",")[1]); // Remove metadata prefix
+    //       reader.onerror = (error) => reject(error);
+    //       reader.readAsDataURL(photo);
+    //     });
+    //   })
+    // );
+
+    // const formData = {
+    //   wilaya: wilaya,
+    //   commune: commune,
+    //   adress_gmaps: adresse,
+    //   title: titre,
+    //   description: description,
+    //   area: surface,
+    //   price: prix,
+    //   transaction_status: selectedCheckbox, // Type de transaction
+    //   property_type: typeBien,
+    //   // photos: photos,
+    // };
+    // console.log(formData, "hhfie");
+    const formData = new FormData();
+    formData.append("wilaya", wilaya);
+    formData.append("commune", commune);
+    formData.append("adress_gmaps", adresse);
+    formData.append("title", titre);
+    formData.append("description", description);
+    formData.append("area", surface);
+    formData.append("price", prix);
+    formData.append("transaction_status", selectedCheckbox); // Type de transaction
+    formData.append("property_type", typeBien);
+    formData.append("rooms", rooms);
+
+    // // Append photos to the FormData
+    photos.forEach((photo, index) => {
+      formData.append("photos", photo); // Backend expects the key "photos"
+    });
+
+    try {
+      for (let [key, value] of formData.entries()) {
+        console.log(value);
+      }
+
+      const response = await fetch(
+        "http://127.0.0.1:3000/api/property/create",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // "Content-Type": "application/json",
+          },
+          body: formData,
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to create property");
+      }
+
+      const data = await response.json();
+      console.log("Property created:", data);
+      alert("Property created successfully!");
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred while creating the property.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // axios
+  //   .post("", formData, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //     withCredentials: true, // This will ensure cookies are sent with the request
+  //   })
+
+  //   .then((response) => {
+  //     console.log("Property created:", response.data);
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error:", error);
+  //     alert("Une erreur est survenue lors de la publication de votre bien.");
   // });
-
-  // Envoie les données au backend via axios
-    console.log("//////////***********");
-   axios
-     .post("http://127.0.0.1:3000/api/property/create", formData)
-     .then((response) => {
-       alert("Votre bien a été publié avec succès !");
-       // Réinitialise le formulaire après succès
-       setSearch("");
-       setPhotos([]);
-       setSelectedCheckbox(null);
-       setTypeBien("");
-     })
-     .catch((error) => {
-       console.error("Erreur lors de la soumission du formulaire : ", error);
-       alert("Une erreur est survenue lors de la publication de votre bien.");
-     });
-};
-
-
 
   return (
     <div>
@@ -493,12 +616,14 @@ const handleSubmit = (e) => {
         <h1 className="text-[#1C84FF] text-left text-[40px] font-bold mb-8">
           {t("Publier")}
         </h1>
+        
         <div className="flex space-x-60 w-full h-screen overflow-auto mt-6">
           <div className="space-y-3 ml-32 w-full lg:w-1/2 flex flex-col p-6 lg:p-1 lg:pt-4">
             <div className="flex flex-col space-y-2">
               <label className="font-semibold" htmlFor="wilaya">
                 {t("Wilaya")}
               </label>
+              
               <input
                 type="text"
                 placeholder={t("wilaya")}
@@ -521,10 +646,9 @@ const handleSubmit = (e) => {
                 </ul>
               )}
             </div>
-           
 
             <div className="flex flex-col space-y-2">
-              <label className="font-semibold" htmlFor="commune">
+              <label htmlFor="commune" className="font-semibold">
                 {t("Commune")}
               </label>
               <input
@@ -551,6 +675,7 @@ const handleSubmit = (e) => {
             </div>
 
             <div className="flex flex-col space-y-2">
+              
               <label htmlFor="addresseM" className="font-semibold">
                 {t("Addresse")}
               </label>
@@ -565,6 +690,7 @@ const handleSubmit = (e) => {
               <label htmlFor="titre" className="font-semibold">
                 {t("Titre")}
               </label>
+             
               <input
                 placeholder={t("titre")}
                 id="titre"
@@ -576,6 +702,7 @@ const handleSubmit = (e) => {
               <label htmlFor="description" className="font-semibold">
                 {t("Description")}
               </label>
+             
               <textarea
                 placeholder={t("description")}
                 id="description"
@@ -588,12 +715,14 @@ const handleSubmit = (e) => {
           <div className="space-y-3 w-full lg:w-1/2 flex flex-col p-6 lg:p-1 lg:pt-4">
             <PhotoUploader onUpload={handlePhotoUpload} />
 
+            <VideoUploader />
             <FormulaireSelect onSelect={handleSelect} />
 
             <div className="flex flex-col ml-2 space-y-2">
               <label htmlFor="surface" className="font-semibold">
                 {t("Surface")}
               </label>
+             
               <input
                 placeholder={t("surface")}
                 id="surface"
@@ -605,6 +734,7 @@ const handleSubmit = (e) => {
               <label htmlFor="prix" className="font-semibold">
                 {t("Prix")}
               </label>
+             
               <input
                 placeholder={t("prix")}
                 id="prix"
@@ -625,6 +755,7 @@ const handleSubmit = (e) => {
                 <label htmlFor="a vendre" className="font-semibold">
                   {t("vendre")}
                 </label>
+              
               </div>
               <div className="ml-2 flex items-center space-x-3">
                 <input
@@ -637,6 +768,7 @@ const handleSubmit = (e) => {
                 <label htmlFor="a louer" className="font-semibold">
                   {t("louer")}
                 </label>
+               
               </div>
             </div>
 

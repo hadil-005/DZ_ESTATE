@@ -1,13 +1,12 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+console.log(initReactI18next); // Devrait afficher une fonction
+
 
 // Définissez vos traductions ici
 const resources = {
-  
-};
 
-i18n.use(initReactI18next).init({
-  resources: {
+
     ar: {
       translation: {
         Pourquoinouschoisir: "لماذا تختارنا",
@@ -223,9 +222,13 @@ i18n.use(initReactI18next).init({
         Pourquoinouschoisir: "Pourquoi nous choisir",
       },
     },
-  },
-  lng: "fr",
-  fallbackLng: "fr",
+
+  };
+i18n.use(initReactI18next).init({
+  resources,
+  lng: "fr", // Langue par défaut
+  fallbackLng: "fr", // Langue de secours
+
   interpolation: {
     escapeValue: false,
   },

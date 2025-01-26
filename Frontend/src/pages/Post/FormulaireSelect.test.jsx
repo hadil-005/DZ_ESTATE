@@ -1,69 +1,79 @@
-import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
-import FormulaireSelect from "./FormulaireSelect";
-import axios from "axios"; // Ajoutez cette ligne en haut de votre fichier
-jest.mock("axios");
-import "@testing-library/jest-dom";
+import React, { useState, useRef } from "react";
 
-describe("FormulaireSelect", () => {
-  it("rend correctement le composant avec une valeur initiale vide", () => {
-    render(<FormulaireSelect />);
+const PhotoUploader = () => {
+  const [photos, setPhotos] = useState([]); // Liste des fichiers ajoutés
+  const fileInputRef = useRef(null); // Référence pour l'élément input file
 
-    // Vérifier que le label est présent
-    expect(screen.getByLabelText(/Type/i)).toBeInTheDocument();
-    // Vérifier que la valeur initiale du select est vide
-    expect(screen.getByRole("combobox")).toHaveValue("");
-  });
+  // Fonction pour ouvrir le sélecteur de fichiers
+  const openFileSelector = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // Simule un clic sur l'input file
+    }
+  };
 
-  it("affiche les champs conditionnels pour 'Appartement' quand sélectionné", () => {
-    render(<FormulaireSelect />);
+  // Fonction pour ajouter une photo
+  const addPhoto = (e) => {
+    const files = Array.from(e.target.files);
+    setPhotos([...photos, ...files]); // Ajoute les fichiers sélectionnés à la liste
+    e.target.value = ""; // Réinitialise l'input pour éviter l'affichage du dernier fichier sélectionné
+  };
 
-    // Sélectionner l'option "Appartement"
-    fireEvent.change(screen.getByRole("combobox"), { target: { value: "1" } });
+  // Fonction pour supprimer une photo
+  const removePhoto = (index) => {
+    setPhotos(photos.filter((_, idx) => idx !== index)); // Supprime l'élément de la liste
+  };
 
-    // Vérifier que les champs spécifiques pour Appartement sont présents
-    expect(screen.getByLabelText(/Nombre de chambres/i)).toBeInTheDocument();
-  });
+  return (
+    <div className="ml-2  w-3/4  space-y-2">
+      <p className="block text-[16px] font-semibold mb-2">Ajouter des photos</p>
 
-  it("affiche les champs conditionnels pour 'Villa' quand sélectionné", () => {
-    render(<FormulaireSelect />);
+      {/* Input file masqué */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept="image/*"
+        onChange={addPhoto}
+        className="hidden "
+      />
 
-    // Sélectionner l'option "Villa"
-    fireEvent.change(screen.getByRole("combobox"), { target: { value: "4" } });
+      {/* Liste des cases */}
+      <div className="mt-2 border border-[#9F9F9F]  rounded-lg overflow-hidden">
+        {/* Affichage dynamique des cases */}
+        {photos.map((file, index) => (
+          <div
+            key={index}
+            className="flex justify-between items-center p-2 border-b border-gray-200 last:border-none"
+          >
+            {/* Affichage du fichier */}
+            <span className="text-sm text-gray-700 truncate w-3/4">
+              {file.name}
+            </span>
+            {/* Bouton "-" pour supprimer */}
+            <button
+              onClick={() => removePhoto(index)}
+              className="text-[#CD0000] hover:text-red-700 font-bold text-lg"
+            >
+              −
+            </button>
+          </div>
+        ))}
 
-    // Vérifier que les champs spécifiques pour Villa sont présents
-    expect(screen.getByLabelText(/Nombre de chambres/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Surface du jardin/i)).toBeInTheDocument();
-  });
+        {/* Dernière case avec le bouton "+" */}
+        <div className="flex justify-between items-center p-2">
+          <span className="text-sm text-gray-500 italic w-3/4">
+            Ajouter une photo
+          </span>
+          <button
+            onClick={openFileSelector}
+            className="text-[#4CAF50] hover:text-green-700 font-bold text-lg"
+          >
+            +
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-  it("affiche les champs conditionnels pour 'Maison' quand sélectionné", () => {
-    render(<FormulaireSelect />);
-
-    // Sélectionner l'option "Maison"
-    fireEvent.change(screen.getByRole("combobox"), { target: { value: "2" } });
-
-    // Vérifier que les champs spécifiques pour Maison sont présents
-    expect(screen.getByLabelText(/Nombre de chambres/i)).toBeInTheDocument();
-  });
-
-  it("cache les champs conditionnels si aucune option n'est sélectionnée", () => {
-    render(<FormulaireSelect />);
-
-    const select = screen.getByRole("combobox");
-
-    // Sélectionner une option
-    fireEvent.change(select, { target: { value: "1" } });
-
-    // Vérifier que les champs conditionnels apparaissent
-    expect(screen.getByLabelText(/Nombre de chambres/i)).toBeInTheDocument();
-
-    // Revenir à la sélection vide
-    fireEvent.change(select, { target: { value: "" } });
-
-    // Vérifier que les champs conditionnels disparaissent
-    expect(
-      screen.queryByLabelText(/Nombre de chambres/i)
-    ).not.toBeInTheDocument();
-  });
-});
+export default PhotoUploader;

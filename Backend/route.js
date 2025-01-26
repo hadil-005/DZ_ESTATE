@@ -1,19 +1,21 @@
 const express = require("express");
 const {
   signup,
-  lert,
   login,
+  getget,
   getMessages,
   getit,
-  logout,
-  getPropertyDetails,
+  createMessage,
+  createeessage,
+  getMessases,
   getLikedProperties,
   getSavedProperties,
   getThreeRandomProperties,
   searchProperties,
-  createMessage,
+  logout,
   saveProperty,
-  getRandomComments,
+  creaeeMessage,
+  getPropertyDetails,
   his,
   addLike,
   authenticate,
@@ -31,9 +33,10 @@ router.post("/signup", signup);
 router.post("/login", login);
 router.post("/:user_id/comment", addComment);
 router.post("/logout", logout);
-router.post("/alert", lert);
-
 //_________________________________________
+router.get("/random", getRandomProperties);
+router.get("/randomp", getRandomProperties);
+router.get("/randomc", getRandomProperties);
 router.get("/random", getRandomProperties);
 router.get("/randomp", getRandomProperties);
 router.get("/randomc", getRandomProperties);
@@ -44,16 +47,18 @@ router.post("/like", addLike);
 router.post("/save", saveProperty);
 router.post("/userhis", his);
 router.post("/createMessage", createMessage);
-router.post("/createc", addComment);
-
 router.get("/home", getit);
 router.get("/searchProperties", searchProperties);
 router.get("/getThreeRandomProperties", getThreeRandomProperties);
 router.get("/:user_id/getLikedProperties", getLikedProperties);
 router.get("/getPropertyDetails/:property_id", getPropertyDetails);
 router.get("/:user_id/getSavedProperties", getSavedProperties);
-router.get("/home/comment", getRandomComments);
+router.post("/cmassage", creaeeMessage);
+
+// Fetch messages between two users
+router.get("/getget ", getget);
 
 // ____________________________________________
-router.get("/getMessages", getMessages);
+// router.get("/getMessages", getMessases);
 module.exports = router;
+

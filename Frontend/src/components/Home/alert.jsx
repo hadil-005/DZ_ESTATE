@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "./home.css";
 import axios from "axios";
+
 import { useTranslation } from "react-i18next";
 import "../../components/Multilingue/i18n";
+
 
 const Alert = () => {
   const { i18n, t } = useTranslation();

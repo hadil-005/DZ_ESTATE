@@ -13,6 +13,7 @@ import {
 } from "@material-tailwind/react";
 import "../Multilingue/i18n";
 
+
 export const Navbar = () => {
   const { i18n, t } = useTranslation();
   const [click, setClick] = useState(false);
