@@ -71,7 +71,7 @@ const [properties, setProperties] = useState([]);
 
     fetchData();
   }, []);
-
+console.log(properties)
 
   const wilayas = [
     "Adrar",
@@ -229,9 +229,14 @@ const [properties, setProperties] = useState([]);
             title={property.title}
             image={property.photo1 || Cuisine} // Use the fetched image or a default
             wilaya={property.wilaya}
+            bedrooms={property.rooms}
             commune={property.commune}
             surface={property.area} // You may need to adjust this based on your data
             price={property.price}
+            save_count={property.save_count}
+            likes_count={property.likes_count}
+            user_id = {property.user_id}
+            id = {property.id}
             isNew={true} // Adjust based on your logic
             saleType={property.transaction_status} // Adjust based on your data
           />

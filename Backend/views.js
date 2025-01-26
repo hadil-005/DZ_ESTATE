@@ -742,7 +742,11 @@ const getThreeRandomProperties = async (req, res) => {
         title, 
         wilaya,
         commune,
-        likes_count
+        likes_count,
+        area,
+        rooms,
+        photo1,
+        save_count
       FROM property
       ORDER BY RANDOM()
       LIMIT 3;
@@ -760,6 +764,7 @@ const getThreeRandomProperties = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while retrieving random properties' });
   }
 };
+
 
 
   const getLikedProperties = async (req, res) => {

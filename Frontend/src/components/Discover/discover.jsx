@@ -142,9 +142,11 @@ title={article.title}
             image={article.photo1} // Use the fetched image or a default
             images={[article.photo2, article.photo3]}
             wilaya={article.wilaya}  
-            iii = {article.user_id}
+            user_id = {article.user_id}
+            id = {article.id}
             commune={article.commune}
-
+            save_count={article.save_count}
+            likes_count={article.likes_count}
             bedrooms={article.rooms} // You may need to adjust this based on your data
 
             category={article.property_type}
