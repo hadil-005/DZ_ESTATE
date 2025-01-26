@@ -21,7 +21,7 @@ const PhotoUploader = ({ onUpload }) => {
     const newPhotos = [...photos, ...files];
     setPhotos(newPhotos); // Ajoute les fichiers sélectionnés à la liste
     onUpload(newPhotos); // Transmet les photos au parent
-    // Envoie les fichiers au backend via Axios
+    // // Envoie les fichiers au backend via Axios
     // try {
     //   setUploading(true);
     //   const formData = new FormData();
@@ -38,14 +38,14 @@ const PhotoUploader = ({ onUpload }) => {
     //         "Content-Type": "multipart/form-data", // Important pour l'upload de fichiers
     //       },
     //     }
-      //);
+    //   );
 
     //   console.log("Fichiers téléchargés avec succès :", response.data);
     // } catch (error) {
     //   console.error("Erreur lors de l'upload des fichiers :", error);
     // } finally {
     //   setUploading(false);
-    //}
+    // }
 
     e.target.value = ""; // Réinitialise l'input pour éviter l'affichage du dernier fichier sélectionné
   };

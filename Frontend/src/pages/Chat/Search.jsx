@@ -1,27 +1,43 @@
-import React from "react";
-import { DocSearch } from "@docsearch/react";
+import React, { useState } from "react";
 import { Input } from "@material-tailwind/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import PropTypes from "prop-types";
 
-const APP_ID = "your-app-id";
-const INDEX_NAME = "your-index-name";
-const API_KEY = "your-algolia-api-key";
+const MessageSearch = ({ users, onFilter }) => {
+  const [searchTerm, setSearchTerm] = useState("");
 
-const Search = () => {
+  // Fonction pour gérer le changement dans le champ de recherche
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    // Filtrage des utilisateurs selon le nom
+    const filteredUsers = users.filter((user) => {
+      const matchesSearchTerm =
+        value === "" || user.name.toLowerCase().includes(value.toLowerCase());
+      return matchesSearchTerm;
+    });
+
+    // Retourner les utilisateurs filtrés via le callback
+    onFilter(filteredUsers);
+  };
+
   return (
     <div className="relative w-full">
-      {/* Input avec du padding à gauche pour laisser de la place à l'icône */}
+      {/* Champ de recherche */}
       <Input
         type="text"
-        placeholder="Search"
-        className="pl-10 focus:!border-t-gray-900 group-hover:border-2 group-hover:!border-gray-900 w-full"
+        placeholder="Rechercher un utilisateur..."
+        value={searchTerm}
+        onChange={handleSearchChange}
+        className="pl-10 focus:!border-gray-900 w-full"
         labelProps={{
           className: "hidden",
         }}
       />
 
-      {/* Icône positionnée à l'intérieur de l'input */}
+      {/* Icône de recherche */}
       <div className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-600 pointer-events-none">
         <FontAwesomeIcon icon={faSearch} />
       </div>
@@ -29,4 +45,15 @@ const Search = () => {
   );
 };
 
-export default Search;
+MessageSearch.propTypes = {
+  users: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired, // Nom de l'utilisateur
+      avatar: PropTypes.string, // Facultatif : avatar de l'utilisateur
+    })
+  ).isRequired, // Liste des utilisateurs
+  onFilter: PropTypes.func.isRequired, // Fonction appelée lors de la recherche
+};
+
+export default MessageSearch;

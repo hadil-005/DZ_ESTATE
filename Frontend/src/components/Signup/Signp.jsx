@@ -84,7 +84,7 @@ const Signp = () => {
      alert("Inscription réussie ! Bienvenue !");
 
      // Naviguer vers la page d'accueil (Home)
-     navigate("/home");
+     navigate("/");
    } catch (error) {
      console.error("Erreur lors de l'inscription :", error);
      if (error.response && error.response.data) {

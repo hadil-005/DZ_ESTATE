@@ -1,26 +1,28 @@
-import React from 'react'
+import React from "react";
 import { Avatar, Typography } from "@material-tailwind/react";
+import PropTypes from "prop-types";
 
-const Avataru = () => {
+const Avataru = ({ avatar, name, onClick }) => {
   return (
-     <div className="flex items-center gap-4">
-              <Avatar
-                src="https://docs.material-tailwind.com/img/face-2.jpg"
-                alt="avatar"
-              />
-              <div>
-                <Typography variant="h6">Tania Andrew</Typography>
-                <Typography
-                  variant="small"
-                  color="gray"
-                  className="font-normal"
-                >
-                 azeer
-                </Typography>
-              </div>
-            
-            </div>
+    <div
+      className="flex items-center gap-4 cursor-pointer"
+      onClick={onClick} // Gère le clic
+    >
+      <Avatar src={avatar} alt={name} />
+      <div>
+        <Typography variant="h6">{name}</Typography>
+       
+      </div>
+    </div>
+  );
+};
 
-          
-  )
-}
+Avataru.propTypes = {
+  avatar: PropTypes.string.isRequired, // URL de l'avatar
+  name: PropTypes.string.isRequired, // Nom de l'utilisateur
+ 
+  onClick: PropTypes.func, // Fonction appelée au clic
+};
+
+
+export default Avataru;

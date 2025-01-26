@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Navbar } from "../../components/Navbar/Navbar";
 import { Sidebar } from "../../components/Sidebar/Sidebar";
 import Avataru from "./Avataru";
@@ -9,8 +9,9 @@ import {
   PhotoIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
+import PropTypes from "prop-types";
 
-function Discussion() {
+function Discussion({ user, selectedReceiverId }) {
   const fileInputRef = useRef(null); // Référence pour l'input image
   const fileInputOtherRef = useRef(null); // Référence pour l'input autre fichier
   const [uploadedFiles, setUploadedFiles] = useState([]); // Fichiers téléchargés
@@ -25,11 +26,6 @@ function Discussion() {
   // Ouvre le sélecteur de fichiers autres que les images
   const handleFileClick = () => {
     fileInputOtherRef.current.click();
-  };
-  // Gère l'ajout de fichiers
-  const handleFileChange = (event) => {
-    const files = Array.from(event.target.files);
-    setUploadedFiles((prevFiles) => [...prevFiles, ...files]);
   };
 
   // Gère les changements dans le <textarea>
@@ -46,56 +42,99 @@ function Discussion() {
     event.target.style.textAlign = isArabic ? "right" : "left";
   };
 
-  // Supprime un fichier
-  const removeFile = (index) => {
-    setUploadedFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
-  };
-
   // Envoi du message
-  const handleSendMessage = () => {
-    if (message.trim() || uploadedFiles.length > 0) {
-      const newMessage = {
-        text: message.trim(),
-        files: uploadedFiles,
-        timestamp: new Date().toLocaleTimeString(),
-      };
-      setSentMessages((prevMessages) => [...prevMessages, newMessage]);
-      setMessage(""); // Réinitialise le champ texte
-      setUploadedFiles([]); // Réinitialise les fichiers
+  const handleSendMessage = async () => {
+    const token = localStorage.getItem("token");
+    console.log("Token from localStorage:", token);
 
-      // Réinitialise le contenu éditable
-      const editableDiv = document.querySelector('[contenteditable="true"]');
-      if (editableDiv) {
-        editableDiv.innerText = "";
-        editableDiv.setAttribute("dir", "ltr");
-        editableDiv.style.textAlign = "left";
+    if (!token) {
+      console.error("No token found!");
+      return;
+    }
+
+    const msgElement = document.getElementById("msg");
+    if (msgElement && msgElement.textContent.trim()) {
+      const msg = msgElement.textContent.trim();
+      const formData = new FormData();
+
+      // Append message content
+      formData.append("content", msg);
+
+      // Dynamically set the receiver_id and content
+      const receiver_id = 2; // Get dynamically selected receiver ID
+      const content = msg; // Use the message content from the input field
+
+      // Log FormData for debugging purposes
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
       }
+
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:3000/api/messages/cmassage",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json", // Ensure content type is application/json
+            },
+            body: JSON.stringify({ receiver_id, content }),
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Message sent successfully:", data);
+
+          setSentMessages((prevMessages) => {
+            const updatedMessages = [
+              ...prevMessages,
+              { text: msg, timestamp: new Date().toLocaleString(), files: [] },
+            ];
+
+            // Sauvegarder dans localStorage
+            localStorage.setItem(
+              "sentMessages",
+              JSON.stringify(updatedMessages)
+            );
+
+            return updatedMessages;
+          });
+          setMessage(""); // Clear input
+        } else {
+          console.error("Error sending message:", response.statusText);
+          alert("Failed to send message. Please try again.");
+        }
+      } catch (error) {
+        console.error("Network error:", error);
+        alert("A network error occurred. Please check your connection.");
+      }
+    } else {
+      console.error("Message input element not found or is empty.");
+      alert("Please enter a message.");
     }
   };
+  // Charger les messages au démarrage (lors du rechargement de la page)
+  useEffect(() => {
+    const storedMessages =
+      JSON.parse(localStorage.getItem("sentMessages")) || [];
+    setSentMessages(storedMessages); // Charger les messages depuis le localStorage
+  }, []);
 
   return (
     <div>
       <Navbar />
       <div className="flex h-screen">
-        <Sidebar />
-        <div className="flex-1 ml-7 mt-24 p-4">
-          <div>
-            {isOnline ? (
-              <Badge color="green" overlap="circular" placement="bottom-end">
-                <Avatar
-                  src="https://docs.material-tailwind.com/img/face-2.jpg"
-                  alt="profile picture"
-                />
-              </Badge>
-            ) : (
-              <Avatar
-                src="https://docs.material-tailwind.com/img/face-2.jpg"
-                alt="profile picture"
-              />
-            )}
+        <div className="flex-1 ml-7 mt-2 p-4">
+          <div className="flex items-center gap-4">
+            <Avatar
+              src={user?.avatar || "default-avatar.jpg"}
+              alt={user?.name || "Anonymous"}
+            />
+            <h2 className="text-xl font-bold">{user?.name || "Anonymous"}</h2>
           </div>
 
-          <div className="absolute w-2/3  bottom-0 ml-44 p-4 ">
+          <div className="absolute w-2/3 bottom-0 ml-44 p-4">
             {/* Messages envoyés */}
             <div className="mb-4 space-y-2">
               {sentMessages.map((msg, index) => (
@@ -114,14 +153,12 @@ function Discussion() {
                       {msg.files.map((file, i) => (
                         <div key={i}>
                           {file.type.startsWith("image/") ? (
-                            // Aperçu de l'image
                             <img
                               src={URL.createObjectURL(file)}
                               alt={file.name}
                               className="w-full max-h-40 object-cover rounded-md"
                             />
                           ) : (
-                            // Lien téléchargeable pour les autres fichiers
                             <a
                               href={URL.createObjectURL(file)}
                               download={file.name}
@@ -148,7 +185,8 @@ function Discussion() {
               <div
                 contentEditable
                 suppressContentEditableWarning
-                className="w-full  min-h-[40px] max-h-[200px] p-2 rounded-md"
+                id="msg"
+                className="w-full min-h-[40px] max-h-[200px] p-2 rounded-md bg-red-300"
                 style={{
                   outline: "none",
                   border: "none",
@@ -157,7 +195,7 @@ function Discussion() {
                 onInput={handleMessageChange}
                 dir="ltr"
               ></div>
-              <div className="mt-2 flex  flex-wrap">
+              <div className="mt-2 flex flex-wrap">
                 {uploadedFiles.map((file, index) => (
                   <div
                     key={index}
@@ -178,12 +216,13 @@ function Discussion() {
               <PhotoIcon
                 className="w-6 h-6 text-[#1C84FF]"
                 onClick={handleGalleryClick}
+                aria-label="Ajouter une image"
               />
             </div>
             <div className="absolute left-[-7%] bottom-4 transform -translate-y-1/2 cursor-pointer">
               <PaperClipIcon
                 className="w-6 h-6 text-[#1C84FF]"
-                onClick={handleFileClick} // Permet d'ouvrir le sélecteur de fichiers
+                onClick={handleFileClick}
               />
             </div>
             <div className="absolute left-[73%] bottom-4 transform -translate-y-1/2 cursor-pointer">
@@ -192,27 +231,25 @@ function Discussion() {
                 onClick={handleSendMessage}
               />
             </div>
-
-            {/* Input de type fichier, masqué */}
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept="image/*"
-              onChange={handleFileChange}
-              className="hidden"
-            />
-            <input
-              type="file"
-              ref={fileInputOtherRef}
-              accept="*/*" // Accepte tous les fichiers sauf les images
-              onChange={handleFileChange}
-              className="hidden"
-            />
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+Discussion.propTypes = {
+  user: PropTypes.shape({
+    avatar: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  }),
+};
+
+Discussion.defaultProps = {
+  user: {
+    avatar: "default-avatar.jpg",
+    name: "Anonymous",
+  },
+};
 
 export default Discussion;

@@ -50,17 +50,17 @@ function Login() {
      // Récupérer le token et les informations de l'utilisateur
      const token = response.data.token;
      const userData = response.data.user;
-
+     console.log('mlkj',token)
      // Sauvegarder dans localStorage
      localStorage.setItem("token", token);
      localStorage.setItem("first_name", userData.first_name);
      localStorage.setItem("family_name", userData.family_name);
-
+      console.log("mlkj44", token);
      console.log("Utilisateur connecté :", userData);
      alert("Connexion réussie !");
 
      // Naviguer vers la page d'accueil (Home)
-     navigate("/home");
+     navigate("/");
    } catch (error) {
      console.error(
        "Erreur lors de la connexion :",

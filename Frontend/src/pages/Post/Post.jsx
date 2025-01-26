@@ -15,17 +15,66 @@ function Post() {
   const [selectedCheckbox, setSelectedCheckbox] = useState(null);
   const [typeBien, setTypeBien] = useState("");
   const [selectedTypeBien, setSelectedTypeBien] = useState("");
-
+  const [rooms, setRooms] = useState("")
   const wilayas = [
-    "Adrar", "Chlef", "Laghouat", "Oum El Bouaghi", "Batna", "Béjaia", "Biskra", 
-    "Béchar", "Blida", "Bouira", "Tamanrasset", "Tébessa", "Tlemcen", "Tiaret", 
-    "Tizi Ouzou", "Alger", "Djelfa", "Jijel", "Sétif", "Saïda", "Skikda", "Sidi Bel Abbès", 
-    "Annaba", "Guelma", "Constantine", "Médéa", "Mostaganem", "M'Sila", "Mascara", 
-    "Ouargla", "Oran", "El Bayadh", "Illizi", "Bordj Bou Arreridj", "Boumerdès", 
-    "El Tarf", "Tindouf", "Tissemsilt", "El Oued", "Khenchela", "Souk Ahras", 
-    "Tipaza", "Mila", "Ain Defla", "Naama", "Aïn Témouchent", "Ghardaïa", "Relizane", 
-    "Timimoun", "Bordj Badji Mokhtar", "Ouled Djellal", "Béni Abbès", "In Salah", 
-    "In Guezzam", "Touggourt", "Djanet", "El Meghaier", "El Meniaa"
+    "Adrar",
+    "Chlef",
+    "Laghouat",
+    "Oum El Bouaghi",
+    "Batna",
+    "Béjaia",
+    "Biskra",
+    "Béchar",
+    "Blida",
+    "Bouira",
+    "Tamanrasset",
+    "Tébessa",
+    "Tlemcen",
+    "Tiaret",
+    "Tizi Ouzou",
+    "Alger",
+    "Djelfa",
+    "Jijel",
+    "Sétif",
+    "Saïda",
+    "Skikda",
+    "Sidi Bel Abbès",
+    "Annaba",
+    "Guelma",
+    "Constantine",
+    "Médéa",
+    "Mostaganem",
+    "M'Sila",
+    "Mascara",
+    "Ouargla",
+    "Oran",
+    "El Bayadh",
+    "Illizi",
+    "Bordj Bou Arreridj",
+    "Boumerdès",
+    "El Tarf",
+    "Tindouf",
+    "Tissemsilt",
+    "El Oued",
+    "Khenchela",
+    "Souk Ahras",
+    "Tipaza",
+    "Mila",
+    "Ain Defla",
+    "Naama",
+    "Aïn Témouchent",
+    "Ghardaïa",
+    "Relizane",
+    "Timimoun",
+    "Bordj Badji Mokhtar",
+    "Ouled Djellal",
+    "Béni Abbès",
+    "In Salah",
+    "In Guezzam",
+    "Touggourt",
+    "Djanet",
+    "El Meghaier",
+    "El Meniaa",
   ];
 
   const filteredWilayas = wilayas.filter((wilaya) =>
@@ -46,90 +95,170 @@ function Post() {
   const handleCheckboxChange = (id) => {
     setSelectedCheckbox((prev) => (prev === id ? null : id));
   };
-
-  const handleSelect = (value) => {
-    setTypeBien(value);
+  const handleSelect = (data) => {
+    console.log("Type de bien :", data.typeBien);
+    console.log("Nombre de chambres :", data.rooms);
+    setTypeBien(data.typeBien); // Updates the typeBien state
+    setRooms(data.rooms); // Updates the rooms state
   };
 
-  const handlePhotoUpload = (newPhotos) => {
-    setPhotos(newPhotos);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Handle photo upload from PhotoUploader
+  const handlePhotoUpload = (uploadedPhotos) => {
+    console.log("zz");
+    setPhotos(uploadedPhotos); // Update the list of uploaded photo URLs
   };
-const handleSubmit = (e) => {
-  e.preventDefault();
 
-  // Collecte des données du formulaire
-  const wilaya = search.trim();
-  const commune = document.getElementById("commune").value.trim();
-  const adresse = document.getElementById("addresseM").value.trim();
-  const titre = document.getElementById("titre").value.trim();
-  const description = document.getElementById("description").value.trim();
-  const surface = document.getElementById("surface").value.trim();
-  const prix = document.getElementById("prix").value.trim();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    // Vérifie si des photos ont été uploadées
+    // if (photos.length === 0) {
+    //   alert("Veuillez ajouter au moins une photo.");
+    //   setLoading(false);
+    //   return;
+    // }
+    // // Get the token from localStorage
+    const token = localStorage.getItem("token");
+    console.log("Token from localStorage:55555555555555", token);
+    if (!token) {
+      console.error("No token found!");
+      return;
+    }
 
-  // Vérification des champs vides
-  const champsVides = [];
-  if (!wilaya) champsVides.push("Wilaya");
-  if (!commune) champsVides.push("Commune");
-  if (!adresse) champsVides.push("Adresse");
-  if (!titre) champsVides.push("Titre de publication");
-  if (!description) champsVides.push("Description");
-  if (!surface) champsVides.push("Surface");
-  if (!prix) champsVides.push("Prix");
-  if (photos.length === 0) champsVides.push("Photos");
-  if (selectedCheckbox === null) champsVides.push("Case à cocher");
-  if (!typeBien || typeBien === "") champsVides.push("Type de bien");
+    // Collecte des données du formulaire
+    const wilaya = search.trim();
+    const commune = document.getElementById("commune").value.trim();
+    const adresse = document.getElementById("addresseM").value.trim();
+    const titre = document.getElementById("titre").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const surface = document.getElementById("surface").value.trim();
+    const prix = document.getElementById("prix").value.trim();
 
-  if (champsVides.length > 0) {
-    alert(`Veuillez remplir les champs :\n${champsVides.join(", ")}`);
-    return;
-  }
+    // Vérification des champs vides
+    const champsVides = [];
+    if (!wilaya) champsVides.push("Wilaya");
+    if (!commune) champsVides.push("Commune");
+    if (!adresse) champsVides.push("Adresse");
+    if (!titre) champsVides.push("Titre de publication");
+    if (!description) champsVides.push("Description");
+    if (!surface) champsVides.push("Surface");
+    if (!prix) champsVides.push("Prix");
+    if (photos.length === 0) champsVides.push("Photos");
+    if (selectedCheckbox === null) champsVides.push("Case à cocher");
+    if (!typeBien || typeBien === "") champsVides.push("Type de bien");
 
-  // Préparation des données à envoyer
-  const formData = new FormData();
-  formData.append("wilaya", wilaya);
-  formData.append("commune", commune);
-  formData.append("adress_gmaps", adresse);
-  formData.append("title", titre);
-  formData.append("description", description);
-  formData.append("area", surface);
-  formData.append("price", prix);
-  formData.append("transaction_status", selectedCheckbox); // Type de transaction
-  formData.append("property_type", typeBien);
+    // if (champsVides.length > 0) {
+    //   alert(`Veuillez remplir les champs :\n${champsVides.join(", ")}`);
+    //   return;
+    // }
 
-    // // Ajoute les photos au FormData
-  // photos.forEach((photo) => {
-    
-  //   formData.append("photos[]", photo);
+    // const base64Photos = await Promise.all(
+    //   photos.map((photo) => {
+    //     return new Promise((resolve, reject) => {
+    //       const reader = new FileReader();
+    //       reader.onloadend = () => resolve(reader.result.split(",")[1]); // Remove metadata prefix
+    //       reader.onerror = (error) => reject(error);
+    //       reader.readAsDataURL(photo);
+    //     });
+    //   })
+    // );
+
+    // const formData = {
+    //   wilaya: wilaya,
+    //   commune: commune,
+    //   adress_gmaps: adresse,
+    //   title: titre,
+    //   description: description,
+    //   area: surface,
+    //   price: prix,
+    //   transaction_status: selectedCheckbox, // Type de transaction
+    //   property_type: typeBien,
+    //   // photos: photos,
+    // };
+    // console.log(formData, "hhfie");
+    const formData = new FormData();
+    formData.append("wilaya", wilaya);
+    formData.append("commune", commune);
+    formData.append("adress_gmaps", adresse);
+    formData.append("title", titre);
+    formData.append("description", description);
+    formData.append("area", surface);
+    formData.append("price", prix);
+    formData.append("transaction_status", selectedCheckbox); // Type de transaction
+    formData.append("property_type", typeBien);
+        formData.append("rooms" , rooms);
+
+    // // Append photos to the FormData
+    photos.forEach((photo, index) => {
+      formData.append("photos", photo); // Backend expects the key "photos"
+    });
+
+    try {
+      for (let [key, value] of formData.entries()) {
+        console.log(value);
+      }
+
+      const response = await fetch(
+        "http://127.0.0.1:3000/api/property/create",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // "Content-Type": "application/json",
+          },
+          body: formData,
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to create property");
+      }
+
+      const data = await response.json();
+      console.log("Property created:", data);
+      alert("Property created successfully!");
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred while creating the property.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // axios
+  //   .post("", formData, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //     withCredentials: true, // This will ensure cookies are sent with the request
+  //   })
+
+  //   .then((response) => {
+  //     console.log("Property created:", response.data);
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error:", error);
+  //     alert("Une erreur est survenue lors de la publication de votre bien.");
   // });
-
-  // Envoie les données au backend via axios
-
-   axios
-     .post("http://127.0.0.1:3000/api/property/create", formData)
-     .then((response) => {
-      
-       alert("Votre bien a été publié avec succès !");
-       // Réinitialise le formulaire après succès
-       setSearch("");
-       setPhotos([]);
-       setSelectedCheckbox(null);
-       setTypeBien("");
-     })
-     .catch((error) => {
-       console.error("Erreur lors de la soumission du formulaire : ", error);
-       alert("Une erreur est survenue lors de la publication de votre bien.");
-     });
-};
 
   return (
     <div>
       <Navbar />
       <div className="mt-24 ml-12 flex flex-col">
-        <h1 className="text-[#1C84FF] text-left text-[40px] font-bold mb-8">{t("Publier")}</h1>
+        <h1 className="text-[#1C84FF] text-left text-[40px] font-bold mb-8">
+          {t("Publier")}
+        </h1>
         <div className="flex space-x-60 w-full h-screen overflow-auto mt-6">
           <div className="space-y-3 ml-32 w-full lg:w-1/2 flex flex-col p-6 lg:p-1 lg:pt-4">
             <div className="flex flex-col space-y-2">
-              <label className="font-semibold" htmlFor="wilaya">{t("Wilaya")}</label>
+              <label className="font-semibold" htmlFor="wilaya">
+                {t("Wilaya")}
+              </label>
               <input
                 type="text"
                 placeholder={t("wilaya")}
@@ -153,7 +282,9 @@ const handleSubmit = (e) => {
               )}
             </div>
             <div className="flex flex-col space-y-2">
-              <label htmlFor="commune" className="font-semibold">{t("Commune")}</label>
+              <label htmlFor="commune" className="font-semibold">
+                {t("Commune")}
+              </label>
               <input
                 placeholder={t("commune")}
                 id="commune"
@@ -163,7 +294,9 @@ const handleSubmit = (e) => {
             </div>
 
             <div className="flex flex-col space-y-2">
-              <label htmlFor="addresseM" className="font-semibold">{t("Addresse")}</label>
+              <label htmlFor="addresseM" className="font-semibold">
+                {t("Addresse")}
+              </label>
               <input
                 placeholder={t("addresse")}
                 id="addresseM"
@@ -172,7 +305,9 @@ const handleSubmit = (e) => {
               />
             </div>
             <div className="flex flex-col space-y-2">
-              <label htmlFor="titre" className="font-semibold">{t("Titre")}</label>
+              <label htmlFor="titre" className="font-semibold">
+                {t("Titre")}
+              </label>
               <input
                 placeholder={t("titre")}
                 id="titre"
@@ -181,7 +316,9 @@ const handleSubmit = (e) => {
               />
             </div>
             <div className="flex flex-col space-y-2">
-              <label htmlFor="description" className="font-semibold">{t("Description")}</label>
+              <label htmlFor="description" className="font-semibold">
+                {t("Description")}
+              </label>
               <textarea
                 placeholder={t("description")}
                 id="description"
@@ -193,11 +330,14 @@ const handleSubmit = (e) => {
 
           <div className="space-y-3 w-full lg:w-1/2 flex flex-col p-6 lg:p-1 lg:pt-4">
             <PhotoUploader onUpload={handlePhotoUpload} />
-            <VideoUploader/>
+
+            <VideoUploader />
             <FormulaireSelect onSelect={handleSelect} />
 
             <div className="flex flex-col ml-2 space-y-2">
-              <label htmlFor="surface" className="font-semibold">{t("Surface")}</label>
+              <label htmlFor="surface" className="font-semibold">
+                {t("Surface")}
+              </label>
               <input
                 placeholder={t("surface")}
                 id="surface"
@@ -206,7 +346,9 @@ const handleSubmit = (e) => {
               />
             </div>
             <div className="flex flex-col ml-2 space-y-2">
-              <label htmlFor="prix" className="font-semibold">{t("Prix")}</label>
+              <label htmlFor="prix" className="font-semibold">
+                {t("Prix")}
+              </label>
               <input
                 placeholder={t("prix")}
                 id="prix"
@@ -224,7 +366,9 @@ const handleSubmit = (e) => {
                   checked={selectedCheckbox === "a vendre"}
                   onChange={() => handleCheckboxChange("a vendre")}
                 />
-                <label htmlFor="a vendre" className="font-semibold">{t("vendre")}</label>
+                <label htmlFor="a vendre" className="font-semibold">
+                  {t("vendre")}
+                </label>
               </div>
               <div className="ml-2 flex items-center space-x-3">
                 <input
@@ -234,7 +378,9 @@ const handleSubmit = (e) => {
                   onChange={() => handleCheckboxChange("a louer")}
                   className="accent-green-600"
                 />
-                <label htmlFor="a louer" className="font-semibold">{t("louer")}</label>
+                <label htmlFor="a louer" className="font-semibold">
+                  {t("louer")}
+                </label>
               </div>
             </div>
 
