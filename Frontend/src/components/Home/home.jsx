@@ -604,6 +604,41 @@ console.log(properties)
             saleType={property.transaction_status} // Adjust based on your data
           />
         ))}
+        <Article 
+    title="Appartement confortable"
+    image={Cuisine} 
+    location="Alger" 
+    bedrooms="3" 
+    bathrooms="2" 
+    surface="120" 
+    price="250,000"
+    isNew={true}  // Show NEW tag for this article
+    saleType="For Sale"  // Show FOR SALE tag for this article
+/>
+
+<Article 
+    title="Villa de Luxe"
+    image={Cuisine} 
+    location="Oran" 
+    bedrooms="4" 
+    bathrooms="3" 
+    surface="200" 
+    price="450,000"
+    isNew={false}  // No NEW tag for this article
+    saleType="For Rent"  // Show FOR RENT tag for this article
+/>
+
+<Article 
+    title="Condo moderne"
+    image={Cuisine} 
+    location="Bejaia" 
+    bedrooms="2" 
+    bathrooms="1" 
+    surface="80" 
+    price="150,000"
+    isNew={true}  // Show NEW tag for this article
+    saleType="For Sale"  // Show FOR SALE tag for this article
+/>
       </div>
 
       <div className="bg-black h-80 ">
