@@ -27,7 +27,7 @@ const PropertyPage = () => {
 
     const fetchRecommendedProperties = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/property/randomp?limit=30'); // Adjust the URL as needed
+        const response = await fetch('https://dz-estate-wjy4.onrender.com/api/property/randomp?limit=30'); // Adjust the URL as needed
         const data = await response.json();
         setRecommendedArticles(data);
       } catch (error) {
@@ -66,7 +66,7 @@ const PropertyPage = () => {
     if (name === "search") {
       console.log('Searching for commune:', value); // Log the search value
       try {
-        const response = await fetch('http://localhost:3000/api/property/searchProperties', {
+        const response = await fetch('https://dz-estate-wjy4.onrender.com/api/property/searchProperties', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
