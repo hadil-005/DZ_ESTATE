@@ -44,8 +44,7 @@ app.options("/api/alerts/alert", (req, res) => {
 
 const { Pool } = require("pg");
 const pool = new Pool({
-  connectionString:
-    "postgresql://DZestate_owner:ZMrytvCKhe04@ep-soft-cell-a5j0gqje.us-east-2.aws.neon.tech/last_version_from_me?sslmode=require",
+  connectionString: process.env.DATABASE_URL,
 });
 const db = pool;
 const GOOGLE_CLIENT_ID =
