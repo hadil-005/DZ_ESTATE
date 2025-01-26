@@ -169,7 +169,7 @@ app.use("/api/saved_posts", userRoutes);
 app.use("/api/alerts", userRoutes);
 
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Use Render's port or default to 3000 for local dev
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
