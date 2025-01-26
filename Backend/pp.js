@@ -24,7 +24,7 @@ cloudinary.config({
 
 app.use(
   cors({
-    origin: "https://DZ-Estate.onrender.com", // Autorise uniquement cette origine
+    origin: "https://dz-estate-smpt.vercel.app", // Autorise uniquement cette origine
     methods: ["GET", "POST", "PUT", "DELETE"], // Autorise ces méthodes
     allowedHeaders: ["Content-Type", "Authorization"], // Autorise ces en-têtes
     credentials: true, // Autorise les cookies
@@ -32,7 +32,7 @@ app.use(
 );
 app.use(express.json());
 app.options("/api/alerts/alert", (req, res) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5173"); // Origine spécifique
+  res.header("Access-Control-Allow-Origin", "https://dz-estate-smpt.vercel.app"); // Origine spécifique
   res.header("Access-Control-Allow-Credentials", "true"); // Autorise les cookies
   res.header("Access-Control-Allow-Methods", "POST"); // Méthodes autorisées
   res.header(
