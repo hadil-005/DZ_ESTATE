@@ -36,13 +36,9 @@ const Bien = () => {
      return;
    }
 
-   if (!article?.user_id) {
-     alert("Aucun destinataire n'est associé à cet article.");
-     return;
-   }
-  
-   const receiverId = article.user_id;
-   const messageUrl = `/disc?receiverId=${receiverId}`;
+
+        const response = await fetch('https://dz-estate-wjy4.onrender.com/api/property/getThreeRandomProperties'); // Adjust the URL as needed
+
 
    navigate(messageUrl);
  };
@@ -113,35 +109,154 @@ const Bien = () => {
               )}
             </div>
 
-            <div className="grid grid-cols-3 gap-4 mt-6">
-              {/* Render Images */}
-              {article.images &&
-                article.images.map((imgSrc, index) => (
-                  <img
-                    key={index}
-                    src={imgSrc}
-                    alt={`Property View ${index + 1}`}
-                    className="w-full h-32 rounded-lg border border-gray-300 hover:border-orange-500 cursor-pointer"
-                    onClick={() => handleMediaClick(imgSrc)}
-                    onError={(e) =>
-                      (e.target.src = "path-to-placeholder-image.jpg")
-                    }
-                  />
-                ))}
 
-              {/* Render Videos */}
-              {article.videos &&
-                article.videos.map((videoSrc, index) => (
-                  <video
-                    key={`video-${index}`}
-                    src={videoSrc}
-                    className="w-full h-32 rounded-lg border border-gray-300 hover:border-orange-500 cursor-pointer"
-                    onClick={() => handleMediaClick(videoSrc)}
-                    onError={(e) =>
-                      console.error(`Failed to load video: ${videoSrc}`)
-                    }
-                  />
-                ))}
+            <div className="p-6 max-w-7xl mx-auto mt-12">
+                {/* Header Section */}
+                <h1 className="text-4xl font-bold mb-6 text-left text-gray-800">
+                    {article.title || "Property Details"}
+                </h1>
+
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    {/* Left Section - Image and Carousel */}
+                    <div className="lg:col-span-3">
+  
+{/* Main Display */}
+<div className="relative">
+  {mainImage.includes('.mp4') || mainImage.includes('.webm') ? (
+    <video
+      src={mainImage}
+      controls
+      className="w-full h-auto rounded-lg shadow-lg"
+    />
+  ) : (
+    <img
+      src={mainImage}
+      alt={article.title || "Default Image"}
+      className="w-full h-auto max-h-[500px] rounded-lg shadow-lg"
+    />
+  )}
+</div>
+
+                        <div className="grid grid-cols-3 gap-4 mt-6">
+  {/* Render Images */}
+  {article.images && article.images.map((imgSrc, index) => (
+    <img
+      key={index}
+      src={imgSrc}
+      alt={`Property View ${index + 1}`}
+      className="w-full h-32 rounded-lg border border-gray-300 hover:border-orange-500 cursor-pointer"
+      onClick={() => handleMediaClick(imgSrc)}
+      onError={(e) => (e.target.src = 'path-to-placeholder-image.jpg')}
+    />
+  ))}
+
+  {/* Render Videos */}
+  {article.videos && article.videos.map((videoSrc, index) => (
+    <video
+      key={`video-${index}`}
+      src={videoSrc}
+      className="w-full h-32 rounded-lg border border-gray-300 hover:border-orange-500 cursor-pointer"
+      onClick={() => handleMediaClick(videoSrc)}
+      onError={(e) => console.error(`Failed to load video: ${videoSrc}`)}
+    />
+  ))}
+</div>
+
+
+
+
+                    </div>
+
+                    {/* Right Section - Overview */}
+                    <div className="lg:col-span-2">
+                        <h1 className="text-3xl font-bold mb-6 text-gray-800">Overview Section</h1>
+                        <div className="space-y-6">
+                            {/* Price */}
+                            <div className="flex items-center justify-between h-16 bg-gray-100 rounded-lg shadow-md">
+                                <span className="font-semibold text-lg px-4">Price: {article.price || "no price"} DZD</span>
+                                <div className="flex items-center justify-center bg-orange-500 text-white h-full w-16">
+                                    <FaTag size={24} />
+                                </div>
+                            </div>
+
+                            {/* Location */}
+                            <div className="flex items-center justify-between h-16 bg-gray-100 rounded-lg shadow-md">
+                                <span className="font-semibold text-lg px-4"> {article.wilaya}, {article.commune}</span>
+                                <div className="flex items-center justify-center bg-orange-500 text-white h-full w-16">
+                                    <FaMapMarkerAlt size={24} />
+                                </div>
+                            </div>
+
+                            {/* Property Type */}
+                            <div className="flex items-center justify-between h-16 bg-gray-100 rounded-lg shadow-md">
+                                <span className="font-semibold text-lg px-4">Property Type: {article.category}</span>
+                                <div className="flex items-center justify-center bg-orange-500 text-white h-full w-16">
+                                    <FaHome size={24} />
+                                </div>
+                            </div>
+
+                            {/* Bedrooms */}
+                            <div className="flex items-center justify-between h-16 bg-gray-100 rounded-lg shadow-md">
+                                <span className="font-semibold text-lg px-4">Nombre de chambres: {article.bedrooms}</span>
+                                <div className="flex items-center justify-center bg-orange-500 text-white h-full w-16">
+                                    <FaBed size={24} />
+                                </div>
+                            </div>
+
+                            {/* Additional Features */}
+                            <div className="flex items-center justify-between h-16 bg-gray-100 rounded-lg shadow-md cursor-pointer" onClick={() => setShowDescription(!showDescription)}>
+                                <span className="font-semibold text-lg px-4">Caractéristiques supplémentaires </span>
+                                <div className="flex items-center justify-center bg-orange-500 text-white h-full w-16">
+                                    <FaListAlt size={24} />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Description */}
+                        {showDescription && (
+                            <div className="mt-8">
+                                <p className="text-gray-700 leading-relaxed">
+                                {article.description}
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Contact Information */}
+                        <div className="mt-8 space-y-4">
+                            <div
+                                className="flex items-center justify-between h-16 bg-gray-100 rounded-lg shadow-md cursor-pointer"
+                                onClick={() => setShowContact(!showContact)}
+                            >
+                                <span className="font-semibold text-lg px-4">Contact Informations </span>
+                                <div className="flex items-center justify-center bg-orange-500 text-white h-full w-16">
+                                    <FaPhoneAlt size={24} />
+                                </div>
+                            </div>
+                        </div>
+
+                        {showContact && (
+                            <div className="mt-8">
+                                <ul className="text-gray-700">
+                                    <li><strong>Phone:</strong> {article.phone_number}</li>
+                                    <li><strong>Email:</strong> {article.email}</li>
+                                </ul>
+                            </div>
+                        )}
+
+                        {/* Call to Action */}
+                        <div className="mt-8">
+  <h2 className="text-2xl font-bold mb-6 text-gray-800 text-left">Demander une visite</h2>
+  <div className="flex justify-center">
+    <Link to="../disc">
+      <button className="bg-blue-500 text-white px-4 h-12 rounded-lg text-sm hover:bg-blue-600">
+        ENVOYER UN MESSAGE
+      </button>
+    </Link>
+  </div>
+</div>
+                    </div>
+                </div>
+
             </div>
           </div>
 

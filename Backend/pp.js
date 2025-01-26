@@ -22,6 +22,7 @@ app.use(express.urlencoded({ limit: "50mb" }));
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({
+
   cloud_name: "dsbox1txz",
   api_key: "294792496868756",
   api_secret: "2VSmn_Wen1P2XRGlKl0fFxZ7HwM",
@@ -31,6 +32,30 @@ const { Pool } = require("pg");
 const pool = new Pool({
   connectionString:
     "postgresql://DZestate_owner:ZMrytvCKhe04@ep-soft-cell-a5j0gqje-pooler.us-east-2.aws.neon.tech/last_version_from_me?sslmode=require",
+
+
+
+app.use(
+  cors({
+    origin: "https://dz-estate-smpt.vercel.app", // Autorise uniquement cette origine
+    methods: ["GET", "POST", "PUT", "DELETE"], // Autorise ces méthodes
+    allowedHeaders: ["Content-Type", "Authorization"], // Autorise ces en-têtes
+    credentials: true, // Autorise les cookies
+  })
+);
+app.use(express.json());
+app.options("/api/alerts/alert", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "https://dz-estate-smpt.vercel.app"); // Origine spécifique
+  res.header("Access-Control-Allow-Credentials", "true"); // Autorise les cookies
+  res.header("Access-Control-Allow-Methods", "POST"); // Méthodes autorisées
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization" // En-têtes autorisés
+  );
+  res.sendStatus(204); // Répond avec un statut 204 (No Content)
+});
+
+
 });
 
 const db = pool;
@@ -278,7 +303,7 @@ const io = socketio(server, {
   },
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Use Render's port or default to 3000 for local dev
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

@@ -3,8 +3,14 @@
   "version": "1.0.0",
   "main": "pp.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "devStart": "nodemon pp.js"
+
+    "test": "echo \"Error: no test specified\" && exit 1", 
+    "dev": "nodemon pp.js",
+    "start": "node pp.js"
+  },
+  "engines": {
+    "node": "22.x"
+
   },
   "keywords": [],
   "author": "",

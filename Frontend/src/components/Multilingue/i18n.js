@@ -9,6 +9,7 @@ const resources = {
 
     ar: {
       translation: {
+        Pourquoinouschoisir: "لماذا تختارنا",
         accueil: "الرئيسية",
         decouvrir: "اكتشاف",
         apropos: "حول",
@@ -49,10 +50,111 @@ const resources = {
         Type: "نوع العقار",
         ch: "عدد الغرف",
         jar: "مساحة الحديقة (م²)",
+        Personnalisezvosalertes: "ضبط تنبيهاتك",
+        Vousrecevrezunenotificationsilapropriétéquevousrecherchezestdisponible:
+          "ستتلقى إشعارًا إذا كانت العقار الذي تبحث عنه متاحًا",
+        Questcequetucherches: "ما الذي تبحث عنه؟",
+        customizeAlerts: "خصص تنبيهاتك",
+        youWillReceiveNotification:
+          "ستتلقى إشعارًا إذا كانت العقار الذي تبحث عنه متاحًا.",
+        whatAreYouLookingFor: "ماذا تبحث؟",
+        house: "منزل",
+        apartment: "شقة",
+        studio: "استوديو",
+        villa: "فيلا",
+        wilaya: "ولاية",
+        wilayaPlaceholder: "ولاية",
+        commune: "بلدية",
+        communePlaceholder: "بلدية",
+        budget: "الميزانية (DA)",
+        pricePlaceholder: "السعر",
+        numberOfRooms: "عدد الغرف",
+        numberOfRoomsPlaceholder: "عدد الغرف",
+        area: "المساحة",
+        maxAreaPlaceholder: "الحد الأقصى",
+        createAlert: "إنشاء تنبيه",
+        dzEstateDescription:
+          "Dz-Estate هي منصة عبر الإنترنت حديثة مخصصة لتبسيط المعاملات العقارية في الجزائر. إنها تعمل كمنصة موثوقة لشراء وبيع وتأجير العقارات، مما يوفر تجربة شفافة للمستخدمين الذين يبحثون عن منازل أو شقق أو مساحات تجارية. مع واجهة مستخدم بديهية وميزات بحث متقدمة، تتيح Dz-Estate للمستخدمين تصفية العقارات حسب الموقع ونطاق السعر والنوع، مما يضمن أنهم يجدون الحل المثالي لاحتياجاتهم. توفر المنصة أيضًا قوائم مفصلة للعقارات، مصحوبة بالصور والوصف، مما يسهل استكشاف الخيارات في راحة منزلك. سواء كنت مشتريًا أو بائعًا أو مستأجرًا، فإن Dz-Estate هي الحل الأمثل للعقارات في الجزائر.",
+        proposdenous: "معلومات عنا",
+        meilleuresoffres: "اكتشف أفضل عروضنا",
+        Trouvezvotrefuturemaison: "ابحث عن منزلك المستقبلي",
+        N: "نحن نساعدك في العثور على سكن جديد من خلال تقديم",
+        intelligente: "تجربة عقارية ذكية",
+        A: "شراء أو استئجار العقارات",
+        B: "ملايين المنازل والشقق",
+        C: "في مدنكم المفضلة",
+        D: "بيع أو تأجير ممتلكاتك",
+        E: "سجل الآن وبيع أو استأجر",
+        F: "ممتلكاتك",
+        G: "ماذا يقول عملاؤنا عنا؟",
+        Q: "تطورت نسخ مختلفة على مر السنين، أحيانًا عن طريق الصدفة، وأحيانًا تم إدخال الفكاهة بشكل متعمد، إلخ",
+        S: "أشخاص سعداء",
+        M: "التقييم العام",
+        N: " هل لديك أسئلة أخرى؟",
+        V: "إذا كنت بحاجة إلى مساعدة إضافية أو إذا كان لديك أسئلة محددة، فإن فريقنا في خدمتك لمساعدتك",
+        question1: "كيف يمكنني نشر عقار للبيع أو للإيجار؟",
+        answer1:
+          "لنشر عقار، قم بإنشاء حساب على Dz-Estate، ثم انتقل إلى لوحة التحكم الخاصة بك. انقر على 'نشر عقار'، املأ المعلومات اللازمة وأضف الصور لإكمال الإعلان.",
+        question2: "هل يمكنني الاتصال بالمالكين مباشرة عبر المنصة؟",
+        answer2:
+          "نعم، يتيح لك Dz-Estate الاتصال بالمالكين مباشرة عبر الرسائل المدمجة. انقر على 'اتصل' في الإعلان لإرسال رسالة إلى المالك.",
+        question3: "ما هي أنواع العقارات المدرجة على Dz-Estate؟",
+        answer3:
+          "يقدم Dz-Estate مجموعة واسعة من العقارات، بما في ذلك المنازل والشقق والفيلات والمساحات التجارية والأراضي للبيع أو للإيجار.",
+        question4: "كيف يمكنني البحث عن عقارات في مدينة معينة؟",
+        answer4:
+          "استخدم شريط البحث المتقدم لدينا عن طريق إدخال اسم المدينة. يمكنك أيضًا تطبيق الفلاتر لتضييق نتائجك بناءً على ميزانيتك ونوع العقار والميزات المطلوبة.",
+        question5: "هل يمكنني جدولة زيارة لعقار عبر Dz-Estate؟",
+        answer5:
+          "نعم، يمكنك طلب زيارة مباشرة من الإعلان. انقر على 'جدولة زيارة'، وسيتأكد المالك من طلبك.",
+        Commentaire: "تعليقك",
+        service: "ماذا تعتقد في خدمتنا؟",
+        envoyer: " إرسال←",
+        reseau: "شبكاتنا الاجتماعية",
+        contact: "اتصل بنا",
       },
     },
     fr: {
       translation: {
+        contact: "Contactez-nous",
+        reseau: "Nos réseaux sociaux",
+        envoyer: "Envoyer →",
+        service: "Que pensez-vous de notre service",
+        Commentaire: "Votre commentaire",
+        question1: "Comment puis-je publier un bien à vendre ou à louer ?",
+        answer1:
+          "Pour publier un bien, créez un compte sur Dz-Estate, puis accédez à votre tableau de bord. Cliquez sur 'Publier une propriété', remplissez les informations nécessaires et ajoutez des photos pour compléter l'annonce.",
+        question2:
+          "Puis-je contacter les propriétaires directement via la plateforme ?",
+        answer2:
+          "Oui, Dz-Estate vous permet de contacter les propriétaires directement via la messagerie intégrée. Cliquez sur 'Contacter' sur l'annonce pour envoyer un message au propriétaire.",
+        question3: "Quels types de propriétés sont répertoriés sur Dz-Estate ?",
+        answer3:
+          "Dz-Estate propose une large gamme de propriétés, notamment des maisons, appartements, villas, espaces commerciaux et terrains à vendre ou à louer.",
+        question4:
+          "Comment rechercher des propriétés dans une ville spécifique ?",
+        answer4:
+          "Utilisez notre barre de recherche avancée en saisissant le nom de la ville. Vous pouvez également appliquer des filtres pour affiner vos résultats en fonction de votre budget, du type de propriété et des caractéristiques souhaitées.",
+        question5: "Puis-je planifier une visite de propriété via Dz-Estate ?",
+        answer5:
+          "Oui, vous pouvez demander une visite directement sur l'annonce. Cliquez sur 'Planifier une visite', et le propriétaire confirmera votre demande.",
+        N: "Avez vous d'autres questions ?",
+        V: "Si vous avez besoin d'aide supplémentaire ou si vous avez des questions spécifiques, notre équipe est à votre disposition pour vous accompagner.",
+        S: "Des gens heureux",
+        M: "Note globale",
+        Q: " Différentes versions ont évolué au fil des années,parfois par accident, parfois volontairement injecté de l'humour etc",
+        G: "Que disent nos clients de nous ?",
+        D: "Vendre ou louer votre propriété",
+        E: "Inscrivez-vous maintenant et vendez ou louez",
+        F: "vos propriétés",
+        A: " Acheter ou louer des propriétés",
+        B: "Des millions de maisons et d'appartements",
+        C: "dans vos villes préférées",
+        intelligente: "une expérience immobilière intelligente",
+        N: "Nous vous aidons à trouver un nouveau logement en vous offrant",
+        Trouvezvotrefuturemaison: "Trouvez votre future maison",
+        meilleuresoffres: " Découvrez nos meilleures offres",
+        proposdenous: "À propos de nous",
         accueil: "Accueil",
         decouvrir: "Découvrir",
         apropos: "À propos",
@@ -91,15 +193,44 @@ const resources = {
         ch: "Nombre de chambres",
         jar: "Surface du jardin (en m²)",
         connectez_vous_publier: "Veuillez vous connecter pour publier un bien.",
+        Personnalisezvosalertes: " Personnalisez vos alertes",
+        Vousrecevrezunenotificationsilapropriétéquevousrecherchezestdisponible:
+          "Vous recevrez une notification si la propriété que vous recherchez est disponible",
+        Questcequetucherches: " Qu'est-ce que tu cherches?",
+
+        customizeAlerts: "Personnalisez vos alertes",
+        youWillReceiveNotification:
+          "Vous recevrez une notification si la propriété que vous recherchez est disponible.",
+        whatAreYouLookingFor: "Qu'est-ce que tu cherches?",
+        house: "Maison",
+        apartment: "Appartement",
+        studio: "Studio",
+        villa: "Villa",
+        wilaya: "Wilaya",
+        wilayaPlaceholder: "wilaya",
+        commune: "Commune",
+        communePlaceholder: "commune",
+        budget: "Budget (DA)",
+        pricePlaceholder: "prix",
+        numberOfRooms: "Nombre de chambres",
+        numberOfRoomsPlaceholder: "Nombre de chambres",
+        area: "Surface",
+        maxAreaPlaceholder: "Max",
+        createAlert: "Créer une alerte",
+        dzEstateDescription:
+          "Dz-Estate est une plateforme en ligne moderne dédiée à la simplification des transactions immobilières en Algérie. Il sert de plateforme de confiance pour l'achat, la vente et la location de propriétés, offrant une expérience transparente aux utilisateurs à la recherche de maisons, d'appartements ou d'espaces commerciaux. Avec une interface intuitive et des fonctionnalités de recherche avancées, Dz-Estate permet aux utilisateurs de filtrer les propriétés par emplacement, gamme de prix et type, garantissant ainsi qu'ils trouvent la solution idéale pour leurs besoins. La plateforme fournit également des listes de propriétés détaillées, accompagnées de photos et de descriptions, ce qui facilite l'exploration des options dans le confort de votre maison. Que vous soyez acheteur, vendeur ou locataire, Dz-Estate est votre solution incontournable pour l'immobilier en Algérie.",
+        Pourquoinouschoisir: "Pourquoi nous choisir",
       },
     },
+
   };
 i18n.use(initReactI18next).init({
   resources,
   lng: "fr", // Langue par défaut
   fallbackLng: "fr", // Langue de secours
+
   interpolation: {
-    escapeValue: false, // React se charge de l'échappement des valeurs
+    escapeValue: false,
   },
 });
 
