@@ -1,11 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar } from '../Navbar/Navbar';
-import Cuisine from "../../assets/cuisine.png";
-import Bienp from "../../assets/bienp.png";
-import Building from "../../assets/building.png";
-import Homep from "../../assets/Homep.png";
-import Estate from "../../assets/estate.png";
-import Vid from "../../assets/vi.mp4";
 import  Footer  from '../Footer/Footer';
 import DropdownFilter from "./dropdown";
 import Article from '../Article/Article'; // Import the new Article component
@@ -25,56 +19,37 @@ const PropertyPage = () => {
     priceMax: "",
   });
   const [visibleArticles, setVisibleArticles] = useState(9);
+  const [recommendedArticles, setRecommendedArticles] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [properties, setProperties] = useState([]); // State for properties
 
-  const articles = [
-    { title: "Villa Moderne Hydra", image: Cuisine, bedrooms: 5,  surface: 500, price: "450,000", category: "House", wilaya: "Algiers", commune: "Hydra", saleType : "For Sale", 
-      images: [
-        Building,
-        Estate,
-        Homep,
-        Bienp
-      ],
-      videos: [
-        Vid,
-        Vid
-      ],
-    },
-    { title: "Appartement Vue sur Mer", image: Cuisine,  bedrooms: 3, surface: 120, price: "300,000", category: "Apartment", wilaya: "Oran", commune: "Oran Centre", saleType : "For Rent"},
-    { title: "Terrain Résidentiel Béjaïa", image: Cuisine, bedrooms: null,  surface: 600, price: "200,000", category: "Land", wilaya: "Béjaïa", commune: "Béjaïa Ville",   shaleType : "For Rent"},
-    { title: "Duplex à Dely Ibrahim", image: Cuisine, bedrooms: 4,  surface: 300, price: "350,000", category: "Apartment", wilaya: "Algiers", commune: "Dely Ibrahim",   saleType : "For Sale"},
-    { title: "Villa Luxueuse Chéraga", image: Cuisine,  bedrooms: 6,  surface: 550, price: "500,000", category: "House", wilaya: "Algiers", commune: "Chéraga",   saleType : "For Sale"},
-    { title: "Studio à Bab El Oued", image: Cuisine,  bedrooms: 1,  surface: 40, price: "80,000", category: "Apartment", wilaya: "Algiers", commune: "Bab El Oued",   saleType : "For Rent"},
-    { title: "F2 à Tizi Ouzou", image: Cuisine,  bedrooms: 2,  surface: 60, price: "100,000", category: "Apartment", wilaya: "Tizi Ouzou", commune: "Tizi Ouzou Ville", saleType : "For Rent"},
-    { title: "Maison Familiale Blida", image: Cuisine, bedrooms: 4,  surface: 200, price: "250,000", category: "House", wilaya: "Blida", commune: "Blida Ville",  saleType : "For Sale"},
-    { title: "Penthouse à Sidi Bel Abbès", image: Cuisine, bedrooms: 3, surface: 180, price: "275,000", category: "Apartment", wilaya: "Sidi Bel Abbès", commune: "Sidi Bel Abbès",   saleType : "For Sale"},
-    { title: "Terrain Agricole Mostaganem", image: Cuisine, bedrooms: 0,  surface: 2000, price: "150,000", category: "Land", wilaya: "Mostaganem", commune: "Mazagran",   saleType : "For Sale"},
-    { title: "Appartement F4 Constantine", image: Cuisine,  bedrooms: 4, surface: 100, price: "220,000", category: "Apartment", wilaya: "Constantine", commune: "Constantine Ville",  saleType : "For Sale" },
-    { title: "Villa avec Piscine Annaba", image: Cuisine,  bedrooms: 6,  surface: 450, price: "480,000", category: "House", wilaya: "Annaba", commune: "Annaba Ville",  saleType : "For Rent"},
-    { title: "F3 Neuf à Ghardaïa", image: Cuisine,  bedrooms: 3, surface: 90, price: "180,000", category: "Apartment", wilaya: "Ghardaïa", commune: "Ghardaïa Ville",   saleType : "For Rent" },
-    { title: "Maison Traditionnelle Timimoun", image: Cuisine,  bedrooms: 3,  surface: 150, price: "100,000", category: "House", wilaya: "Adrar", commune: "Timimoun",   saleType : "For Sale"},
-    { title: "Terrain Industriel Setif", image: Cuisine,  bedrooms: 0,  surface: 1000, price: "300,000", category: "Land", wilaya: "Setif", commune: "El Eulma",   saleType : "For Rent"},
-    { title: "F2 à Tizi Ouzou", image: Cuisine,  bedrooms: 2,  surface: 60, price: "100,000", category: "Apartment", wilaya: "Tizi Ouzou", commune: "Tizi Ouzou Ville", saleType : "For Rent"},
-    { title: "Maison Familiale Blida", image: Cuisine, bedrooms: 4,  surface: 200, price: "250,000", category: "House", wilaya: "Blida", commune: "Blida Ville",  saleType : "For Sale"},
-    { title: "Penthouse à Sidi Bel Abbès", image: Cuisine, bedrooms: 3, surface: 180, price: "275,000", category: "Apartment", wilaya: "Sidi Bel Abbès", commune: "Sidi Bel Abbès",   saleType : "For Sale"},
-    { title: "Terrain Agricole Mostaganem", image: Cuisine, bedrooms: 0,  surface: 2000, price: "150,000", category: "Land", wilaya: "Mostaganem", commune: "Mazagran",   saleType : "For Sale"},
-    { title: "Appartement F4 Constantine", image: Cuisine,  bedrooms: 4, surface: 100, price: "220,000", category: "Apartment", wilaya: "Constantine", commune: "Constantine Ville",  saleType : "For Sale" },
-    { title: "Villa avec Piscine Annaba", image: Cuisine,  bedrooms: 6,  surface: 450, price: "480,000", category: "House", wilaya: "Annaba", commune: "Annaba Ville",  saleType : "For Rent"},
-    { title: "F3 Neuf à Ghardaïa", image: Cuisine,  bedrooms: 3, surface: 90, price: "180,000", category: "Apartment", wilaya: "Ghardaïa", commune: "Ghardaïa Ville",   saleType : "For Rent" },
-    { title: "Maison Traditionnelle Timimoun", image: Cuisine,  bedrooms: 3,  surface: 150, price: "100,000", category: "House", wilaya: "Adrar", commune: "Timimoun",   saleType : "For Sale"},
-    { title: "Terrain Industriel Setif", image: Cuisine,  bedrooms: 0,  surface: 1000, price: "300,000", category: "Land", wilaya: "Setif", commune: "El Eulma",   saleType : "For Rent"},
-  ];
-  
+  useEffect(() => {
+
+    const fetchRecommendedProperties = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/property/randomp?limit=30'); // Adjust the URL as needed
+        const data = await response.json();
+        setRecommendedArticles(data);
+      } catch (error) {
+        console.error('Error fetching recommended properties:', error);
+      }
+    };
+    fetchRecommendedProperties();
+  }, []);
+
 
   // Filter Articles
-  const filteredArticles = articles.filter((article) => {
+
+  const filteredArticles = recommendedArticles.filter((article) => {
     const matchesSurface =
       (filters.surfaceMin === "" || article.surface >= Number(filters.surfaceMin)) &&
       (filters.surfaceMax === "" || article.surface <= Number(filters.surfaceMax));
     const matchesPrice =
       (filters.priceMin === "" || Number(article.price.replace(/,/g, "")) >= Number(filters.priceMin)) &&
       (filters.priceMax === "" || Number(article.price.replace(/,/g, "")) <= Number(filters.priceMax));
+  
     return (
-      (filters.search === "" || article.commune.toLowerCase().includes(filters.search.toLowerCase())) &&
+      (filters.search === "" || (article.commune && article.commune.toLowerCase().includes(filters.search.toLowerCase()))) &&
       (filters.category === "" || article.category === filters.category) &&
       (filters.wilaya === "" || article.wilaya === filters.wilaya) &&
       (filters.commune === "" || article.commune === filters.commune) &&
@@ -82,14 +57,46 @@ const PropertyPage = () => {
       matchesPrice
     );
   });
-  const displayedArticles = filteredArticles.slice(0, visibleArticles);
+  
 
-  const handleFilterChange = (e) => {
+  const handleFilterChange = async (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
+  
+    if (name === "search") {
+      console.log('Searching for commune:', value); // Log the search value
+      try {
+        const response = await fetch('http://localhost:3000/api/property/searchProperties', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ commune: value }),
+        });
+  
+        if (!response.ok) {
+          const errorText = await response.text(); // Get the error message from the response
+          throw new Error(`Failed to fetch search results: ${errorText}`);
+        }
+  
+        const data = await response.json();
+        setSearchResults(data.properties || []);
+      } catch (error) {
+        console.error('Error fetching search results:', error);
+        setSearchResults([]); // Clear results on error
+      }
+    }
   };
+
+  // Determine which articles to display
+
+  const displayedArticles = searchResults.length > 0 ? searchResults : filteredArticles.slice(0, visibleArticles);
+
+
   const loadMoreArticles = () => {
+
     setVisibleArticles((prevVisibleArticles) => prevVisibleArticles + 9);
+
   };
 
   return (
@@ -100,34 +107,81 @@ const PropertyPage = () => {
       <div className="w-full max-w-4xl mx-auto mt-16">
         {/* Search Input */}
         <div className="mb-4">
-          <input
-            type="text"
-            name="search"
-            value={filters.search}
-            onChange={handleFilterChange}
-            placeholder="Cherchez par commune"
-            className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-        </div>
-        <DropdownFilter filters={filters} handleFilterChange={handleFilterChange} />
 
-      </div>
+            <input
+
+              type="text"
+
+              name="search"
+
+              value={filters.search}
+
+              onChange={handleFilterChange}
+
+              placeholder="Cherchez par commune"
+
+              className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+
+            />
+
+          </div>
+
+          <DropdownFilter filters={filters} handleFilterChange={handleFilterChange} />
+
+        </div>
 
       {/* Recommended Articles */}
       <h2 className="text-2xl font-semibold mb-6">Le plus recommandé</h2>
-     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayedArticles.map((article, index) => (
-            <Article key={index} {...article} />
-          ))}
-        </div>
-        {visibleArticles < filteredArticles.length && (
-          <div className="flex justify-center">
-            <button
-              onClick={loadMoreArticles}
-              className="mt-6 px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600"
-            >
-              Load More
-            </button>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {displayedArticles.map((article, index) => (
+
+<Article 
+key={index}
+title={article.title}
+
+            image={article.photo1} // Use the fetched image or a default
+            images={[article.photo2, article.photo3]}
+            wilaya={article.wilaya}  
+            user_id = {article.user_id}
+            property_id = {article.id}
+            commune={article.commune}
+            save_count={article.save_count}
+            likes_count={article.likes_count}
+            bedrooms={article.rooms} // You may need to adjust this based on your data
+
+            category={article.property_type}
+            description={article.description}
+            adress_gmaps={article.adress_gmaps}
+            email={article.email}
+            phone_number ={article.phone_number}
+            surface={article.area}// You may need to adjust this based on your data
+
+            price={article.price}
+
+            isNew={true}  // Adjust based on your logic
+
+            saleType={article.transaction_status}
+             />
+
+))}
+
+</div>
+
+{visibleArticles < filteredArticles.length && (
+
+<div className="flex justify-center">
+
+<button
+
+  onClick={loadMoreArticles}
+
+  className="mt-6 px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600"
+
+>
+
+  Load More
+
+</button>
           </div>
         )}
     </div>

@@ -1,33 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sidebar } from "../../components/Sidebar/Sidebar";
 import { Navbar } from '../../components/Navbar/Navbar';
-import Article from '../../components/Article/Article'; // Import the new Article component
-import Cuisine from '../../assets/cuisine.png'
+import Article from '../../components/Article/Article'; 
+const Enregistrement = () => {
+  const [savedArticles, setSavedArticles] = useState([]);
+  const fetchSavedProperties = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/property/:user_id/getSavedProperties`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch saved properties');
+      }
+      const data = await response.json();
+      setSavedArticles(data.saved_properties);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-const Enregistrement  = () => {
-  const savedArticles = [
-      { title: "Villa Moderne Hydra", image: Cuisine, bedrooms: 5,  surface: 500, price: "450,000", category: "House", wilaya: "Algiers", commune: "Hydra", saleType : "For Sale", },
-      { title: "Appartement Vue sur Mer", image: Cuisine,  bedrooms: 3, surface: 120, price: "300,000", category: "Apartment", wilaya: "Oran", commune: "Oran Centre", saleType : "For Rent"},
-  ];
+  useEffect(() => {
+    fetchSavedProperties();
+  }, []);
+
   return (
-        <div>
-          <Navbar />
-          <div className="flex h-screen">
-            <Sidebar />
-            <div className="flex-1  ml-7 mt-24 p-4">
-            <h1 className="text-5xl font-bold text-blue-500 text-left ml-4">
+    <div>
+      <Navbar />
+      <div className="flex h-screen">
+        <Sidebar />
+        <div className="flex-1 ml-7 mt-24 p-4">
+          <h1 className="text-5xl font-bold text-blue-500 text-left ml-4">
             Enregistrements
-            </h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          </h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {savedArticles.length > 0 ? (
-              savedArticles.map((article, index) => <Article key={index} {...article} />)
+              savedArticles.map((article, index) => (
+                <Article key={index} title={article.title} image={article.photo_address} price={article.price} />
+              ))
             ) : (
-                  <p className="text-center text-xl text-gray-500 mt-44">Aucun article enregistré pour le moment.</p>          
-              )}
+              <p className="text-center text-xl text-gray-500 mt-44">Aucun article enregistré pour le moment.</p>
+            )}
           </div>
-            </div>
-            </div>
-            </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

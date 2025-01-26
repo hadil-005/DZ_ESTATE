@@ -1,17 +1,21 @@
-const bcrypt = require("bcrypt");
-const { Pool } = require("pg");
-const multer = require("multer");
-const path = require("path");
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-const session = require("express-session");
-const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const cookieParser = require("cookie-parser");
-const crypto = require("crypto");
-const { Console } = require("console");
-// const secret = crypto.randomBytes(64).toString("hex");
-const secret = "asma";
+
+const bcrypt = require('bcrypt');
+const { Pool } = require('pg');
+const multer = require('multer');
+const path = require('path');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv')
+const session = require('express-session');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const cookieParser = require('cookie-parser')
+const crypto = require('crypto');
+const { console } = require('inspector');
+const secret = crypto.randomBytes(64).toString('hex');
+console.log(secret);
+
+
+
 
 console.log(secret);
 
@@ -197,7 +201,7 @@ function authenticate(req, res, next) {
 // };
 const getRandomProperties = async (req, res) => {
   try {
-    const { limit = 5, property_type } = req.query;
+    const { limit = 30, property_type } = req.query;
 
     let query = "SELECT * FROM property";
 
@@ -339,7 +343,7 @@ const deleteProperty = async (req, res) => {
   }
 };
 
-const addLike = async (req, res) => {
+const ahddLike = async (req, res) => {
   const { user_id, property_id } = req.body;
 
   try {
@@ -375,18 +379,96 @@ const addLike = async (req, res) => {
   }
 };
 
+const addLike = async (req, res) => {
+  const { user_id, property_id } = req.body;
+
+  try {
+    await pool.query("BEGIN");
+
+    // Check if the user has already liked this property
+    const existingLike = await pool.query(
+      "SELECT id FROM likes WHERE user_id = $1 AND property_id = $2",
+      [user_id, property_id]
+    );
+
+    if (existingLike.rowCount > 0) {
+      // If a like already exists, rollback and return a message
+      await pool.query("ROLLBACK");
+      return res
+        .status(400)
+        .json({ message: "You have already liked this property" });
+    }
+
+    // Insert the like record into the 'likes' table
+    const result = await pool.query(
+      "INSERT INTO likes (user_id, property_id) VALUES ($1, $2) RETURNING id",
+      [user_id, property_id]
+    );
+
+    if (result.rowCount > 0) {
+      // Increment the likes_count in the 'property' table
+      await pool.query(
+        "UPDATE property SET likes_count = likes_count + 1 WHERE id = $1",
+        [property_id]
+      );
+
+      // Commit the transaction
+      await pool.query("COMMIT");
+
+      return res.status(201).json({
+        message: "Like added successfully",
+        likeId: result.rows[0].id,
+      });
+    } else {
+      // If the like wasn't added, rollback the transaction
+      await pool.query("ROLLBACK");
+      return res.status(400).json({ message: "Failed to add like" });
+    }
+  } catch (err) {
+    // Rollback in case of any error
+    await pool.query("ROLLBACK");
+    console.error(err);
+    return res
+      .status(500)
+      .json({ message: "An error occurred while adding the like" });
+  }
+};
+
+
 const saveProperty = async (req, res) => {
   const { user_id, property_id } = req.body;
 
   try {
     await pool.query("BEGIN");
 
+    // Check if the user has already saved this property
+    const existingSave = await pool.query(
+      "SELECT id FROM saved_posts WHERE user_id = $1 AND property_id = $2",
+      [user_id, property_id]
+    );
+
+    if (existingSave.rowCount > 0) {
+      // If the property is already saved, rollback and return a message
+      await pool.query("ROLLBACK");
+      return res.status(400).json({
+        message: "You have already saved this property",
+      });
+    }
+
+    // Insert the save record into the 'saved_posts' table
     const result = await pool.query(
       "INSERT INTO saved_posts (user_id, property_id) VALUES ($1, $2) RETURNING id, saved_at",
       [user_id, property_id]
     );
 
     if (result.rowCount > 0) {
+      // Increment the save_count in the 'property' table
+      await pool.query(
+        "UPDATE property SET save_count = save_count + 1 WHERE id = $1",
+        [property_id]
+      );
+
+      // Commit the transaction
       await pool.query("COMMIT");
 
       return res.status(201).json({
@@ -395,10 +477,12 @@ const saveProperty = async (req, res) => {
         savedAt: result.rows[0].saved_at,
       });
     } else {
+      // If the save wasn't added, rollback the transaction
       await pool.query("ROLLBACK");
       return res.status(400).json({ message: "Failed to save property" });
     }
   } catch (err) {
+    // Rollback in case of any error
     await pool.query("ROLLBACK");
     console.error(err);
     return res
@@ -406,6 +490,7 @@ const saveProperty = async (req, res) => {
       .json({ message: "An error occurred while saving the property" });
   }
 };
+
 
 const his = async (req, res) => {
   const { property_id, buyer_email, new_status } = req.body;
@@ -493,15 +578,14 @@ const createMessage = async (req, res) => {
   }
 };
 
-const searchProperties = async (req, res) => {
+const sezarchProperties = async (req, res) => {
   try {
-    const { wilaya, commune, property_type } = req.body;
+    const {  commune} = req.body;
 
     // Validate that at least one search field is provided
-    if (!wilaya && !commune && !property_type) {
-      return res
-        .status(400)
-        .json({ error: "At least one search criterion must be provided" });
+
+    if (!commune ) {
+      return res.status(400).json({ error: 'At least one search criterion must be provided' });
     }
 
     // Build the dynamic SQL query
@@ -539,6 +623,35 @@ const searchProperties = async (req, res) => {
     res
       .status(500)
       .json({ error: "An error occurred while searching for properties" });
+  }
+};
+
+const searchProperties = async (req, res) => {
+  try {
+    console.log("zz")
+    const { commune } = req.body;
+    console.log(req.body);
+    // Validate that the commune is provided
+    if (!commune) {
+      return res.status(400).json({ error: 'Commune is required to search for properties' });
+    }
+
+    // Build the query for searching by commune
+    const query = 'SELECT * FROM property WHERE commune ILIKE $1';
+    const values = [`%${commune}%`];
+
+    // Execute the query
+    const result = await pool.query(query, values);
+
+    // Return results or handle no match
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'No properties found in the specified commune' });
+    }
+
+    res.status(200).json({ properties: result.rows });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while searching for properties' });
   }
 };
 
@@ -667,10 +780,11 @@ const getPropertyDetails = async (req, res) => {
   }
 };
 
-const getThreeRandomProperties = async (req, res) => {
-  try {
-    const query = `
-      SELECT 
+
+const geetThreeRandomProperties = async (req, res) => {
+    try {
+      const query = `
+        SELECT 
         id,
         price, 
         transaction_status, 
@@ -698,17 +812,53 @@ const getThreeRandomProperties = async (req, res) => {
   }
 };
 
-const getLikedProperties = async (req, res) => {
-  try {
-    const { user_id } = req.params;
 
-    // Validate if the user_id is provided
-    if (!user_id) {
-      return res.status(400).json({ error: "User ID is required" });
+const getThreeRandomProperties = async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        id,
+        price, 
+        transaction_status, 
+        title, 
+        wilaya,
+        commune,
+        likes_count,
+        area,
+        rooms,
+        photo1,
+        save_count
+      FROM property
+      ORDER BY RANDOM()
+      LIMIT 3;
+    `;
+
+    const result = await pool.query(query);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'No properties found' });
     }
 
-    // Step 1: Get the property IDs that the user has liked from the liked_posts table
-    const likedPropertiesQuery = `
+    res.status(200).json({ properties: result.rows });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while retrieving random properties' });
+  }
+};
+
+
+
+  const getLikedProperties = async (req, res) => {
+    try {
+      const { user_id } = req.params;
+  
+      // Validate if the user_id is provided
+      if (!user_id) {
+        return res.status(400).json({ error: 'User ID is required' });
+      }
+  
+      // Step 1: Get the property IDs that the user has liked from the liked_posts table
+      const likedPropertiesQuery = `
         SELECT property_id
         FROM likes
         WHERE user_id = $1;

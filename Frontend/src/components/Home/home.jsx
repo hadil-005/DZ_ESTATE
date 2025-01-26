@@ -12,6 +12,7 @@ import buy from "../../assets/buy.png";
 import sale from "../../assets/sale.png";
 import { Navbar } from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
+
 import { TfiQuoteLeft } from "react-icons/tfi";
 import Alert from "../../components/Home/alert.jsx";
 import Article from "../Article/Article"; // Import the new Article component
@@ -22,11 +23,18 @@ import "../../components/Multilingue/i18n";
   rel="stylesheet"
 ></link>;
 
+
+
+//api/property/getThreeRandomProperties
+
+
 const Home = () => {
+
     const { i18n, t } = useTranslation();
     const [testimonials, setTestimonials] = useState([]); // Stocker les commentaires
     const [currentIndex, setCurrentIndex] = useState(0); // Index du commentaire affiché
     const [properties, setProperties] = useState([]);
+
  
   useEffect(() => {
     const fetchData = async () => {
@@ -36,6 +44,7 @@ const Home = () => {
           "http://localhost:3000/api/comments/home/comment"
         );
         setTestimonials(commentsResponse.data); // Mise à jour des témoignages
+
 
         // Appel pour les propriétés
         const propertiesResponse = await fetch(
@@ -55,7 +64,7 @@ const Home = () => {
 
     fetchData();
   }, []);
-
+console.log(properties)
 
   const wilayas = [
     "Adrar",
@@ -583,9 +592,14 @@ const Home = () => {
             title={property.title}
             image={property.photo1 || Cuisine} // Use the fetched image or a default
             wilaya={property.wilaya}
+            bedrooms={property.rooms}
             commune={property.commune}
             surface={property.area} // You may need to adjust this based on your data
             price={property.price}
+            save_count={property.save_count}
+            likes_count={property.likes_count}
+            user_id = {property.user_id}
+            id = {property.id}
             isNew={true} // Adjust based on your logic
             saleType={property.transaction_status} // Adjust based on your data
           />
@@ -622,6 +636,7 @@ const Home = () => {
               {t("E")} <br />
               {t("F")}
             </p>
+
           </div>
         </div>
       </div>
