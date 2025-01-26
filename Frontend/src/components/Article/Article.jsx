@@ -14,6 +14,7 @@ const Article = ({ title, image, wilaya, commune, bedrooms,phone_number ,likes_c
     if (liked) return; // Prevent multiple likes
     try {
       const response = await axios.post('http://localhost:3000/api/property/like', { user_id, property_id });
+      console.log("Received user_id:", user_id);
       if (response.status === 201) {
         setLiked(true);
         setLikesCount(prevCount => prevCount + 1); // Increment likes count
@@ -27,6 +28,7 @@ const Article = ({ title, image, wilaya, commune, bedrooms,phone_number ,likes_c
     if (saved) return; // Prevent multiple saves
     try {
       const response = await axios.post('http://localhost:3000/api/property/save', { user_id, property_id });
+      console.log("Received user_id:", user_id);
       if (response.status === 201) {
         setSaved(true);
         setSaveCount(prevCount => prevCount + 1); // Increment save count
