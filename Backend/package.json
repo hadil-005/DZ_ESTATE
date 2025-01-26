@@ -4,14 +4,12 @@
   "main": "pp.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon pp.js" ,
-        "start": "node pp.js"
-
+    "dev": "nodemon pp.js",
+    "start": "node pp.js"
   },
   "engines": {
     "node": "22.x"
-  }
- 
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
