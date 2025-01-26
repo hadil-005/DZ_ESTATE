@@ -23,7 +23,7 @@ cloudinary.config({
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // Autorise uniquement cette origine
+    origin: "https://DZ-Estate.onrender.com", // Autorise uniquement cette origine
     methods: ["GET", "POST", "PUT", "DELETE"], // Autorise ces méthodes
     allowedHeaders: ["Content-Type", "Authorization"], // Autorise ces en-têtes
     credentials: true, // Autorise les cookies
