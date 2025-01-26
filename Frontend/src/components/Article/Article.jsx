@@ -13,7 +13,7 @@ const Article = ({ title, image, wilaya, commune, bedrooms,phone_number ,likes_c
   const handleLike = async () => {
     if (liked) return; // Prevent multiple likes
     try {
-      const response = await axios.post('http://localhost:3000/api/property/like', { user_id, property_id });
+      const response = await axios.post('https://dz-estate-smpt.vercel.app//api/property/like', { user_id, property_id });
       console.log("Received user_id:", user_id);
       if (response.status === 201) {
         setLiked(true);
@@ -27,7 +27,7 @@ const Article = ({ title, image, wilaya, commune, bedrooms,phone_number ,likes_c
   const handleSave = async () => {
     if (saved) return; // Prevent multiple saves
     try {
-      const response = await axios.post('http://localhost:3000/api/property/save', { user_id, property_id });
+      const response = await axios.post('https://dz-estate-smpt.vercel.app//api/property/save', { user_id, property_id });
       console.log("Received user_id:", user_id);
       if (response.status === 201) {
         setSaved(true);
