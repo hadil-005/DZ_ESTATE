@@ -343,7 +343,7 @@ const deleteProperty = async (req, res) => {
   }
 };
 
-const addLike = async (req, res) => {
+const ahddLike = async (req, res) => {
   const { user_id, property_id } = req.body;
 
   try {
@@ -379,18 +379,96 @@ const addLike = async (req, res) => {
   }
 };
 
+const addLike = async (req, res) => {
+  const { user_id, property_id } = req.body;
+
+  try {
+    await pool.query("BEGIN");
+
+    // Check if the user has already liked this property
+    const existingLike = await pool.query(
+      "SELECT id FROM likes WHERE user_id = $1 AND property_id = $2",
+      [user_id, property_id]
+    );
+
+    if (existingLike.rowCount > 0) {
+      // If a like already exists, rollback and return a message
+      await pool.query("ROLLBACK");
+      return res
+        .status(400)
+        .json({ message: "You have already liked this property" });
+    }
+
+    // Insert the like record into the 'likes' table
+    const result = await pool.query(
+      "INSERT INTO likes (user_id, property_id) VALUES ($1, $2) RETURNING id",
+      [user_id, property_id]
+    );
+
+    if (result.rowCount > 0) {
+      // Increment the likes_count in the 'property' table
+      await pool.query(
+        "UPDATE property SET likes_count = likes_count + 1 WHERE id = $1",
+        [property_id]
+      );
+
+      // Commit the transaction
+      await pool.query("COMMIT");
+
+      return res.status(201).json({
+        message: "Like added successfully",
+        likeId: result.rows[0].id,
+      });
+    } else {
+      // If the like wasn't added, rollback the transaction
+      await pool.query("ROLLBACK");
+      return res.status(400).json({ message: "Failed to add like" });
+    }
+  } catch (err) {
+    // Rollback in case of any error
+    await pool.query("ROLLBACK");
+    console.error(err);
+    return res
+      .status(500)
+      .json({ message: "An error occurred while adding the like" });
+  }
+};
+
+
 const saveProperty = async (req, res) => {
   const { user_id, property_id } = req.body;
 
   try {
     await pool.query("BEGIN");
 
+    // Check if the user has already saved this property
+    const existingSave = await pool.query(
+      "SELECT id FROM saved_posts WHERE user_id = $1 AND property_id = $2",
+      [user_id, property_id]
+    );
+
+    if (existingSave.rowCount > 0) {
+      // If the property is already saved, rollback and return a message
+      await pool.query("ROLLBACK");
+      return res.status(400).json({
+        message: "You have already saved this property",
+      });
+    }
+
+    // Insert the save record into the 'saved_posts' table
     const result = await pool.query(
       "INSERT INTO saved_posts (user_id, property_id) VALUES ($1, $2) RETURNING id, saved_at",
       [user_id, property_id]
     );
 
     if (result.rowCount > 0) {
+      // Increment the save_count in the 'property' table
+      await pool.query(
+        "UPDATE property SET save_count = save_count + 1 WHERE id = $1",
+        [property_id]
+      );
+
+      // Commit the transaction
       await pool.query("COMMIT");
 
       return res.status(201).json({
@@ -399,10 +477,12 @@ const saveProperty = async (req, res) => {
         savedAt: result.rows[0].saved_at,
       });
     } else {
+      // If the save wasn't added, rollback the transaction
       await pool.query("ROLLBACK");
       return res.status(400).json({ message: "Failed to save property" });
     }
   } catch (err) {
+    // Rollback in case of any error
     await pool.query("ROLLBACK");
     console.error(err);
     return res
@@ -410,6 +490,7 @@ const saveProperty = async (req, res) => {
       .json({ message: "An error occurred while saving the property" });
   }
 };
+
 
 const his = async (req, res) => {
   const { property_id, buyer_email, new_status } = req.body;
