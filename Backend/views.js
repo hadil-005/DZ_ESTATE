@@ -1,16 +1,22 @@
-const bcrypt = require("bcrypt");
-const { Pool } = require("pg");
-const multer = require("multer");
-const path = require("path");
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-const session = require("express-session");
-const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const cookieParser = require("cookie-parser");
-const crypto = require("crypto");
-const secret = "asma";
-// const secret = crypto.randomBytes(64).toString('hex');
+
+const bcrypt = require('bcrypt');
+const { Pool } = require('pg');
+const multer = require('multer');
+const path = require('path');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv')
+const session = require('express-session');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const cookieParser = require('cookie-parser')
+const crypto = require('crypto');
+const { console } = require('inspector');
+const secret = crypto.randomBytes(64).toString('hex');
+console.log(secret);
+
+
+
+
 console.log(secret);
 
 //
@@ -87,7 +93,7 @@ async function login(req, res) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Generate token with no expiration
+    // Génère le token JWT
     const token = jwt.sign(
       {
         id: user.rows[0].id,
@@ -98,10 +104,18 @@ async function login(req, res) {
       secret
     );
 
-    // Send token and user info back to the frontend
+    // Stocke le token dans un cookie
+    res.cookie("token", token, {
+      httpOnly: true, // Empêche l'accès au cookie via JavaScript
+      secure: process.env.NODE_ENV === "production", // Envoie le cookie uniquement en HTTPS en production
+      sameSite: "strict", // Protège contre les attaques CSRF
+      maxAge: 7 * 24 * 60 * 60 * 1000, // Durée de vie du cookie (7 jours)
+    });
+
+    // Renvoie la réponse avec le token et les informations de l'utilisateur
     res.status(200).json({
       message: "Login successful",
-      token, // Token sent in the response body
+      token, // Token envoyé dans la réponse JSON (optionnel)
       user: {
         first_name: user.rows[0].first_name,
         family_name: user.rows[0].family_name,
@@ -114,7 +128,7 @@ async function login(req, res) {
 }
 
 function authenticate(req, res, next) {
-  const token = req.cookies.token;
+  const token = req.cookies.token; // Récupère le token depuis les cookies
 
   if (!token) {
     return res
@@ -127,34 +141,67 @@ function authenticate(req, res, next) {
       return res.status(403).json({ message: "Token is not valid" });
     }
     req.user = decoded;
+    next(); // Passe au middleware suivant
   });
 }
+// const addComment = async (req, res) => {
+//   console.log("aa");
+//   try {
+//     // Extract token from headers and validate it
+//     const token = req.headers.authorization?.split(" ")[1]; // Extract Bearer token
+//     if (!token) {
+//       return res
+//         .status(401)
+//         .json({ error: "Authentication token is missing." });
+//     }
+//     console.log("Token:", token);
 
-const addComment = async (req, res) => {
-  const { content } = req.body;
-  const userId = req.params.user_id;
+//     // Decode the JWT token with proper error handling
+//     const decoded = jwt.verify(token, secret); // Decode the token using the secret
+//     console.log("alert invoked");
 
-  try {
-    const createdAt = new Date();
+//     const userId = decoded.id;
+//     if (!userId) {
+//       return res
+//         .status(401)
+//         .json({ error: "Invalid token. User ID is missing." });
+//     }
 
-    const query = `
-      INSERT INTO comments (user_id, content, created_at) 
-      VALUES ($1, $2, $3) 
-      RETURNING *;
-    `;
+//     console.log("User ID from token:", userId); // Log user ID for debugging
 
-    const result = await pool.query(query, [userId, content, createdAt]);
+//     const { content } = req.body; // Get content from request body
+//     if (!content) {
+//       return res.status(400).json({ error: "Comment content is required." });
+//     }
+//     console.log("Content:", content);
 
-    res.status(201).json({ comment: result.rows[0] });
-  } catch (error) {
-    console.error("Error adding comment:", error);
-    res.status(500).json({ error: error.message });
-  }
-};
+//     // Insert comment into database
+//     const createdAt = new Date();
+//     const query = `
+//       INSERT INTO comments (user_id, content, created_at)
+//       VALUES ($1, $2, $3)
+//       RETURNING *;
+//     `;
 
+//     const result = await pool.query(query, [userId, content, createdAt]);
+
+//     // Send the response with the inserted comment
+//     res.status(201).json({ comment: result.rows[0] });
+//   } catch (error) {
+//     console.error("Error adding comment:", error);
+
+//     // Check if the error was due to the JWT verification
+//     if (error instanceof jwt.JsonWebTokenError) {
+//       return res.status(401).json({ error: "Invalid or expired token." });
+//     }
+
+//     // Generic error handling
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 const getRandomProperties = async (req, res) => {
   try {
-    const { limit = 5, property_type } = req.query;
+    const { limit = 30, property_type } = req.query;
 
     let query = "SELECT * FROM property";
 
@@ -175,10 +222,99 @@ const getRandomProperties = async (req, res) => {
   }
 };
 
+// const addComment = async (req, res) => {
+//   try {
+//     console.log("addComment invoked");
+
+//     // Extract token from headers and validate it
+//     // const token = req.headers.authorization?.split(" ")[1]; // Extract Bearer token
+
+//     // if (!token) {
+//     //   return res
+//     //     .status(401)
+//     //     .json({ error: "Authentication token is missing." });
+//     // }
+//     // console.log("Token:", token);
+
+//     // // Decode and verify the JWT token with proper error handling
+//     // const decoded = jwt.verify(token, secret); // Decode and verify the token using the secret
+//     // console.log("Decoded token:", decoded);
+
+//     // const userId = decoded.id;
+//     // if (!userId) {
+//     //   return res
+//     //     .status(401)
+//     //     .json({ error: "Invalid token. User ID is missing." });
+//     // }
+
+//     // console.log("User ID from token:", userId);
+
+//     // Extract comment content from request body
+//     const { content } = req.body;
+//     if (!content) {
+//       return res.status(400).json({ error: "Comment content is required." });
+//     }
+//     console.log("Content:", content);
+
+//     // Insert comment into database
+//     const createdAt = new Date();
+//     const query = `
+//       INSERT INTO comments  content, created_at)
+//       VALUES ($1, $2)
+//       RETURNING *;
+//     `;
+
+//     const result = await pool.query(query, [content, createdAt]);
+
+//     // Send the response with the inserted comment
+//     res.status(201).json({ comment: result.rows[0] });
+//   } catch (error) {
+//     console.error("Error adding comment:", error);
+
+//     // Handle JWT validation error
+//     if (error instanceof jwt.JsonWebTokenError) {
+//       return res.status(401).json({ error: "Invalid or expired token." });
+//     }
+
+//     // Generic error handling
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+const addComment = async (req, res) => {
+  try {
+    console.log("addComment invoked");
+
+    // Extract comment content from request body
+    const { content } = req.body;
+    if (!content) {
+      return res.status(400).json({ error: "Comment content is required." });
+    }
+    console.log("Content:", content);
+
+    // Insert comment into the database
+    const createdAt = new Date();
+    const query = `
+      INSERT INTO comments (content, created_at) 
+      VALUES ($1, $2) 
+      RETURNING *;
+    `;
+
+    const result = await pool.query(query, [content, createdAt]);
+
+    // Send the response with the inserted comment
+    res.status(201).json({ comment: result.rows[0] });
+  } catch (error) {
+    console.error("Error adding comment:", error);
+
+    // Generic error handling
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const getRandomComments = async (req, res) => {
   try {
     const result = await db.query(
-      `SELECT * FROM comments ORDER BY RANDOM() LIMIT 5`
+      `SELECT * FROM comments ORDER BY RANDOM() LIMIT 10`
     );
 
     res.json(result.rows);
@@ -207,7 +343,7 @@ const deleteProperty = async (req, res) => {
   }
 };
 
-const addLike = async (req, res) => {
+const ahddLike = async (req, res) => {
   const { user_id, property_id } = req.body;
 
   try {
@@ -243,18 +379,96 @@ const addLike = async (req, res) => {
   }
 };
 
+const addLike = async (req, res) => {
+  const { user_id, property_id } = req.body;
+
+  try {
+    await pool.query("BEGIN");
+
+    // Check if the user has already liked this property
+    const existingLike = await pool.query(
+      "SELECT id FROM likes WHERE user_id = $1 AND property_id = $2",
+      [user_id, property_id]
+    );
+
+    if (existingLike.rowCount > 0) {
+      // If a like already exists, rollback and return a message
+      await pool.query("ROLLBACK");
+      return res
+        .status(400)
+        .json({ message: "You have already liked this property" });
+    }
+
+    // Insert the like record into the 'likes' table
+    const result = await pool.query(
+      "INSERT INTO likes (user_id, property_id) VALUES ($1, $2) RETURNING id",
+      [user_id, property_id]
+    );
+
+    if (result.rowCount > 0) {
+      // Increment the likes_count in the 'property' table
+      await pool.query(
+        "UPDATE property SET likes_count = likes_count + 1 WHERE id = $1",
+        [property_id]
+      );
+
+      // Commit the transaction
+      await pool.query("COMMIT");
+
+      return res.status(201).json({
+        message: "Like added successfully",
+        likeId: result.rows[0].id,
+      });
+    } else {
+      // If the like wasn't added, rollback the transaction
+      await pool.query("ROLLBACK");
+      return res.status(400).json({ message: "Failed to add like" });
+    }
+  } catch (err) {
+    // Rollback in case of any error
+    await pool.query("ROLLBACK");
+    console.error(err);
+    return res
+      .status(500)
+      .json({ message: "An error occurred while adding the like" });
+  }
+};
+
+
 const saveProperty = async (req, res) => {
   const { user_id, property_id } = req.body;
 
   try {
     await pool.query("BEGIN");
 
+    // Check if the user has already saved this property
+    const existingSave = await pool.query(
+      "SELECT id FROM saved_posts WHERE user_id = $1 AND property_id = $2",
+      [user_id, property_id]
+    );
+
+    if (existingSave.rowCount > 0) {
+      // If the property is already saved, rollback and return a message
+      await pool.query("ROLLBACK");
+      return res.status(400).json({
+        message: "You have already saved this property",
+      });
+    }
+
+    // Insert the save record into the 'saved_posts' table
     const result = await pool.query(
       "INSERT INTO saved_posts (user_id, property_id) VALUES ($1, $2) RETURNING id, saved_at",
       [user_id, property_id]
     );
 
     if (result.rowCount > 0) {
+      // Increment the save_count in the 'property' table
+      await pool.query(
+        "UPDATE property SET save_count = save_count + 1 WHERE id = $1",
+        [property_id]
+      );
+
+      // Commit the transaction
       await pool.query("COMMIT");
 
       return res.status(201).json({
@@ -263,10 +477,12 @@ const saveProperty = async (req, res) => {
         savedAt: result.rows[0].saved_at,
       });
     } else {
+      // If the save wasn't added, rollback the transaction
       await pool.query("ROLLBACK");
       return res.status(400).json({ message: "Failed to save property" });
     }
   } catch (err) {
+    // Rollback in case of any error
     await pool.query("ROLLBACK");
     console.error(err);
     return res
@@ -361,15 +577,14 @@ const createMessage = async (req, res) => {
   }
 };
 
-const searchProperties = async (req, res) => {
+const sezarchProperties = async (req, res) => {
   try {
-    const { wilaya, commune, property_type } = req.body;
+    const {  commune} = req.body;
 
     // Validate that at least one search field is provided
-    if (!wilaya && !commune && !property_type) {
-      return res
-        .status(400)
-        .json({ error: "At least one search criterion must be provided" });
+
+    if (!commune ) {
+      return res.status(400).json({ error: 'At least one search criterion must be provided' });
     }
 
     // Build the dynamic SQL query
@@ -399,6 +614,37 @@ const searchProperties = async (req, res) => {
       return res
         .status(404)
         .json({ message: "No properties found matching your criteria" });
+    }
+
+    res.status(200).json({ properties: result.rows });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while searching for properties" });
+  }
+};
+
+const searchProperties = async (req, res) => {
+  try {
+    console.log("zz")
+    const { commune } = req.body;
+    console.log(req.body);
+    // Validate that the commune is provided
+    if (!commune) {
+      return res.status(400).json({ error: 'Commune is required to search for properties' });
+    }
+
+    // Build the query for searching by commune
+    const query = 'SELECT * FROM property WHERE commune ILIKE $1';
+    const values = [`%${commune}%`];
+
+    // Execute the query
+    const result = await pool.query(query, values);
+
+    // Return results or handle no match
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'No properties found in the specified commune' });
     }
 
     res.status(200).json({ properties: result.rows });
@@ -535,25 +781,22 @@ const getPropertyDetails = async (req, res) => {
   }
 };
 
-const getThreeRandomProperties = async (req, res) => {
-  try {
-    const query = `
+
+const geetThreeRandomProperties = async (req, res) => {
+    try {
+      const query = `
         SELECT 
         id,
-          price, 
-          transaction_status, 
-          title, 
-          wilaya,
-          commune,
-          likes_count,
-          CASE
-            WHEN photos_urls IS NOT NULL AND photos_urls != '{}' THEN photos_urls[1]
-            ELSE NULL
-          END AS photo_address
-        FROM property
-        ORDER BY RANDOM()
-        LIMIT 3;
-      `;
+        price, 
+        transaction_status, 
+        title, 
+        wilaya,
+        commune,
+        likes_count
+      FROM property
+      ORDER BY RANDOM()
+      LIMIT 3;
+    `;
 
     const result = await pool.query(query);
 
@@ -569,6 +812,42 @@ const getThreeRandomProperties = async (req, res) => {
       .json({ error: "An error occurred while retrieving random properties" });
   }
 };
+
+
+const getThreeRandomProperties = async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        id,
+        price, 
+        transaction_status, 
+        title, 
+        wilaya,
+        commune,
+        likes_count,
+        area,
+        rooms,
+        photo1,
+        save_count
+      FROM property
+      ORDER BY RANDOM()
+      LIMIT 3;
+    `;
+
+    const result = await pool.query(query);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'No properties found' });
+    }
+
+    res.status(200).json({ properties: result.rows });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while retrieving random properties' });
+  }
+};
+
+
 
 const getLikedProperties = async (req, res) => {
   try {
@@ -638,221 +917,89 @@ const logout = (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-// const createeessage = async (req, res) => {
-//   const { sender_id, receiver_id, content, attachment } = req.body;
-
-//   // Validate required fields
-//   if (!sender_id || !receiver_id || !content) {
-//     return res
-//       .status(400)
-//       .json({ error: "Sender ID, Receiver ID, and Content are required" });
-//   }
-
-//   try {
-//     // Insert message into the database
-//     const query = `
-//             INSERT INTO messages (sender_id, receiver_id, content, attachment)
-//             VALUES ($1, $2, $3, $4)
-//             RETURNING *;
-//         `;
-//     const values = [sender_id, receiver_id, content, attachment || null];
-//     const result = await req.pool.query(query, values);
-
-//     // Emit the new message to the receiver via WebSocket
-//     const newMessage = result.rows[0];
-//     req.io.to(receiver_id.toString()).emit("message received", newMessage);
-
-//     // Return the created message
-//     res.status(201).json(newMessage);
-//   } catch (err) {
-//     console.error("Error creating message:", err);
-//     res.status(500).json({ error: "Failed to create message" });
-//   }
-// };
-
-// const getMessagess = async (req, res) => {
-//   const { sender_id, receiver_id } = req.query;
-
-//   if (!sender_id || !receiver_id) {
-//     return res
-//       .status(400)
-//       .json({ error: "Sender ID and Receiver ID are required" });
-//   }
-
-//   try {
-//     // Fetch messages between sender and receiver
-//     const query = `
-//             SELECT * FROM messages
-//             WHERE (sender_id = $1 AND receiver_id = $2)
-//             OR (sender_id = $2 AND receiver_id = $1)
-//             ORDER BY message_date ASC;
-//         `;
-//     const values = [sender_id, receiver_id];
-//     const result = await req.pool.query(query, values);
-
-//     res.status(200).json(result.rows);
-//   } catch (err) {
-//     console.error("Error fetching messages:", err);
-//     res.status(500).json({ error: "Failed to fetch messages" });
-//   }
-// };
-
-const getget = async (req, res) => {
-  // Extract the token and decode it to get the sender_id
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) {
-    return res.status(401).json({ error: "Authentication token is missing" });
-  }
-
-  let sender_id;
+async function lert(req, res) {
   try {
-    const decoded = jwt.verify(token, secret); // Replace `secret` with your JWT secret
-    sender_id = decoded.id; // The logged-in user's ID
-  } catch (err) {
-    return res.status(403).json({ error: "Invalid or expired token" });
+    console.log("alert invoked");
+    // Extract token from cookies and validate it
+    const token = req.headers.authorization?.split(" ")[1]; // Récupérer le token Bearer
+    if (!token) {
+      return res
+        .status(401)
+        .json({ error: "Authentication token is missing." });
+    }
+    console.log(token);
+
+    const decoded = jwt.verify(token, secret); // Decode the JWT token
+
+    const userId = decoded.id;
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ error: "Invalid token. User ID is missing." });
+    }
+
+    console.log("User ID from token:", userId); // Log user ID for debugging
+
+    // Extract the alert data from the request body
+    const { wilaya, commune, property_type, max_price, area, rooms_number } =
+      req.body;
+
+    // Check if any required field is missing
+    if (
+      !wilaya ||
+      !commune ||
+      !property_type ||
+      !max_price ||
+      !area ||
+      !rooms_number
+    ) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+
+    const insertAlertQuery = `
+      INSERT INTO alerts (user_id, wilaya, commune, property_type, max_price, area, rooms_number) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
+
+    const newAlert = await pool.query(insertAlertQuery, [
+      userId,
+      wilaya,
+      commune,
+      property_type,
+      max_price,
+      area,
+      rooms_number,
+    ]);
+    res.status(201).json({
+      message: "Alert created successfully",
+      alert: newAlert.rows[0],
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: error.message });
   }
-
-  const { receiver_id } = req.query;
-
-  if (!receiver_id) {
-    return res.status(400).json({ error: "Receiver ID is required" });
-  }
-
-  try {
-    // Fetch messages between sender and receiver
-    const query = `
-      SELECT * FROM messages
-      WHERE (sender_id = $1 AND receiver_id = $2)
-      OR (sender_id = $2 AND receiver_id = $1)
-      ORDER BY message_date ASC;
-    `;
-    const values = [sender_id, receiver_id];
-    const result = await req.pool.query(query, values);
-
-    res.status(200).json(result.rows);
-  } catch (err) {
-    console.error("Error fetching messages:", err);
-    res.status(500).json({ error: "Failed to fetch messages" });
-  }
-};
-// const creaeeMessage = async (req, res) => {
-//   // Extract the token and decode it to get the sender_id
-//   const token = req.headers.authorization?.split(" ")[1];
-//   if (!token) {
-//     return res.status(401).json({ error: "Authentication token is missing" });
-//   }
-
-//   let sender_id;
-//   try {
-//     const decoded = jwt.verify(token, secret); // Replace `secret` with your JWT secret
-//     sender_id = decoded.id; // The logged-in user's ID
-//   } catch (err) {
-//     return res.status(403).json({ error: "Invalid or expired token" });
-//   }
-
-//   const { receiver_id, content, attachment } = req.body;
-
-//   // Validate required fields
-//   if (!receiver_id || !content) {
-//     return res
-//       .status(400)
-//       .json({ error: "Receiver ID and Content are required" });
-//   }
-
-//   try {
-//     // Insert message into the database
-//     const query = `
-//       INSERT INTO messages (sender_id, receiver_id, content, attachment)
-//       VALUES ($1, $2, $3, $4)
-//       RETURNING *;
-//     `;
-//     const values = [sender_id, receiver_id, content, attachment || null];
-//     const result = await req.pool.query(query, values);
-
-//     // Emit the new message to the receiver via WebSocket
-//     const newMessage = result.rows[0];
-//     req.io.to(receiver_id.toString()).emit("message received", newMessage);
-
-//     // Return the created message
-//     res.status(201).json(newMessage);
-//   } catch (err) {
-//     console.error("Error creating message:", err);
-//     res.status(500).json({ error: "Failed to create message" });
-//   }
-// };
-const creaeeMessage = async (req, res) => {
-  console.log("aaaaaa");
-  console.log(req.headers); // Log headers to see if the token is there
-  console.log(req.body); // Log the body to see if it's populated
-
-  // Extract the token and decode it to get the sender_id
-  const token = req.headers.authorization?.split(" ")[1];
-  console.log("aaaaaa");
-
-  if (!token) {
-    console.log("aaaaaa");
-
-    return res.status(401).json({ error: "Authentication token is missing" });
-  }
-  console.log("aaaaaa");
-
-  const decoded = jwt.verify(token, secret);
-  const sender_id = decoded.id;
-  console.log("aaaaaa");
-
-  console.log(sender_id);
-  // Extract receiver_id and content from the request body
-  const { receiver_id, content } = req.body;
-  console.log("aaaaaa");
-  console.log(req.body);
-  // Validate required fields
-  if (!receiver_id || !content) {
-    return res
-      .status(400)
-      .json({ error: "Receiver ID and Content are required" });
-  }
-
-  try {
-    // Insert message into the database without the attachment field
-    const query = `
-      INSERT INTO messages (sender_id, receiver_id, content)
-      VALUES ($1, $2, $3)
-      RETURNING *;
-    `;
-    const values = [sender_id, receiver_id, content];
-    const result = await req.pool.query(query, values);
-
-    // Emit the new message to the receiver via WebSocket
-    const newMessage = result.rows[0];
-    req.io.to(receiver_id.toString()).emit("message received", newMessage);
-
-    // Return the created message
-    res.status(201).json(newMessage);
-  } catch (err) {
-    console.error("Error creating message:", err);
-    res.status(500).json({ error: "Failed to create message" });
-  }
-};
+}
 
 module.exports = {
+  lert,
   logout,
-  creaeeMessage,getget ,
-  getMessages,
   getPropertyDetails,
   getLikedProperties,
   getSavedProperties,
-  creaeeMessage,
   getThreeRandomProperties,
   searchProperties,
   getit,
+  addComment,
   signup,
+  getRandomComments,
   his,
   createMessage,
+  getMessages,
   saveProperty,
   login,
   addLike,
   authenticate,
   addComment,
+  getThreeRandomProperties,
   deleteProperty,
   getRandomProperties,
   getRandomComments,

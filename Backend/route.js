@@ -37,6 +37,9 @@ router.post("/logout", logout);
 router.get("/random", getRandomProperties);
 router.get("/randomp", getRandomProperties);
 router.get("/randomc", getRandomProperties);
+router.get("/random", getRandomProperties);
+router.get("/randomp", getRandomProperties);
+router.get("/randomc", getRandomProperties);
 // _______________________________________________________
 
 router.delete("/:id/deleteit", deleteProperty);
@@ -58,3 +61,4 @@ router.get("/getget ", getget);
 // ____________________________________________
 // router.get("/getMessages", getMessases);
 module.exports = router;
+

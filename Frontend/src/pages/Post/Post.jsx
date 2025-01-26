@@ -43,6 +43,370 @@ function Post() {
     setShowList(false);
   };
 
+
+   const communes = [
+        "Adrar",
+        "Tamest",
+        "Charouine",
+        "Reggane",
+        "In Zghmir",
+        "Tit",
+        "Tsabit",
+        "Ksar Kaddour",
+        "Aoulef",
+        "Tamentit",
+        "Fenoughil",
+        "Zaouiet Kounta",
+        "Timimoun",
+        "Metarfa",
+        "Ouled Said",
+        "Deldoul",
+        "Bouda",
+        "Sali",
+        "Akabli",
+        "Tinerkouk",
+        "Talmine",
+        "Ouled Ahmed Timmi",
+        "Sebaa",
+        "In Belbel",
+        "Bouda",
+        "Chlef",
+        "Tenes",
+        "Beni Haoua",
+        "Sobha",
+        "Ouled Farès",
+        "El Karimia",
+        "Harchoun",
+        "Oued Fodda",
+        "Boukadir",
+        "El Marsa",
+        "Abou El Hassan",
+        "Oued Goussine",
+        "Dahra",
+        "Taougrit",
+        "Sidi Akkacha",
+        "El Hadjadj",
+        "Ouled Abbes",
+        "Tadjena",
+        "Sendjas",
+        "Ouled Ben Abdelkader",
+        "Breira",
+        "Beni Rached",
+        "Beni Bouateb",
+        "Talassa",
+        "Laghouat",
+        "Ksar El Hirane",
+        "Benacer Benchohra",
+        "Sidi Makhlouf",
+        "Hassi Delaa",
+        "Hassi R'mel",
+        "Aflou",
+        "Tadjrouna",
+        "Sebgag",
+        "Brida",
+        "Ouled Morah",
+        "Gueltat Sidi Saad",
+        "El Ghicha",
+        "Ain Madhi",
+        "Tadjemout",
+        "Kheneg",
+        "El Assafia",
+        "Oued Morra",
+        "El Beidha",
+        "Sidi Bouzid",
+        "Oum El Bouaghi",
+        "Aïn Beïda",
+        "Aïn M'lila",
+        "Sigus",
+        "Ouled Hamla",
+        "Fkirina",
+        "Aïn Babouche",
+        "El Amiria",
+        "El Belala",
+        "Aïn Kercha",
+        "Hanchir Toumghani",
+        "Berriche",
+        "Aïn Diss",
+        "Ouled Zouai",
+        "Dhalaa",
+        "El Harmilia",
+        "Aïn Fakroun",
+        "Souk Naamane",
+        "Zorg",
+        "Rahia",
+        "Ouled Gacem",
+        "Bir Chouhada",
+        "Batna",
+        "Timgad",
+        "Barika",
+        "Merouana",
+        "N'gaous",
+        "Seriana",
+        "El Madher",
+        "Aïn Touta",
+        "Tazoult",
+        "Arris",
+        "Lambiridi",
+        "Bouzina",
+        "Chemora",
+        "Djerma",
+        "Inoughissen",
+        "Ichmoul",
+        "Aïn Yagout",
+        "Fesdis",
+        "Gosbat",
+        "El Hassi",
+        "Tilatou",
+        "Talkhamt",
+        "Seggana",
+        "Guigba",
+        "Ouyoun El Assafir",
+        "Béjaïa",
+        "Akbou",
+        "Amizour",
+        "Tichy",
+        "Souk El Tenine",
+        "Tazmalt",
+        "Barbacha",
+        "Timezrit",
+        "Sidi Aïch",
+        "El Kseur",
+        "Tala Hamza",
+        "Kendira",
+        "Adekar",
+        "Chemini",
+        "Aït Smail",
+        "Aokas",
+        "Bouhamza",
+        "Ouzellaguen",
+        "Melbou",
+        "Feraoun",
+        "Tifra",
+        "Tamridjet",
+        "Taskriout",
+        "Semaoune",
+        "Biskra",
+        "Tolga",
+        "El Kantara",
+        "Sidi Okba",
+        "Ourlal",
+        "Djemorah",
+        "Lioua",
+        "M'chouneche",
+        "Aïn Naga",
+        "El Ghrous",
+        "Zeribet El Oued",
+        "Oumache",
+        "Chetma",
+        "Khenguet Sidi Nadji",
+        "El Haouch",
+        "Bouchakroun",
+        "Bordj Ben Azzouz",
+        "Meziraa",
+        "Aïn Zaatout",
+        "Foughala",
+        "El Feidh",
+        "Béchar",
+        "Kenadsa",
+        "Abadla",
+        "Erg Ferradj",
+        "Taghit",
+        "Béni Abbès",
+        "Ouled Khoudir",
+        "Timoudi",
+        "El Ouata",
+        "Kerzaz",
+        "Igli",
+        "Tabelbala",
+        "Beni Ikhlef",
+        "Tamtert",
+        "Boukais",
+        "Mechraa Houari Boumediene",
+        "Blida",
+        "Boufarik",
+        "El Affroun",
+        "Ouled Yaïch",
+        "Mouzaïa",
+        "Bouarfa",
+        "Chebli",
+        "Béni Tamou",
+        "Soumaa",
+        "Chréa",
+        "Chiffa",
+        "Hammam Melouane",
+        "Ben Khelil",
+        "Ouled Slama",
+        "Meftah",
+        "Larbaa",
+        "Bouira",
+        "Aïn Bessem",
+        "Lakhdaria",
+        "El Hachimia",
+        "Bordj Okhriss",
+        "Haizer",
+        "Sour El Ghozlane",
+        "M'Chedallah",
+        "Bechloul",
+        "Bouderbala",
+        "Taghzout",
+        "Aïn Turk",
+        "Aomar",
+        "El Adjiba",
+        "Ridane",
+        "Saharidj",
+        "Dechmia",
+        "El Hakimia",
+        "Taguedit",
+        "Ath Mansour",
+        "Ath Laâziz",
+        "Ath Rached",
+        "Tamanrasset",
+        "Abalessa",
+        "Idles",
+        "In Ghar",
+        "In Guezzam",
+        "In Salah",
+        "Foggaret Ezzoua",
+        "Tazrouk",
+        "Tinzaouatine",
+        "Tébessa",
+        "Bir El Ater",
+        "El Aouinet",
+        "Cheria",
+        "El Ogla",
+        "El Ma Labiodh",
+        "Ouenza",
+        "Bekkaria",
+        "Bir Mokkadem",
+        "Hammamet",
+        "El Kouif",
+        "Negrine",
+        "Morsott",
+        "Safsaf El Ouesra",
+        "Stah Guentis",
+        "El Mezeraa",
+        "El Ogla El Malha",
+        "Guorriguer",
+        "Boukhadra",
+        "Oum Ali",
+        "Aïn Zerga",
+        "Aïn El Kebira",
+        "Tizi Ouzou",
+        "Azazga",
+        "Larbaa Nath Irathen",
+        "Draa El Mizan",
+        "Makouda",
+        "Aïn El Hammam",
+        "Freha",
+        "Boghni",
+        "Tigzirt",
+        "Beni Douala",
+        "Aghribs",
+        "Ait Yahia Moussa",
+        "Yakouren",
+        "Azeffoun",
+        "Ouaguenoun",
+        "Ifigha",
+        "Tizi Gheniff",
+        "Aït Aissa Mimoun",
+        "Mekla",
+        "Aït Bouadou",
+        "Iboudraren",
+        "Imsouhal",
+        "Boudjima",
+        "Yatafen",
+        "Beni Zmenzer",
+        "Iferhounène",
+        "Ait Chaffa",
+        "Timizart",
+        "Illoula Oumalou",
+        "Alger-Centre",
+        "Sidi M'Hamed",
+        "El Madania",
+        "Belouizdad",
+        "Bab El Oued",
+        "Bologhine",
+        "Casbah",
+        "Oued Koriche",
+        "Bir Mourad Raïs",
+        "El Biar",
+        "Bouzareah",
+        "Birkhadem",
+        "El Harrach",
+        "Baraki",
+        "Oued Smar",
+        "Bachdjerrah",
+        "Hussein Dey",
+        "Kouba",
+        "Bourouba",
+        "Dar El Beïda",
+        "Bab Ezzouar",
+        "Ben Aknoun",
+        "Dely Ibrahim",
+        "Hammamet",
+        "Raïs Hamidou",
+        "Djasr Kasentina",
+        "El Mouradia",
+        "Hydra",
+        "Mohammadia",
+        "Boumerdès",
+        "Boudouaou",
+        "Thenia",
+        "Khemis El Khechna",
+        "Naciria",
+        "Bordj Menaïel",
+        "Dellys",
+        "Isser",
+        "Baghlia",
+        "Chabet El Ameur",
+        "Zemmouri",
+        "Corso",
+        "Tidjelabine",
+        "Beni Amrane",
+        "Larbatache",
+        "Ouled Moussa",
+        "Afir",
+        "Souk El Had",
+        "Si Mustapha",
+        "El Kharrouba",
+        "Timezrit",
+        "Ouled Aissa",
+        "Taourga",
+        "Ben Choud",
+        "Legata",
+        "Khenchela",
+        "Babar",
+        "Bouhmama",
+        "Chelia",
+        "Kaïs",
+        "M'Toussa",
+        "El Oueldja",
+        "Ensigha",
+        "Tamza",
+        "Khirane",
+        "Baghai",
+        "Djellal",
+        "Aïn Touila",
+        "El Hamma",
+        "Ouled Rechache",
+        "Taouzianat",
+        "Yabous",
+      ];
+      const [searchc, setSearchc] = useState("");
+      const [showListc, setShowListc] = useState(false);
+  
+      const filtercommunes = communes.filter((commune) =>
+       commune.toLowerCase().startsWith(searchc.toLowerCase())
+      );
+      const handlecommuneClick = (commune) => {
+        setSearchc(commune);
+        setShowListc(false);
+      };
+      const handleInputChangec = (e) => {
+        const value = e.target.value;
+        setSearchc(value);
+        setShowListc(value !== "");
+      };
   const handleCheckboxChange = (id) => {
     setSelectedCheckbox((prev) => (prev === id ? null : id));
   };
@@ -128,11 +492,15 @@ const handleSubmit = (e) => {
     <div>
       <Navbar />
       <div className="mt-24 ml-12 flex flex-col">
-        <h1 className="text-[#1C84FF] text-left text-[40px] font-bold mb-8">{t("Publier")}</h1>
+        <h1 className="text-[#1C84FF] text-left text-[40px] font-bold mb-8">
+          {t("Publier")}
+        </h1>
         <div className="flex space-x-60 w-full h-screen overflow-auto mt-6">
           <div className="space-y-3 ml-32 w-full lg:w-1/2 flex flex-col p-6 lg:p-1 lg:pt-4">
             <div className="flex flex-col space-y-2">
-              <label className="font-semibold" htmlFor="wilaya">{t("Wilaya")}</label>
+              <label className="font-semibold" htmlFor="wilaya">
+                {t("Wilaya")}
+              </label>
               <input
                 type="text"
                 placeholder={t("wilaya")}
@@ -155,18 +523,39 @@ const handleSubmit = (e) => {
                 </ul>
               )}
             </div>
+           
+
             <div className="flex flex-col space-y-2">
-              <label htmlFor="commune" className="font-semibold">{t("Commune")}</label>
+              <label className="font-semibold" htmlFor="commune">
+                {t("Commune")}
+              </label>
               <input
+                type="text"
                 placeholder={t("commune")}
                 id="commune"
-                type="text"
+                value={searchc}
+                onChange={handleInputChangec}
                 className="border border-[#9F9F9F] rounded-md p-1 mb-4 w-3/4"
               />
+              {showListc && filtercommunes.length > 0 && (
+                <ul className="list-disc ml-6 border border-gray-300 rounded-md shadow-md bg-white max-h-60 overflow-auto">
+                  {filtercommunes.map((commune, index) => (
+                    <li
+                      key={index}
+                      className="cursor-pointer text-gray-700 hover:text-blue-500 px-2 py-1"
+                      onClick={() => handlecommuneClick(commune)}
+                    >
+                      {commune}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <div className="flex flex-col space-y-2">
-              <label htmlFor="addresseM" className="font-semibold">{t("Addresse")}</label>
+              <label htmlFor="addresseM" className="font-semibold">
+                {t("Addresse")}
+              </label>
               <input
                 placeholder={t("addresse")}
                 id="addresseM"
@@ -175,7 +564,9 @@ const handleSubmit = (e) => {
               />
             </div>
             <div className="flex flex-col space-y-2">
-              <label htmlFor="titre" className="font-semibold">{t("Titre")}</label>
+              <label htmlFor="titre" className="font-semibold">
+                {t("Titre")}
+              </label>
               <input
                 placeholder={t("titre")}
                 id="titre"
@@ -184,7 +575,9 @@ const handleSubmit = (e) => {
               />
             </div>
             <div className="flex flex-col space-y-2">
-              <label htmlFor="description" className="font-semibold">{t("Description")}</label>
+              <label htmlFor="description" className="font-semibold">
+                {t("Description")}
+              </label>
               <textarea
                 placeholder={t("description")}
                 id="description"
@@ -196,11 +589,13 @@ const handleSubmit = (e) => {
 
           <div className="space-y-3 w-full lg:w-1/2 flex flex-col p-6 lg:p-1 lg:pt-4">
             <PhotoUploader onUpload={handlePhotoUpload} />
-            <VideoUploader/>
+    <VideoUploader/>
             <FormulaireSelect onSelect={handleSelect} />
 
             <div className="flex flex-col ml-2 space-y-2">
-              <label htmlFor="surface" className="font-semibold">{t("Surface")}</label>
+              <label htmlFor="surface" className="font-semibold">
+                {t("Surface")}
+              </label>
               <input
                 placeholder={t("surface")}
                 id="surface"
@@ -209,7 +604,9 @@ const handleSubmit = (e) => {
               />
             </div>
             <div className="flex flex-col ml-2 space-y-2">
-              <label htmlFor="prix" className="font-semibold">{t("Prix")}</label>
+              <label htmlFor="prix" className="font-semibold">
+                {t("Prix")}
+              </label>
               <input
                 placeholder={t("prix")}
                 id="prix"
@@ -227,7 +624,9 @@ const handleSubmit = (e) => {
                   checked={selectedCheckbox === "a vendre"}
                   onChange={() => handleCheckboxChange("a vendre")}
                 />
-                <label htmlFor="a vendre" className="font-semibold">{t("vendre")}</label>
+                <label htmlFor="a vendre" className="font-semibold">
+                  {t("vendre")}
+                </label>
               </div>
               <div className="ml-2 flex items-center space-x-3">
                 <input
@@ -237,7 +636,9 @@ const handleSubmit = (e) => {
                   onChange={() => handleCheckboxChange("a louer")}
                   className="accent-green-600"
                 />
-                <label htmlFor="a louer" className="font-semibold">{t("louer")}</label>
+                <label htmlFor="a louer" className="font-semibold">
+                  {t("louer")}
+                </label>
               </div>
             </div>
 

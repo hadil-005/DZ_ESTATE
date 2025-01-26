@@ -1,4 +1,5 @@
 const express = require("express");
+const express = require("express");
 const cors = require("cors");
 const JWT = require("jsonwebtoken");
 const multer = require("multer");
@@ -33,10 +34,19 @@ const pool = new Pool({
 });
 
 const db = pool;
+
 const GOOGLE_CLIENT_ID =
   "408478996991-prag7l93m9v845ms2ft7oighd3o17edh.apps.googleusercontent.com";
 const GOOGLE_CLIENT_SECRET = " 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";
 
+app.use(
+  session({
+    secret:
+      "d1565e2de497088d875c5b66f985b5245f559212a48773f1f6781ff76d501760f9558a3a5f8cee8d118b0abc9d35bd046f41579b2cfc79d420370d9ae570b26f",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 app.use(
   session({
     secret:
