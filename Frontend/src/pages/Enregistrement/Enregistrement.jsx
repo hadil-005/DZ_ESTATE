@@ -6,7 +6,7 @@ const Enregistrement = () => {
   const [savedArticles, setSavedArticles] = useState([]);
   const fetchSavedProperties = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/property/:user_id/getSavedProperties`);
+      const response = await fetch(`https://dz-estate-wjy4.onrender.com/api/property/:user_id/getSavedProperties`);
       if (!response.ok) {
         throw new Error('Failed to fetch saved properties');
       }
