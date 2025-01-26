@@ -24,5 +24,3 @@ const Avataru = () => {
           
   )
 }
-
-export default Avataru

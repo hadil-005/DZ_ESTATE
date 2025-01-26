@@ -96,8 +96,7 @@ const handleSubmit = (e) => {
   formData.append("transaction_status", selectedCheckbox); // Type de transaction
   formData.append("property_type", typeBien);
 
-
-  // // Ajoute les photos au FormData
+    // // Ajoute les photos au FormData
   // photos.forEach((photo) => {
     
   //   formData.append("photos[]", photo);
@@ -121,8 +120,6 @@ const handleSubmit = (e) => {
        alert("Une erreur est survenue lors de la publication de votre bien.");
      });
 };
-
-
 
   return (
     <div>
