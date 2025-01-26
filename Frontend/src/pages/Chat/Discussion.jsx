@@ -1,8 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Navbar } from "../../components/Navbar/Navbar";
-import { Sidebar } from "../../components/Sidebar/Sidebar";
-import Avataru from "./Avataru";
-import { Badge, Avatar } from "@material-tailwind/react";
+import { Avatar } from "@material-tailwind/react";
 import {
   PaperAirplaneIcon,
   PaperClipIcon,
@@ -11,115 +9,124 @@ import {
 } from "@heroicons/react/24/solid";
 import PropTypes from "prop-types";
 
-function Discussion({ user, selectedReceiverId }) {
-  const fileInputRef = useRef(null); // Référence pour l'input image
-  const fileInputOtherRef = useRef(null); // Référence pour l'input autre fichier
-  const [uploadedFiles, setUploadedFiles] = useState([]); // Fichiers téléchargés
-  const [message, setMessage] = useState(""); // Texte du message
-  const [sentMessages, setSentMessages] = useState([]); // Liste des messages envoyés
-  const [isOnline, setIsOnline] = useState(true); // Etat pour savoir si l'utilisateur est en ligne
+function Discussion({ user }) {
+  const fileInputRef = useRef(null);
+  const fileInputOtherRef = useRef(null);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [message, setMessage] = useState("");
+  const [sentMessages, setSentMessages] = useState([]);
 
-  // Ouvre le sélecteur de images
-  const handleGalleryClick = () => {
-    fileInputRef.current.click();
-  };
-  // Ouvre le sélecteur de fichiers autres que les images
-  const handleFileClick = () => {
-    fileInputOtherRef.current.click();
-  };
-
-  // Gère les changements dans le <textarea>
-  const handleMessageChange = (event) => {
-    const text = event.target.innerText;
-    setMessage(text);
-
-    // Détection de la langue basée sur les caractères
-    const arabicRegex = /[\u0600-\u06FF]/; // Détecte les caractères arabes
-    const isArabic = arabicRegex.test(text);
-
-    // Appliquer la classe de direction
-    event.target.setAttribute("dir", isArabic ? "rtl" : "ltr");
-    event.target.style.textAlign = isArabic ? "right" : "left";
+  // Convertir un fichier en base64
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
   };
 
-  // Envoi du message
-  const handleSendMessage = async () => {
-    const token = localStorage.getItem("token");
-    console.log("Token from localStorage:", token);
-
-    if (!token) {
-      console.error("No token found!");
-      return;
+  // Convertir base64 en fichier
+  const base64ToFile = (base64, name, type) => {
+    if (!base64 || typeof base64 !== "string") {
+      console.error("Invalid base64 value:", base64);
+      return null;
     }
 
-    const msgElement = document.getElementById("msg");
-    if (msgElement && msgElement.textContent.trim()) {
-      const msg = msgElement.textContent.trim();
-      const formData = new FormData();
-
-      // Append message content
-      formData.append("content", msg);
-
-      // Dynamically set the receiver_id and content
-      const receiver_id = 2; // Get dynamically selected receiver ID
-      const content = msg; // Use the message content from the input field
-
-      // Log FormData for debugging purposes
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
+    try {
+      const base64Data = base64.split(",")[1];
+      if (!base64Data) {
+        console.error("Invalid base64 format:", base64);
+        return null;
       }
 
-      try {
-        const response = await fetch(
-          "http://127.0.0.1:3000/api/messages/cmassage",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json", // Ensure content type is application/json
-            },
-            body: JSON.stringify({ receiver_id, content }),
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Message sent successfully:", data);
-
-          setSentMessages((prevMessages) => {
-            const updatedMessages = [
-              ...prevMessages,
-              { text: msg, timestamp: new Date().toLocaleString(), files: [] },
-            ];
-
-            // Sauvegarder dans localStorage
-            localStorage.setItem(
-              "sentMessages",
-              JSON.stringify(updatedMessages)
-            );
-
-            return updatedMessages;
-          });
-          setMessage(""); // Clear input
-        } else {
-          console.error("Error sending message:", response.statusText);
-          alert("Failed to send message. Please try again.");
-        }
-      } catch (error) {
-        console.error("Network error:", error);
-        alert("A network error occurred. Please check your connection.");
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
-    } else {
-      console.error("Message input element not found or is empty.");
-      alert("Please enter a message.");
+      const byteArray = new Uint8Array(byteNumbers);
+      return new File([byteArray], name, { type });
+    } catch (error) {
+      console.error("Error converting base64 to file:", error);
+      return null;
     }
   };
-  // Charger les messages au démarrage (lors du rechargement de la page)
+
+  // Charger les messages depuis localStorage
   useEffect(() => {
-    const storedMessages =
+    const savedMessages =
       JSON.parse(localStorage.getItem("sentMessages")) || [];
-    setSentMessages(storedMessages); // Charger les messages depuis le localStorage
+
+    // Reconvertir les fichiers base64 en objets File
+    const messagesWithFiles = savedMessages.map((msg) => ({
+      ...msg,
+      files: msg.files
+        .map((file) => {
+          if (!file.base64 || !file.name || !file.type) {
+            console.error("Invalid file data:", file);
+            return null;
+          }
+          return base64ToFile(file.base64, file.name, file.type);
+        })
+        .filter(Boolean), // Supprimer les fichiers invalides
+    }));
+
+    setSentMessages(messagesWithFiles);
   }, []);
+
+  // Sauvegarder les messages dans localStorage
+  const saveMessagesToLocalStorage = (messages) => {
+    const messagesToSave = messages.map((msg) => ({
+      ...msg,
+      files: msg.files.map((file) => ({
+        name: file.name,
+        type: file.type,
+        base64: file.base64,
+      })),
+    }));
+
+    localStorage.setItem("sentMessages", JSON.stringify(messagesToSave));
+  };
+
+  // Envoyer un message
+  const handleSendMessage = async () => {
+    if (!message.trim() && uploadedFiles.length === 0) return;
+
+    // Convertir les fichiers en base64
+    const filesWithBase64 = await Promise.all(
+      uploadedFiles.map(async (file) => ({
+        name: file.name,
+        type: file.type,
+        base64: await fileToBase64(file),
+      }))
+    );
+
+    const newMessage = {
+      text: message,
+      files: filesWithBase64,
+      timestamp: new Date().toLocaleString(),
+    };
+
+    const updatedMessages = [...sentMessages, newMessage];
+    setSentMessages(updatedMessages);
+    saveMessagesToLocalStorage(updatedMessages);
+    setMessage("");
+    setUploadedFiles([]);
+  };
+
+  // Gérer l'ajout de fichiers
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+    if (files.length > 0) {
+      setUploadedFiles((prev) => [...prev, ...files]);
+    }
+  };
+
+  // Supprimer un fichier
+  const handleRemoveFile = (index) => {
+    setUploadedFiles((prev) => prev.filter((_, idx) => idx !== index));
+  };
 
   return (
     <div>
@@ -135,7 +142,7 @@ function Discussion({ user, selectedReceiverId }) {
           </div>
 
           <div className="absolute w-2/3 bottom-0 ml-44 p-4">
-            {/* Messages envoyés */}
+            {/* Afficher les messages envoyés */}
             <div className="mb-4 space-y-2">
               {sentMessages.map((msg, index) => (
                 <div
@@ -147,28 +154,31 @@ function Discussion({ user, selectedReceiverId }) {
                     <p className="text-sm text-gray-700">{msg.text}</p>
                   )}
 
-                  {/* Liste des fichiers joints */}
+                  {/* Fichiers joints */}
                   {msg.files.length > 0 && (
                     <div className="mt-2 space-y-2">
-                      {msg.files.map((file, i) => (
-                        <div key={i}>
-                          {file.type.startsWith("image/") ? (
-                            <img
-                              src={URL.createObjectURL(file)}
-                              alt={file.name}
-                              className="w-full max-h-40 object-cover rounded-md"
-                            />
-                          ) : (
-                            <a
-                              href={URL.createObjectURL(file)}
-                              download={file.name}
-                              className="text-blue-500 underline text-xs"
-                            >
-                              {file.name}
-                            </a>
-                          )}
-                        </div>
-                      ))}
+                      {msg.files.map((file, i) => {
+                        if (!file) return null; // Ignorer les fichiers invalides
+                        return (
+                          <div key={i}>
+                            {file.type.startsWith("image/") ? (
+                              <img
+                                src={URL.createObjectURL(file)}
+                                alt={file.name}
+                                className="w-full max-h-40 object-cover rounded-md"
+                              />
+                            ) : (
+                              <a
+                                href={URL.createObjectURL(file)}
+                                download={file.name}
+                                className="text-blue-500 underline text-xs"
+                              >
+                                {file.name}
+                              </a>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
 
@@ -180,31 +190,28 @@ function Discussion({ user, selectedReceiverId }) {
               ))}
             </div>
 
-            {/* Champ d'entrée du message */}
-            <div className="relative w-[900px] min-h-[50px] max-h-[300px] rounded-md bg-[#D9D9D9] px-2 focus:outline-none overflow-auto border">
-              <div
-                contentEditable
-                suppressContentEditableWarning
-                id="msg"
-                className="w-full min-h-[40px] max-h-[200px] p-2 rounded-md bg-red-300"
+            {/* Champ de saisie du message */}
+            <div className="relative w-[900px] min-h-[40px] max-h-[100px] rounded-md bg-[#D9D9D9] px-2 focus:outline-none overflow-auto border">
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full min-h-[40px] max-h-[200px] p-2 rounded-md "
                 style={{
                   outline: "none",
                   border: "none",
                   textAlign: "left",
                 }}
-                onInput={handleMessageChange}
-                dir="ltr"
-              ></div>
+                placeholder="Écrivez votre message..."
+              />
               <div className="mt-2 flex flex-wrap">
                 {uploadedFiles.map((file, index) => (
                   <div
                     key={index}
-                    className="inline-flex items-center bg-gray-200 px-2 py-1 rounded-full m-1"
-                  >
+                    className="inline-flex items-center bg-[#D9D9D9] px-2 py-1 rounded-full m-1"   >
                     <span className="text-xs">{file.name}</span>
                     <XMarkIcon
                       className="w-4 h-4 ml-1 text-red-500 cursor-pointer"
-                      onClick={() => removeFile(index)}
+                      onClick={() => handleRemoveFile(index)}
                     />
                   </div>
                 ))}
@@ -213,19 +220,32 @@ function Discussion({ user, selectedReceiverId }) {
 
             {/* Boutons */}
             <div className="absolute left-[-3%] bottom-4 transform -translate-y-1/2 cursor-pointer">
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                accept="image/*"
+                onChange={handleFileChange}
+              />
               <PhotoIcon
                 className="w-6 h-6 text-[#1C84FF]"
-                onClick={handleGalleryClick}
+                onClick={() => fileInputRef.current.click()}
                 aria-label="Ajouter une image"
               />
             </div>
             <div className="absolute left-[-7%] bottom-4 transform -translate-y-1/2 cursor-pointer">
+              <input
+                type="file"
+                ref={fileInputOtherRef}
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+              />
               <PaperClipIcon
                 className="w-6 h-6 text-[#1C84FF]"
-                onClick={handleFileClick}
+                onClick={() => fileInputOtherRef.current.click()}
               />
             </div>
-            <div className="absolute left-[73%] bottom-4 transform -translate-y-1/2 cursor-pointer">
+            <div className="absolute left-[83%] bottom-4 transform -translate-y-1/2 cursor-pointer">
               <PaperAirplaneIcon
                 className="w-6 h-6 text-[#1C84FF]"
                 onClick={handleSendMessage}

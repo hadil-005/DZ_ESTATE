@@ -29,7 +29,7 @@ export const Sidebar = () => {
       setOpen(open === value ? 0 : value);
     };
   return (
-    <Card className=" text-white bg-black w-full h-full max-w-[20rem] p-4 ">
+    <Card className=" text-white bg-black w-full h-full max-w-[15rem] p-4 ">
       <div className="mb-2 p-4">
         <Typography variant="h5" color="blue-gray">
           Sidebar
@@ -41,11 +41,11 @@ export const Sidebar = () => {
           <ListItemPrefix>
             <ClockIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Historique
+          <Link to="/historique">Historique</Link>
         </ListItem>
         <ListItem>
           <ListItemPrefix>
-            <FaHeart className="h-5 w-5 " />
+            <FaHeart className="h-5 w-5 mr" />
           </ListItemPrefix>
           <Link to="/favoris"> Favoris</Link>
         </ListItem>
@@ -53,13 +53,13 @@ export const Sidebar = () => {
           <ListItemPrefix>
             <BellIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <Link to="">Alerte</Link>
+          <Link to="/alertes">Alerte</Link>
         </ListItem>
         <ListItem>
           <ListItemPrefix>
             <FaBookmark className="h-5 w-5" />
           </ListItemPrefix>
-          Enregistrements
+          <Link to="/enreg">Enregistrements</Link>
         </ListItem>
         
         <ListItem>

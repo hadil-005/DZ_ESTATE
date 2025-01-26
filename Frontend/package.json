@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "test": "jest",
     "preview": "vite preview",
+    "selenium-test": "node test_selenium.js",
     "build:css": "postcss src/styles.css -o dist/styles.css"
   },
   "dependencies": {
@@ -26,12 +27,10 @@
     "@mui/icons-material": "^6.1.10",
     "@mui/material": "^6.1.10",
     "@react-oauth/google": "^0.12.1",
-    "autoprefixer": "^10.4.20",
     "esm": "^3.2.25",
     "gapi-script": "^1.2.0",
     "i18next": "^24.2.0",
     "jwt-decode": "^4.0.0",
-    "postcss": "^8.4.49",
     "postcss-cli": "^11.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -54,6 +53,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
     "babel-jest": "^29.7.0",
     "eslint": "^9.13.0",
@@ -64,8 +64,9 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "postcss": "^8.5.1",
     "react-test-renderer": "^18.3.1",
-    "tailwindcss": "^3.4.15",
-    "vite": "^5.4.11"
+    "tailwindcss": "^3.4.17",
+    "vite": "^5.4.14"
   }
 }

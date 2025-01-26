@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import drapeau from "../../assets/drapeau.png";
 import profile from "../../assets/profil.png";
+
 import {
   Navbar as MaterialNavbar,
   Typography,
@@ -22,7 +23,7 @@ export const Navbar = () => {
 
   // Ajouter l'état pour l'utilisateur
   const [user, setUser] = useState(null);
-
+  const [isBarVisible, setIsBarVisible] = useState(false); // State for the horizontal bar
   // Vérifiez si un utilisateur est connecté à chaque chargement
   useEffect(() => {
     const firstName = localStorage.getItem("first_name");
@@ -37,7 +38,7 @@ export const Navbar = () => {
   const closeMenu = () => setClick(false);
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
-
+  const toggleBar = () => setIsBarVisible(!isBarVisible); // Toggle the horizontal bar
   const selectLanguage = (lang) => {
     setIsDropdownOpen(false);
     setCurrentLang(lang);
@@ -54,19 +55,22 @@ export const Navbar = () => {
   };
 
   const links = [
+
     { name: t("accueil"), link: "." },
     { name: t("decouvrir"), link: "property" },
-    { name: t("apropos"), link: "" },
-    { name: t("faq"), link: "" },
-    { name: t("avis"), link: "" },
+    { name: t("apropos"), link: "#apropos" },
+    { name: t("faq"), link: "#faq" },
+    { name: t("avis"), link: "#comments-section" },
+
   ];
 
   const linkss = [{ name: t("publierp"), link: "post" }];
   const links1 = [{ name: t("login"), link: "signin" }];
 
   return (
+    <div>
     <MaterialNavbar className="fixed w-full top-0 right-0 bg-black flex items-center justify-between flex-row px-4 py-5 transition-all duration-500 shadow-lg z-50">
-      <Link to="/" className="flex items-center space-x-3">
+      <Link to="/" className="flex items-center space-x-3" onClick={toggleBar}>
         <img src={logo} alt="Logo" className="w-44 h-11" />
       </Link>
 
@@ -81,8 +85,31 @@ export const Navbar = () => {
         {links.map((link, idx) => (
           <li key={idx} className="flex items-center ml-8">
             <Link
-              onClick={closeMenu}
-              to={`/${link.link}`}
+              onClick={(e) => {
+                e.preventDefault(); // Prevent default behavior
+                if (link.link.startsWith("#")) {
+                  const targetId = link.link.substring(1); // Extract the target ID
+
+                  if (window.location.pathname !== "/") {
+                    // Redirect to the homepage with the fragment
+                    window.location.href = `/#${targetId}`;
+                  } else {
+                    // Smooth scroll to the target section
+                    const target = document.getElementById(targetId);
+                    if (target) {
+                      target.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }
+                  }
+                } else {
+                  // For regular navigation
+                  closeMenu();
+                  window.location.href = link.link;
+                }
+              }}
+              to={link.link}
               className="text-white hover:text-[#1C84FF] font-semibold block md:text-bold md:mx-2"
             >
               {link.name}
@@ -224,5 +251,40 @@ export const Navbar = () => {
         </button>
       </div>
     </MaterialNavbar>
+    {/* Horizontal Bar */}
+    <div
+        className={`fixed w-full top-20 bg-gray-950 border-t border-gray-300 py-3 px-5 shadow-md z-40 transform transition-all duration-500 ${
+          isBarVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"
+        }`}
+      >
+        <div className="flex justify-around items-center">
+           <button className="text-gray-400 hover:text-blue-500 font-semibold">
+            <Link to="/historique">
+              {t("Historique")}
+            </Link>
+          </button>
+          <button className="text-gray-400 hover:text-blue-500 font-semibold">
+          <Link to="/favoris">
+            {t("Favorits")}
+          </Link>
+          </button>
+          <button className="text-gray-400 hover:text-blue-500 font-semibold">
+          <Link to="/alertes">
+            {t("Alertes")}
+          </Link>
+          </button>
+          <button className="text-gray-400 hover:text-blue-500 font-semibold">
+          <Link to="/enreg">
+            {t("Enregistrement")}
+            </Link>
+          </button>
+          <button className="text-gray-400 hover:text-blue-500 font-semibold">
+          <Link to="/chat">
+            {t("Messageries")}
+            </Link>
+          </button>
+        </div>
+        </div>
+    </div>
   );
 };

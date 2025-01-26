@@ -11,6 +11,9 @@ import { Navbar } from "@material-tailwind/react";
 import  Post  from "../pages/Post/Post";
 import { Chat } from "../pages/Chat/Chat";
 import Favoris from "../pages/Favoris/Favoris";
+import Enregistrement from "../pages/Enregistrement/Enregistrement";
+import Historique from "../pages/Historique/Historique";
+import Alertes from "../pages/Alarm/Alarm"
 import Discussion from "../pages/Chat/Discussion";
 import { UserProvider } from "../../UserContext";
 
@@ -31,6 +34,9 @@ const Routers = () => {
       <Route path="/post" element={<Post />} />
       <Route path="/disc" element={<Discussion />} />
       <Route path="/favoris" element={<Favoris />} />
+      <Route path="/enreg" element={<Enregistrement />} />
+      <Route path="/historique" element={<Historique />} />
+      <Route path="/alertes" element={<Alertes />} />
       <Route path="/property" element={<PropertyPage />} />
       <Route path="/bien" element={<Bien />} />
 
