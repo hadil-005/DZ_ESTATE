@@ -15,27 +15,19 @@ import Footer from "../Footer/Footer";
 import { TfiQuoteLeft } from "react-icons/tfi";
 import Alert from "../../components/Home/alert.jsx";
 import Article from "../Article/Article"; // Import the new Article component
+import { useTranslation } from "react-i18next";
+import "../../components/Multilingue/i18n";
 <link
   href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap"
   rel="stylesheet"
 ></link>;
 
 const Home = () => {
- const [testimonials, setTestimonials] = useState([]); // Stocker les commentaires
- const [currentIndex, setCurrentIndex] = useState(0); // Index du commentaire affiché
-const [properties, setProperties] = useState([]);
+    const { i18n, t } = useTranslation();
+    const [testimonials, setTestimonials] = useState([]); // Stocker les commentaires
+    const [currentIndex, setCurrentIndex] = useState(0); // Index du commentaire affiché
+    const [properties, setProperties] = useState([]);
  
- // Récupérer les commentaires depuis le backend au chargement du composant
-//  useEffect(() => {
-//    axios
-//      .get("http://localhost:3000/api/comments/home/comment") // URL correcte
-//      .then((response) => {
-//        setTestimonials(response.data); // Met à jour l'état avec les commentaires reçus
-//      })
-//      .catch((error) => {
-//        console.error("Erreur lors de la récupération des témoignages :", error);
-//      });
-//  }, []);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -70,8 +62,6 @@ const [properties, setProperties] = useState([]);
     "Chlef",
     "Laghouat",
     "Oum El Bouaghi",
-    "Laghouat",
-    "Oum El Bouaghi",
     "Batna",
     "Béjaia",
     "Biskra",
@@ -80,6 +70,52 @@ const [properties, setProperties] = useState([]);
     "Bouira",
     "Tamanrasset",
     "Tébessa",
+    "Tlemcen",
+    "Tiaret",
+    "Tizi Ouzou",
+    "Alger",
+    "Djelfa",
+    "Jijel",
+    "Sétif",
+    "Saïda",
+    "Skikda",
+    "Sidi Bel Abbès",
+    "Annaba",
+    "Guelma",
+    "Constantine",
+    "Médéa",
+    "Mostaganem",
+    "M'Sila",
+    "Mascara",
+    "Ouargla",
+    "Oran",
+    "El Bayadh",
+    "Illizi",
+    "Bordj Bou Arreridj",
+    "Boumerdès",
+    "El Tarf",
+    "Tindouf",
+    "Tissemsilt",
+    "El Oued",
+    "Khenchela",
+    "Souk Ahras",
+    "Tipaza",
+    "Mila",
+    "Ain Defla",
+    "Naama",
+    "Aïn Témouchent",
+    "Ghardaïa",
+    "Relizane",
+    "Timimoun",
+    "Bordj Badji Mokhtar",
+    "Ouled Djellal",
+    "Béni Abbès",
+    "In Salah",
+    "In Guezzam",
+    "Touggourt",
+    "Djanet",
+    "El Meghaier",
+    "El Meniaa",
   ];
   const [search, setSearch] = useState("");
   const [showList, setShowList] = useState(false);
@@ -97,7 +133,348 @@ const [properties, setProperties] = useState([]);
     setShowList(value !== "");
   };
 
-  const communes = ["Adrar", "Tamest", "Charouine", "Reggane", "In Zghmir"];
+  const communes = [
+    "Tsabit",
+    "Ksar Kaddour",
+    "Aoulef",
+    "Tamentit",
+    "Fenoughil",
+    "Zaouiet Kounta",
+    "Timimoun",
+    "Metarfa",
+    "Ouled Said",
+    "Deldoul",
+    "Bouda",
+    "Sali",
+    "Akabli",
+    "Tinerkouk",
+    "Talmine",
+    "Ouled Ahmed Timmi",
+    "Sebaa",
+    "In Belbel",
+    "Bouda",
+    "Chlef",
+    "Tenes",
+    "Beni Haoua",
+    "Sobha",
+    "Ouled Farès",
+    "El Karimia",
+    "Harchoun",
+    "Oued Fodda",
+    "Boukadir",
+    "El Marsa",
+    "Abou El Hassan",
+    "Oued Goussine",
+    "Dahra",
+    "Taougrit",
+    "Sidi Akkacha",
+    "El Hadjadj",
+    "Ouled Abbes",
+    "Tadjena",
+    "Sendjas",
+    "Ouled Ben Abdelkader",
+    "Breira",
+    "Beni Rached",
+    "Beni Bouateb",
+    "Talassa",
+    "Laghouat",
+    "Ksar El Hirane",
+    "Benacer Benchohra",
+    "Sidi Makhlouf",
+    "Hassi Delaa",
+    "Hassi R'mel",
+    "Aflou",
+    "Tadjrouna",
+    "Sebgag",
+    "Brida",
+    "Ouled Morah",
+    "Gueltat Sidi Saad",
+    "El Ghicha",
+    "Ain Madhi",
+    "Tadjemout",
+    "Kheneg",
+    "El Assafia",
+    "Oued Morra",
+    "El Beidha",
+    "Sidi Bouzid",
+    "Oum El Bouaghi",
+    "Aïn Beïda",
+    "Aïn M'lila",
+    "Sigus",
+    "Ouled Hamla",
+    "Fkirina",
+    "Aïn Babouche",
+    "El Amiria",
+    "El Belala",
+    "Aïn Kercha",
+    "Hanchir Toumghani",
+    "Berriche",
+    "Aïn Diss",
+    "Ouled Zouai",
+    "Dhalaa",
+    "El Harmilia",
+    "Aïn Fakroun",
+    "Souk Naamane",
+    "Zorg",
+    "Rahia",
+    "Ouled Gacem",
+    "Bir Chouhada",
+    "Batna",
+    "Timgad",
+    "Barika",
+    "Merouana",
+    "N'gaous",
+    "Seriana",
+    "El Madher",
+    "Aïn Touta",
+    "Tazoult",
+    "Arris",
+    "Lambiridi",
+    "Bouzina",
+    "Chemora",
+    "Djerma",
+    "Inoughissen",
+    "Ichmoul",
+    "Aïn Yagout",
+    "Fesdis",
+    "Gosbat",
+    "El Hassi",
+    "Tilatou",
+    "Talkhamt",
+    "Seggana",
+    "Guigba",
+    "Ouyoun El Assafir",
+    "Béjaïa",
+    "Akbou",
+    "Amizour",
+    "Tichy",
+    "Souk El Tenine",
+    "Tazmalt",
+    "Barbacha",
+    "Timezrit",
+    "Sidi Aïch",
+    "El Kseur",
+    "Tala Hamza",
+    "Kendira",
+    "Adekar",
+    "Chemini",
+    "Aït Smail",
+    "Aokas",
+    "Bouhamza",
+    "Ouzellaguen",
+    "Melbou",
+    "Feraoun",
+    "Tifra",
+    "Tamridjet",
+    "Taskriout",
+    "Semaoune",
+    "Biskra",
+    "Tolga",
+    "El Kantara",
+    "Sidi Okba",
+    "Ourlal",
+    "Djemorah",
+    "Lioua",
+    "M'chouneche",
+    "Aïn Naga",
+    "El Ghrous",
+    "Zeribet El Oued",
+    "Oumache",
+    "Chetma",
+    "Khenguet Sidi Nadji",
+    "El Haouch",
+    "Bouchakroun",
+    "Bordj Ben Azzouz",
+    "Meziraa",
+    "Aïn Zaatout",
+    "Foughala",
+    "El Feidh",
+    "Béchar",
+    "Kenadsa",
+    "Abadla",
+    "Erg Ferradj",
+    "Taghit",
+    "Béni Abbès",
+    "Ouled Khoudir",
+    "Timoudi",
+    "El Ouata",
+    "Kerzaz",
+    "Igli",
+    "Tabelbala",
+    "Beni Ikhlef",
+    "Tamtert",
+    "Boukais",
+    "Mechraa Houari Boumediene",
+    "Blida",
+    "Boufarik",
+    "El Affroun",
+    "Ouled Yaïch",
+    "Mouzaïa",
+    "Bouarfa",
+    "Chebli",
+    "Béni Tamou",
+    "Soumaa",
+    "Chréa",
+    "Chiffa",
+    "Hammam Melouane",
+    "Ben Khelil",
+    "Ouled Slama",
+    "Meftah",
+    "Larbaa",
+    "Bouira",
+    "Aïn Bessem",
+    "Lakhdaria",
+    "El Hachimia",
+    "Bordj Okhriss",
+    "Haizer",
+    "Sour El Ghozlane",
+    "M'Chedallah",
+    "Bechloul",
+    "Bouderbala",
+    "Taghzout",
+    "Aïn Turk",
+    "Aomar",
+    "El Adjiba",
+    "Ridane",
+    "Saharidj",
+    "Dechmia",
+    "El Hakimia",
+    "Taguedit",
+    "Ath Mansour",
+    "Ath Laâziz",
+    "Ath Rached",
+    "Tamanrasset",
+    "Abalessa",
+    "Idles",
+    "In Ghar",
+    "In Guezzam",
+    "In Salah",
+    "Foggaret Ezzoua",
+    "Tazrouk",
+    "Tinzaouatine",
+    "Tébessa",
+    "Bir El Ater",
+    "El Aouinet",
+    "Cheria",
+    "El Ogla",
+    "El Ma Labiodh",
+    "Ouenza",
+    "Bekkaria",
+    "Bir Mokkadem",
+    "Hammamet",
+    "El Kouif",
+    "Negrine",
+    "Morsott",
+    "Safsaf El Ouesra",
+    "Stah Guentis",
+    "El Mezeraa",
+    "El Ogla El Malha",
+    "Guorriguer",
+    "Boukhadra",
+    "Oum Ali",
+    "Aïn Zerga",
+    "Aïn El Kebira",
+    "Tizi Ouzou",
+    "Azazga",
+    "Larbaa Nath Irathen",
+    "Draa El Mizan",
+    "Makouda",
+    "Aïn El Hammam",
+    "Freha",
+    "Boghni",
+    "Tigzirt",
+    "Beni Douala",
+    "Aghribs",
+    "Ait Yahia Moussa",
+    "Yakouren",
+    "Azeffoun",
+    "Ouaguenoun",
+    "Ifigha",
+    "Tizi Gheniff",
+    "Aït Aissa Mimoun",
+    "Mekla",
+    "Aït Bouadou",
+    "Iboudraren",
+    "Imsouhal",
+    "Boudjima",
+    "Yatafen",
+    "Beni Zmenzer",
+    "Iferhounène",
+    "Ait Chaffa",
+    "Timizart",
+    "Illoula Oumalou",
+    "Alger-Centre",
+    "Sidi M'Hamed",
+    "El Madania",
+    "Belouizdad",
+    "Bab El Oued",
+    "Bologhine",
+    "Casbah",
+    "Oued Koriche",
+    "Bir Mourad Raïs",
+    "El Biar",
+    "Bouzareah",
+    "Birkhadem",
+    "El Harrach",
+    "Baraki",
+    "Oued Smar",
+    "Bachdjerrah",
+    "Hussein Dey",
+    "Kouba",
+    "Bourouba",
+    "Dar El Beïda",
+    "Bab Ezzouar",
+    "Ben Aknoun",
+    "Dely Ibrahim",
+    "Hammamet",
+    "Raïs Hamidou",
+    "Djasr Kasentina",
+    "El Mouradia",
+    "Hydra",
+    "Mohammadia",
+    "Boumerdès",
+    "Boudouaou",
+    "Thenia",
+    "Khemis El Khechna",
+    "Naciria",
+    "Bordj Menaïel",
+    "Dellys",
+    "Isser",
+    "Baghlia",
+    "Chabet El Ameur",
+    "Zemmouri",
+    "Corso",
+    "Tidjelabine",
+    "Beni Amrane",
+    "Larbatache",
+    "Ouled Moussa",
+    "Afir",
+    "Souk El Had",
+    "Si Mustapha",
+    "El Kharrouba",
+    "Timezrit",
+    "Ouled Aissa",
+    "Taourga",
+    "Ben Choud",
+    "Legata",
+    "Khenchela",
+    "Babar",
+    "Bouhmama",
+    "Chelia",
+    "Kaïs",
+    "M'Toussa",
+    "El Oueldja",
+    "Ensigha",
+    "Tamza",
+    "Khirane",
+    "Baghai",
+    "Djellal",
+    "Aïn Touila",
+    "El Hamma",
+    "Ouled Rechache",
+    "Taouzianat",
+    "Yabous",
+  ];
   const [searchc, setSearchc] = useState("");
   const [showListc, setShowListc] = useState(false);
 
@@ -132,34 +509,28 @@ const [properties, setProperties] = useState([]);
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const faqs = [
-    {
-      question: "Comment puis-je publier un bien à vendre ou à louer ?",
-      answer:
-        "Pour publier un bien, créez un compte sur Dz-Estate, puis accédez à votre tableau de bord. Cliquez sur 'Publier une propriété', remplissez les informations nécessaires et ajoutez des photos pour compléter l'annonce.",
-    },
-    {
-      question:
-        "Puis-je contacter les propriétaires directement via la plateforme ?",
-      answer:
-        "Oui, Dz-Estate vous permet de contacter les propriétaires directement via la messagerie intégrée. Cliquez sur 'Contacter' sur l'annonce pour envoyer un message au propriétaire.",
-    },
-    {
-      question: "Quels types de propriétés sont répertoriés sur Dz-Estate ?",
-      answer:
-        "Dz-Estate propose une large gamme de propriétés, notamment des maisons, appartements, villas, espaces commerciaux et terrains à vendre ou à louer.",
-    },
-    {
-      question: "Comment rechercher des propriétés dans une ville spécifique ?",
-      answer:
-        "Utilisez notre barre de recherche avancée en saisissant le nom de la ville. Vous pouvez également appliquer des filtres pour affiner vos résultats en fonction de votre budget, du type de propriété et des caractéristiques souhaitées.",
-    },
-    {
-      question: "Puis-je planifier une visite de propriété via Dz-Estate ?",
-      answer:
-        "Oui, vous pouvez demander une visite directement sur l'annonce. Cliquez sur 'Planifier une visite', et le propriétaire confirmera votre demande.",
-    },
-  ];
+   const faqs = [
+     {
+       question: t("question1"),
+       answer: t("answer1"),
+     },
+     {
+       question: t("question2"),
+       answer: t("answer2"),
+     },
+     {
+       question: t("question3"),
+       answer: t("answer3"),
+     },
+     {
+       question: t("question4"),
+       answer: t("answer4"),
+     },
+     {
+       question: t("question5"),
+       answer: t("answer5"),
+     },
+   ];
 
   return (
     <div className="home">
@@ -176,22 +547,13 @@ const [properties, setProperties] = useState([]);
       </div>
       <div id="apropos" className="flex justify-between mt-4">
         <div className="w-1/2">
-          <p className=" text-blue-500 m-20 text-5xl">À propos de nous</p>
-          <p className="m-20 text-xl">
-            Dz-Estate est une plateforme en ligne moderne dédiée à la
-            simplification des transactions immobilières en Algérie. Il sert de
-            plateforme de confiance pour l'achat, la vente et la location de
-            propriétés, offrant une expérience transparente aux utilisateurs à
-            la recherche de maisons, d'appartements ou d'espaces commerciaux.
-            Avec une interface intuitive et des fonctionnalités de recherche
-            avancées, Dz-Estate permet aux utilisateurs de filtrer les
-            propriétés par emplacement, gamme de prix et type, garantissant
-            ainsi qu'ils trouvent la solution idéale pour leurs besoins. La
-            plateforme fournit également des listes de propriétés détaillées,
-            accompagnées de photos et de descriptions, ce qui facilite
-            l'exploration des options dans le confort de votre maison. Que vous
-            soyez acheteur, vendeur ou locataire, Dz-Estate est votre solution
-            incontournable pour l'immobilier en Algérie.
+          <p className=" text-blue-500 m-20 text-5xl">{t("proposdenous")}</p>
+          <p
+            className={`m-20 text-xl ${
+              i18n.language === "ar" ? "text-right" : "text-left"
+            }`}
+          >
+            {t("dzEstateDescription")}
           </p>
         </div>
         <div className="relative w-1/2 top-10">
@@ -205,7 +567,7 @@ const [properties, setProperties] = useState([]);
         </div>
       </div>
       <p className=" text-blue-500 mt-20 text-5xl text-center ">
-        Découvrez nos meilleures offres
+        {t("meilleuresoffres")}
       </p>
       <div className="see-more-btn">
         <Link to="./property">
@@ -232,38 +594,33 @@ const [properties, setProperties] = useState([]);
 
       <div className="bg-black h-80 ">
         <p className="custom-text1 text-white text-center mt-10 pt-10">
-          Pourquoi nous choisir
+          {t("Pourquoinouschoisir")}
         </p>
         <div className="flex ">
           <div className="w-1/3 flex flex-col items-center">
             <img src={find} alt="log" />
             <p className="costum-text2 text-white mt- font-bold mt-4">
-              Trouvez votre future maison
+              {t("Trouvezvotrefuturemaison")}
             </p>
             <p className="costum-text2 text-white text-center text-xs mt-3">
-              Nous vous aidons à trouver un nouveau logement en vous offrant{" "}
-              <br />
-              un expérience immobilière intelligente
+              {t("N")} <br />
+              {t("intelligente")}
             </p>
           </div>
           <div className="w-1/3 flex flex-col items-center">
             <img src={buy} alt="log" />
-            <p className="costum-text2 text-white mt-4 font-bold">
-              Acheter ou louer des propriétés
-            </p>
+            <p className="costum-text2 text-white mt-4 font-bold">{t("A")}</p>
             <p className="costum-text2 text-white text-center text-xs mt-3">
-              Des millions de maisons et d'appartements <br />
-              dans vos villes préférées
+              {t("B")} <br />
+              {t("C")}
             </p>
           </div>
           <div className="w-1/3 flex flex-col items-center">
             <img src={sell} alt="log" />
-            <p className="costum-text2 text-white mt-4 font-bold">
-              Vendre ou louer votre propriété
-            </p>
+            <p className="costum-text2 text-white mt-4 font-bold">{t("D")}</p>
             <p className="costum-text2 text-white text-center text-xs mt-3">
-              Inscrivez-vous maintenant et vendez ou louez <br />
-              vos propriétés
+              {t("E")} <br />
+              {t("F")}
             </p>
           </div>
         </div>
@@ -272,21 +629,16 @@ const [properties, setProperties] = useState([]);
         <div className="max-w-6xl mx-auto px-6 md:flex justify-between items-center">
           {/* Left Section */}
           <div className="md:w-1/2">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Que disent nos clients de nous ?
-            </h2>
-            <p className="text-lg mb-6">
-              Différentes versions ont évolué au fil des années, parfois par
-              accident, parfois volontairement injecté de l'humour, etc.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("G")}</h2>
+            <p className="text-lg mb-6">{t("Q")}</p>
             <div className="flex space-x-8">
               <div>
                 <h3 className="text-2xl font-bold">10m+</h3>
-                <p>Des gens heureux</p>
+                <p> {t("S")} </p>
               </div>
               <div>
                 <h3 className="text-2xl font-bold">4.88</h3>
-                <p>Note globale</p>
+                <p> {t("M")}</p>
                 <div className="flex text-yellow-400 mt-1">
                   <span>★</span>
                   <span>★</span>
@@ -331,12 +683,10 @@ const [properties, setProperties] = useState([]);
       </div>
       <div id="faq" className="max-w-2xl mx-auto py-20">
         <h2 className="text-2xl font-bold text-center mb-4">
-          Vous avez d'autres questions ?
+          {t("N")}
         </h2>
         <p className="text-center text-gray-600 mb-6">
-          Si vous avez besoin d'aide supplémentaire ou si vous avez des
-          questions spécifiques, notre équipe est à votre disposition pour vous
-          accompagner.{" "}
+          {t("V")}{" "}
         </p>
         <div className="space-y-4">
           {faqs.map((faq, index) => (
