@@ -41,14 +41,14 @@ const Home = () => {
       try {
         // Appel pour les témoignages
         const commentsResponse = await axios.get(
-          "http://localhost:3000/api/comments/home/comment"
+          "https://dz-estate-wjy4.onrender.com/api/comments/home/comment"
         );
         setTestimonials(commentsResponse.data); // Mise à jour des témoignages
 
 
         // Appel pour les propriétés
         const propertiesResponse = await fetch(
-          "http://localhost:3000/api/property/getThreeRandomProperties"
+          "https://dz-estate-wjy4.onrender.com/api/property/getThreeRandomProperties"
         );
         const propertiesData = await propertiesResponse.json();
 
