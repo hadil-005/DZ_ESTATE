@@ -21,7 +21,7 @@ useEffect(() => {
 
       try {
 
-        const response = await fetch('http://localhost:3000/api/property/getThreeRandomProperties'); // Adjust the URL as needed
+        const response = await fetch('https://dz-estate-wjy4.onrender.com/api/property/getThreeRandomProperties'); // Adjust the URL as needed
 
         const data = await response.json();
 
