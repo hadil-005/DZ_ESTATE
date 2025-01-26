@@ -4,6 +4,9 @@ import App from "./App.jsx";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { disableReactDevTools } from "@fvilers/disable-react-devtools";
+
+if (process.env.NODE_ENV === 'production') disableReactDevTools()
 
 const CLIENT_ID =
   "264331519624-n5p0db3ucu2qmmod49ri268rq5mumvl4.apps.googleusercontent.com";
