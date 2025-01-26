@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa"; // Import des icônes des réseaux sociaux
+import { useTranslation } from "react-i18next";
+import "../../components/Multilingue/i18n";
 
 const Footer = () => {
+  const { i18n, t } = useTranslation();
   const [comment, setComment] = useState("");
   const navigate = useNavigate();
 
@@ -46,37 +49,42 @@ const Footer = () => {
     navigate("/signin");
   };
 
+  // Déterminez les classes d'alignement en fonction de la langue
+  const alignmentClass = i18n.language === "ar" ? "text-right" : "text-left";
+
   return (
     <footer className="bg-gray-950 text-gray-400 py-6">
       <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start gap-12">
+        <div
+          className={`flex flex-col md:flex-row justify-between items-start gap-12 ${alignmentClass}`}
+        >
           {/* Section Votre commentaire */}
           <div className="flex-1">
-            <h3 className="text-white font-semibold mb-4">Votre commentaire</h3>
+            <h3 className="text-white font-semibold mb-4 ml-10">
+              {t("Commentaire")}
+            </h3>
             <div className="flex items-center">
               <input
                 type="text"
                 id="comment"
-                placeholder="Que pensez-vous de notre service"
+                placeholder={t("service")}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="w-72 bg-inherit rounded-lg px-4 py-2 text-sm text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-72 bg-inherit rounded-lg px-4 py-2 text-sm text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 ml-6"
               />
               <button
                 onClick={handleSendComment}
                 className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-full text-sm flex items-center ml-2"
               >
-                Envoyer →
+                {t("envoyer")}
               </button>
             </div>
           </div>
 
           {/* Section Réseaux sociaux */}
-          <div className="flex-1" style={{ marginRight: "-150px" }}>
-            <h3 className="text-white font-semibold mb-4">
-              Nos réseaux sociaux
-            </h3>
-            <div className="flex justify-center items-center gap-6 mr-96">
+          <div className="flex-1 ml-32">
+            <h3 className="text-white font-semibold mb-4">{t("reseau")}</h3>
+            <div className="flex justify-center items-center gap-6">
               <a
                 href="https://facebook.com"
                 target="_blank"
@@ -102,8 +110,8 @@ const Footer = () => {
           </div>
 
           {/* Section Contactez-nous */}
-          <div className="flex-1" style={{ marginRight: "-300px" }}>
-            <h3 className="text-white font-semibold mb-4">Contactez-nous</h3>
+          <div className="flex-1">
+            <h3 className="text-white font-semibold mb-4">{t("contact")}</h3>
             <ul className="space-y-2">
               <li>dzestate@gmail.com</li>
               <li>(123) 456-7890</li>
