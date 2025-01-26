@@ -16,10 +16,11 @@ app.use(bodyParser.json());
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({
-  cloud_name: "dsbox1txz",
-  api_key: "2942VSmn_Wen1P2XRGlKl0fFxZ7HwM792496868756",
-  api_secret: "2VSmn_Wen1P2XRGlKl0fFxZ7HwM",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
 
 app.use(
   cors({
