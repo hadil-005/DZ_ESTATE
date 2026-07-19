@@ -83,7 +83,7 @@ PORT=3000
 
 ## 🤝 Acknowledgements / Team
 
-This was a collaborative team project. Frontend development and additional contributions were made by teammates including [teammate names/handles, e.g. @khenkhg]. This copy is maintained here to showcase my individual contribution (backend architecture and development) as part of my portfolio.
+This was a collaborative team project. Frontend development and additional contributions were made by teammates. This copy is maintained here to showcase my individual contribution (backend architecture and development) as part of my portfolio.
 
 ## 📄 License
 
