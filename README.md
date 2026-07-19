@@ -24,11 +24,15 @@ DZ Estate is a real estate listing web application built collaboratively as a te
 I was responsible for the **entire backend of this project**, including:
 
 - **Backend architecture** — structuring the Node.js/Express application (routing, middleware, controllers, models)
-- **Database design** — designing the schema/data model for property listings, users, and related entities in [Database — e.g. MongoDB/PostgreSQL]
+- **Database design** — designing the PostgreSQL schema for property listings, users, and related entities (hosted on Neon serverless Postgres)
 - **API development** — building the REST API endpoints consumed by the frontend (listings CRUD, search/filtering, authentication, etc.)
+- **Authentication** — JWT-based auth plus Google OAuth 2.0 login via Passport.js
+- **Real-time features** — Socket.io integration for live messaging/chat between users
+- **Media handling** — image upload pipeline using Multer + Cloudinary for property photos
 - **Core backend logic** — request validation, error handling, and connecting the API layer to the database
+- **Deployment** — backend deployed on Vercel/Render
 
-The frontend (React or equivalent, under `Frontend/`) was built by other team members and consumes the API I built.
+The frontend (under `Frontend/`) was built by other team members and consumes the API I built.
 
 ## 🛠️ Tech Stack (Backend)
 
@@ -36,8 +40,12 @@ The frontend (React or equivalent, under `Frontend/`) was built by other team me
 |---|---|
 | Runtime | Node.js |
 | Framework | Express.js |
-| Database | [Fill in — e.g. MongoDB / PostgreSQL / MySQL] |
+| Database | PostgreSQL (hosted on Neon) |
+| Authentication | JWT + Google OAuth 2.0 (Passport.js) |
+| Real-time | Socket.io |
+| Media Storage | Cloudinary (via Multer) |
 | API Style | REST |
+| Deployment | Vercel / Render |
 
 ## 🌲 Project Structure
 
@@ -53,9 +61,25 @@ DZ_ESTATE/
 ```bash
 cd Backend
 npm install
-# configure your .env (DB connection string, PORT, etc. — see .env.example if present)
-npm start
+# create a .env file with the variables below, then:
+npm run dev   # or: npm start
 ```
+
+**Required environment variables (`.env`):**
+
+```env
+DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+GOOGLE_CLIENT_ID=your_google_oauth_client_id
+GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
+JWT_SECRET=your_jwt_secret
+SESSION_SECRET=your_session_secret
+PORT=3000
+```
+
+> **Note:** this was a learning/academic project, and earlier versions of the codebase had some of these values hardcoded directly in source rather than read from environment variables. If you're reusing any part of this code, make sure every secret above is loaded via `process.env` and that `.env` is listed in `.gitignore` before deploying or making the repo public.
 
 ## 🤝 Acknowledgements / Team
 
